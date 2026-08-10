@@ -1,36 +1,43 @@
 // SPDX-License-Identifier: Apache-2.0
 
-def repositoryProperties = new Properties()
-file('../../gradle.properties').withInputStream {
-    repositoryProperties.load(it)
-}
+buildscript {
+    def repositoryProperties = new Properties()
+    file('../../gradle.properties').withInputStream {
+        repositoryProperties.load(it)
+    }
 
-def targetAgpVersion = repositoryProperties.getProperty('agpVersion')
-if (!targetAgpVersion) {
-    throw new GradleException('agpVersion is not set in the repository gradle.properties')
-}
+    def targetAgpVersion = repositoryProperties.getProperty('agpVersion')
+    if (!targetAgpVersion) {
+        throw new GradleException(
+            'agpVersion is not set in the repository gradle.properties'
+        )
+    }
 
-repositories {
-    google()
-    mavenCentral()
-}
+    repositories {
+        google()
+        mavenCentral()
+    }
 
-configurations {
-    agp
-}
-
-dependencies {
-    agp "com.android.tools.build:gradle:${targetAgpVersion}"
+    dependencies {
+        classpath "com.android.tools.build:gradle:${targetAgpVersion}"
+    }
 }
 
 tasks.register('resolveAgp') {
+    def repositoryProperties = new Properties()
+    file('../../gradle.properties').withInputStream {
+        repositoryProperties.load(it)
+    }
+    def targetAgpVersion = repositoryProperties.getProperty('agpVersion')
+
     inputs.property('agpVersion', targetAgpVersion)
 
     doLast {
-        def artifact = configurations.agp.resolvedConfiguration.resolvedArtifacts.find {
-            it.moduleVersion.id.group == 'com.android.tools.build' &&
-                it.name == 'gradle'
-        }
+        def artifact = buildscript.configurations.classpath.resolvedConfiguration
+            .resolvedArtifacts.find {
+                it.moduleVersion.id.group == 'com.android.tools.build' &&
+                    it.name == 'gradle'
+            }
         if (artifact == null || artifact.moduleVersion.id.version != targetAgpVersion) {
             throw new GradleException("AGP ${targetAgpVersion} was not resolved")
         }
