@@ -1,0 +1,39 @@
+// SPDX-License-Identifier: Apache-2.0
+
+def repositoryProperties = new Properties()
+file('../../gradle.properties').withInputStream {
+    repositoryProperties.load(it)
+}
+
+def targetAgpVersion = repositoryProperties.getProperty('agpVersion')
+if (!targetAgpVersion) {
+    throw new GradleException('agpVersion is not set in the repository gradle.properties')
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+configurations {
+    agp
+}
+
+dependencies {
+    agp "com.android.tools.build:gradle:${targetAgpVersion}"
+}
+
+tasks.register('resolveAgp') {
+    inputs.property('agpVersion', targetAgpVersion)
+
+    doLast {
+        def artifact = configurations.agp.resolvedConfiguration.resolvedArtifacts.find {
+            it.moduleVersion.id.group == 'com.android.tools.build' &&
+                it.name == 'gradle'
+        }
+        if (artifact == null || artifact.moduleVersion.id.version != targetAgpVersion) {
+            throw new GradleException("AGP ${targetAgpVersion} was not resolved")
+        }
+        logger.lifecycle("Resolved AGP ${artifact.moduleVersion.id.version}")
+    }
+}
