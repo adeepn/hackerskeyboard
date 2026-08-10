@@ -12,6 +12,8 @@
   завершения и последовательность релизов.
 - [Стратегия тестирования](testing-strategy.md) — функциональная матрица и
   обязательные проверки для IME.
+- [Gradle wrapper](gradle-wrapper.md) — версия, checksums, provenance и CI
+  validation.
 - [Исследование форков](fork-research.md) — сравнение трёх форков и перечень
   изменений, которые стоит портировать или отвергнуть.
 - [Исследование upstream](upstream-research.md) — анализ issues и pull requests
