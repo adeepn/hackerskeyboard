@@ -1,0 +1,29 @@
+name: Quality gates
+
+on:
+  pull_request:
+    branches:
+      - v2
+  push:
+    branches:
+      - v2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prek:
+    name: prek
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Run repository checks
+        uses: j178/prek-action@v2

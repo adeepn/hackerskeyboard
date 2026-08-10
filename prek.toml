@@ -1,0 +1,19 @@
+minimum_prek_version = "0.3.13"
+default_install_hook_types = ["pre-commit"]
+
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "check-added-large-files", args = ["--maxkb=1024"] },
+  { id = "check-case-conflict" },
+  { id = "check-executables-have-shebangs" },
+  { id = "check-illegal-windows-names" },
+  { id = "check-merge-conflict" },
+  { id = "check-symlinks" },
+  { id = "check-toml" },
+  { id = "check-yaml" },
+  { id = "detect-private-key" },
+  { id = "end-of-file-fixer", files = "^(AGENTS\\.md|docs/|\\.github/|prek\\.toml$)" },
+  { id = "mixed-line-ending", args = ["--fix=no"], files = "^(AGENTS\\.md|docs/|\\.github/|prek\\.toml$)" },
+  { id = "trailing-whitespace", files = "^(AGENTS\\.md|docs/|\\.github/|prek\\.toml$)" },
+]
