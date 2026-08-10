@@ -132,6 +132,11 @@ model reviews. Model review supplements human ownership; it never authorizes a
 merge by itself. Record review evidence in the PR checklist. Never include
 secrets, signing material, user text, or other sensitive data in model prompts.
 
+Claude review is owner-operated by default. Agents must not invoke Claude CLI
+when `ANTHROPIC_API_KEY` is present unless the owner explicitly authorizes that
+exact invocation. An installed CLI must not be assumed to use a local model.
+Never print, persist, transmit, or commit model API keys.
+
 Prefer squash merge for one-issue PRs. The resulting commit should retain the
 issue reference and any required upstream attribution.
 
