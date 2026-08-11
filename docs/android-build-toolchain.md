@@ -7,6 +7,9 @@
 | JDK | 17 | зафиксирован в `.java-version` |
 | Gradle | 8.13 | зафиксирован wrapper и SHA-256 |
 | Android Gradle Plugin | 8.13.2 | зафиксирован в `gradle.properties` |
+| Android NDK | 29.0.14206865 (r29) | зафиксирован в `gradle.properties` |
+| CMake | 3.22.1 | зафиксирован в `gradle.properties` |
+| min SDK | 24 (Android 7.0) | принято в ADR-0001 |
 | compile SDK | 36 | запланирован в S1.06 |
 
 AGP 8.13 требует Gradle 8.13 и JDK 17 и поддерживает API 36.1. Patch release
@@ -44,8 +47,8 @@ org.pocketworkstation.pckeyboard
 
 `namespace` объявлен в `app/build.gradle`; manifest больше не используется как
 его источник. Относительные имена Android components продолжают разрешаться в
-тот же package. Числовые значения SDK в S1.05 не меняются: compile/target SDK
-остаются 26, min SDK — 14.
+тот же package. После ADR-0001 compile/target SDK временно остаются 26, а min
+SDK равен 24.
 
 ## Репозитории зависимостей
 
