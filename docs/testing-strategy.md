@@ -18,6 +18,17 @@ matrix.
 | Screenshot | layouts, themes, popup/candidates geometry | resource/UI PR и nightly |
 | Manual interoperability | реальные editors и terminal apps | alpha/beta/release |
 
+## Реализованный Stage 1 native smoke
+
+Instrumented test `BinaryDictionarySmokeTest` запускается на Gradle Managed
+Device Pixel 2 / API 36 и проверяет lookup встроенного минимального словаря через
+полную границу Java → JNI → C++. Его локальная команда описана в
+`android-build-toolchain.md`.
+
+Этот smoke test подтверждает загрузку библиотеки, совместимость JNI signatures и
+один positive/negative lookup. Он не заменяет Stage 3 тесты полноценного corpus,
+невалидных словарей и bigrams, а также отдельную проверку 16 KB page size.
+
 ## API и устройства
 
 Минимальная обязательная матрица должна включать:

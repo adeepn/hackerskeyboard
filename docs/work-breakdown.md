@@ -15,7 +15,9 @@ Epic: **Stage 1: восстановить современную воспрои�
 - S1.06 — поднять `compileSdk` до 36 без изменения `targetSdk`;
 - S1.07 — исправить build/resource errors нового AGP;
 - S1.08 — зафиксировать NDK, CMake и ABI;
-- S1.09 — восстановить сборку JNI и smoke dictionary lookup;
+- S1.09 ([#31](https://github.com/adeepn/hackerskeyboard/issues/31)) — выполнить
+  Java → JNI → C++ smoke dictionary lookup на API 36; сборка и упаковка JNI
+  восстановлены в S1.07 / PR #29;
 - S1.10 — исправить debug/release configuration;
 - S1.11 — включить lint и создать осознанный legacy baseline;
 - S1.12 — добавить `prek` и локальные базовые проверки;
@@ -36,6 +38,14 @@ Epic: **Stage 1: восстановить современную воспрои�
   результатам inventory;
 - S1.24 — добавить CI-проверку license headers, запрещённых лицензий и состава
   license/notice в release artifacts.
+- S1.25 ([#26](https://github.com/adeepn/hackerskeyboard/issues/26)) — сменить
+  application identity на `io.github.baodeep.hackerskeyboard` по отдельному
+  migration plan после зелёного baseline;
+- S1.26 ([#27](https://github.com/adeepn/hackerskeyboard/issues/27)) — найти и
+  лицензировать воспроизводимые источники first-party dictionary packs, сохранив
+  совместимость со старым dictionary API;
+- S1.27 ([#33](https://github.com/adeepn/hackerskeyboard/issues/33)) — явно
+  определить ABI Gradle Managed Device до оценки перехода на AGP 9.
 
 Зависимости: S1.01 → S1.03 → S1.05/S1.06/S1.07; S1.08 → S1.09; стабильная
 сборка → S1.14/S1.15. S1.12 и базовая часть S1.13 могут выполняться раньше.
