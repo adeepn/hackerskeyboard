@@ -15,7 +15,9 @@ Epic: **Stage 1: восстановить современную воспрои�
 - S1.06 — поднять `compileSdk` до 36 без изменения `targetSdk`;
 - S1.07 — исправить build/resource errors нового AGP;
 - S1.08 — зафиксировать NDK, CMake и ABI;
-- S1.09 — восстановить сборку JNI и smoke dictionary lookup;
+- S1.09 ([#31](https://github.com/adeepn/hackerskeyboard/issues/31)) — выполнить
+  Java → JNI → C++ smoke dictionary lookup на API 36; сборка и упаковка JNI
+  восстановлены в S1.07 / PR #29;
 - S1.10 — исправить debug/release configuration;
 - S1.11 — включить lint и создать осознанный legacy baseline;
 - S1.12 — добавить `prek` и локальные базовые проверки;

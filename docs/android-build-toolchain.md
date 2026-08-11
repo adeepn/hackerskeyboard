@@ -64,6 +64,26 @@ S1.06 поднимает только `compileSdk` с 26 до 36. Это поз�
 S1.07 подтверждает сборку Android application и исправляет обнаруженные новым
 AGP resource/build errors. Следующие native smoke tests выполняются в S1.09.
 
+## JNI dictionary smoke test
+
+S1.09 исполняет минимальный instrumented test на управляемом Gradle эмуляторе
+Pixel 2 / API 36:
+
+```sh
+./gradlew :app:pixel2Api36DebugAndroidTest \
+  --no-daemon \
+  -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+```
+
+Тест открывает встроенный `R.raw.main` через `BinaryDictionary`, проверяет
+существующее слово `Android`, отсутствующее контрольное слово `Keyboard` и
+закрывает native dictionary. Тем самым исполняются загрузка
+`libjni_pckeyboard.so`, регистрация JNI, `openNative`, lookup и `closeNative`.
+
+Команда требует Android Emulator, system image API 36 и аппаратную виртуализацию.
+В CI она запускается отдельным job на `ubuntu-latest`; обычная сборка APK
+остаётся отдельным быстрым gate.
+
 ## Namespace и Android DSL
 
 Module namespace и application ID намеренно совпадают с историческим package:
