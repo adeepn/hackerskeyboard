@@ -31,7 +31,18 @@ build:
 
 После S1.03 остаются отдельные изменения:
 
-1. S1.04 — удалить `jcenter()` и перейти на поддерживаемые repositories;
-2. S1.05 — добавить `namespace` и современный Android DSL;
-3. S1.06 — поднять `compileSdk` до 36;
-4. S1.07 — исправить обнаруженные новым AGP resource/build errors.
+1. S1.05 — добавить `namespace` и современный Android DSL;
+2. S1.06 — поднять `compileSdk` до 36;
+3. S1.07 — исправить обнаруженные новым AGP resource/build errors.
+
+## Репозитории зависимостей
+
+Buildscript и Android modules используют только поддерживаемые публичные
+репозитории в фиксированном порядке:
+
+1. `google()` — Android Gradle Plugin, Android Support/AndroidX и Android test
+   artifacts;
+2. `mavenCentral()` — JVM и остальные опубликованные зависимости.
+
+`jcenter()` запрещён. Добавление другого repository требует отдельного
+обоснования происхождения, доступности и лицензионной совместимости artifacts.
