@@ -127,14 +127,20 @@ jobs:
 
       - name: Collect Android lint findings
         continue-on-error: true
-        run: ./gradlew :app:lintDebug --no-daemon --stacktrace
+        run: >-
+          ./gradlew :app:lintDebug
+          -Dlint.baselines.continue=true
+          --no-daemon
+          --stacktrace
 
       - name: Upload Android lint reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: android-lint-diagnostics-${{ github.sha }}
-          path: app/build/reports/lint-results-debug.*
+          path: |
+            app/lint-baseline.xml
+            app/build/reports/lint-results-debug.*
           if-no-files-found: error
           retention-days: 7
 
