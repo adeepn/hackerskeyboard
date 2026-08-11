@@ -7,6 +7,26 @@
 случайно выбранную системную Java или более новый Homebrew JDK.
 
 Подходит любой совместимый JDK 17. В CI используется Eclipse Temurin 17.
+
+Для полной Android-сборки дополнительно установите через Android SDK Manager:
+
+- Android SDK Platform 36;
+- Android SDK Build Tools 36.0.0;
+- Android NDK 29.0.14206865;
+- CMake 3.22.1.
+
+Затем выполните:
+
+```sh
+./gradlew :app:assembleDebug :app:assembleRelease --no-daemon
+scripts/verify-apk-native-libs.sh \
+  app/build/outputs/apk/debug/app-debug.apk \
+  app/build/outputs/apk/release/app-release-unsigned.apk
+```
+
+Release APK на этом этапе не подписан и предназначен только для проверки
+release-конфигурации, ресурсов и native packaging.
+
 Абсолютный путь к JDK зависит от машины и не сохраняется в репозитории.
 
 ## Проверка активной Java

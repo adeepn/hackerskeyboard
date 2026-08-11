@@ -30,6 +30,30 @@ build:
 `com.android.tools.build:gradle` и проверяет полученную версию. Этот build не
 компилирует приложение и не считается подтверждением успешной Android-сборки.
 
+## Полная сборка приложения
+
+Debug и unsigned release варианты собираются одной командой:
+
+```sh
+./gradlew :app:assembleDebug :app:assembleRelease --no-daemon
+```
+
+Для неё необходимы Android Platform 36, Build Tools 36.0.0, NDK
+29.0.14206865 и CMake 3.22.1. CI устанавливает именно эти версии, не полагаясь
+на изменяемый состав образа `ubuntu-latest`.
+
+После сборки состав native libraries проверяется для обоих APK:
+
+```sh
+scripts/verify-apk-native-libs.sh \
+  app/build/outputs/apk/debug/app-debug.apk \
+  app/build/outputs/apk/release/app-release-unsigned.apk
+```
+
+Успешный `assembleRelease` создаёт неподписанный APK и подтверждает только
+release-компиляцию. Он ещё не является публикуемым артефактом: signing,
+финальные release checks и AAB относятся к последующим задачам Stage 1/2.
+
 ## Разделение compile SDK и target SDK
 
 S1.06 поднимает только `compileSdk` с 26 до 36. Это позволяет компилировать код
@@ -37,8 +61,8 @@ S1.06 поднимает только `compileSdk` с 26 до 36. Это поз�
 поведения платформы: `targetSdk` временно остаётся равен 26. Его переход на 36
 выполняется отдельно на Stage 2 вместе с совместимостными изменениями и тестами.
 
-Следующий build blocker — S1.07: собрать Android application и исправить
-обнаруженные новым AGP resource/build errors.
+S1.07 подтверждает сборку Android application и исправляет обнаруженные новым
+AGP resource/build errors. Следующие native smoke tests выполняются в S1.09.
 
 ## Namespace и Android DSL
 
