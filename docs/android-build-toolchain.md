@@ -10,7 +10,7 @@
 | Android NDK | 29.0.14206865 (r29) | зафиксирован в `gradle.properties` |
 | CMake | 3.22.1 | зафиксирован в `gradle.properties` |
 | min SDK | 24 (Android 7.0) | принято в ADR-0001 |
-| compile SDK | 36 | запланирован в S1.06 |
+| compile SDK | 36 | зафиксирован в S1.06 |
 
 AGP 8.13 требует Gradle 8.13 и JDK 17 и поддерживает API 36.1. Patch release
 8.13.2 выбран внутри этой совместимой линии.
@@ -30,12 +30,15 @@ build:
 `com.android.tools.build:gradle` и проверяет полученную версию. Этот build не
 компилирует приложение и не считается подтверждением успешной Android-сборки.
 
-## Следующие blockers
+## Разделение compile SDK и target SDK
 
-После S1.05 остаются отдельные изменения:
+S1.06 поднимает только `compileSdk` с 26 до 36. Это позволяет компилировать код
+против актуального Android API, но само по себе не включает новые изменения
+поведения платформы: `targetSdk` временно остаётся равен 26. Его переход на 36
+выполняется отдельно на Stage 2 вместе с совместимостными изменениями и тестами.
 
-1. S1.06 — поднять `compileSdk` до 36;
-2. S1.07 — исправить обнаруженные новым AGP resource/build errors.
+Следующий build blocker — S1.07: собрать Android application и исправить
+обнаруженные новым AGP resource/build errors.
 
 ## Namespace и Android DSL
 
@@ -47,8 +50,8 @@ org.pocketworkstation.pckeyboard
 
 `namespace` объявлен в `app/build.gradle`; manifest больше не используется как
 его источник. Относительные имена Android components продолжают разрешаться в
-тот же package. После ADR-0001 compile/target SDK временно остаются 26, а min
-SDK равен 24.
+тот же package. После S1.06 `compileSdk` равен 36, `targetSdk` временно остаётся
+26, а `minSdk` равен 24 согласно ADR-0001.
 
 ## Репозитории зависимостей
 
