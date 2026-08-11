@@ -38,6 +38,7 @@ issues. Каждый нижележащий шаг является отдель
 6. Сначала оставить `targetSdk 26`, чтобы отделить build migration от platform
    behavior migration.
 7. Зафиксировать NDK/CMake и поддерживаемые ABI.
+   Минимальная версия v2 — Android 7.0 / API 24 согласно ADR-0001.
 8. Убрать `debuggable true` из release, включить release lint и baseline только
    для осознанно принятых legacy warnings.
 9. Создать CI: assemble debug/release, unit tests, lint, dependency report.

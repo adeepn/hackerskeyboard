@@ -14,3 +14,8 @@ application ID или модели совместимости dictionary packs.
 4. решение;
 5. последствия и план отката;
 6. данные/тесты, на которых основано решение.
+
+## Принятые решения
+
+- [ADR-0001](0001-android-7-minimum-and-native-toolchain.md) — Android 7.0 /
+  API 24 как минимальная версия, NDK r29 и CMake 3.22.1.
