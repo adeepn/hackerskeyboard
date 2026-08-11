@@ -21,8 +21,8 @@ matrix.
 ## Реализованный Stage 1 native smoke
 
 Instrumented test `BinaryDictionarySmokeTest` запускается на Gradle Managed
-Device Pixel 2 / API 36 / x86_64 и проверяет lookup встроенного минимального
-словаря через полную границу Java → JNI → C++. Его локальная команда описана в
+Device Pixel 2 / API 36 и проверяет lookup встроенного минимального словаря через
+полную границу Java → JNI → C++. Его локальная команда описана в
 `android-build-toolchain.md`.
 
 Этот smoke test подтверждает загрузку библиотеки, совместимость JNI signatures и

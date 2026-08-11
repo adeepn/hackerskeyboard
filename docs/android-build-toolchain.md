@@ -67,7 +67,7 @@ AGP resource/build errors. Следующие native smoke tests выполня�
 ## JNI dictionary smoke test
 
 S1.09 исполняет минимальный instrumented test на управляемом Gradle эмуляторе
-Pixel 2 / API 36 / x86_64:
+Pixel 2 / API 36:
 
 ```sh
 ./gradlew :app:pixel2Api36DebugAndroidTest \
@@ -80,11 +80,11 @@ Pixel 2 / API 36 / x86_64:
 закрывает native dictionary. Тем самым исполняются загрузка
 `libjni_pckeyboard.so`, регистрация JNI, `openNative`, lookup и `closeNative`.
 
-ABI устройства явно зафиксирован как `x86_64`: это соответствует архитектуре
-GitHub runner и не зависит от меняющегося default в будущих версиях AGP. Команда
-требует Android Emulator, system image API 36 и аппаратную виртуализацию. В CI
-она запускается отдельным job на `ubuntu-latest`; обычная сборка APK остаётся
-отдельным быстрым gate.
+Команда требует Android Emulator, system image API 36 и аппаратную виртуализацию.
+В CI она запускается отдельным job на `ubuntu-latest`; обычная сборка APK
+остаётся отдельным быстрым gate. Для зафиксированного AGP 8.13.2 на GitHub runner
+используется `x86_64`; изменение ABI default в AGP 9 рассматривается отдельно до
+обновления toolchain.
 
 ## Namespace и Android DSL
 

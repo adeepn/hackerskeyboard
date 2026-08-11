@@ -36,12 +36,11 @@ android {
     }
     testOptions {
         managedDevices {
-            allDevices {
-                pixel2Api36(com.android.build.api.dsl.ManagedVirtualDevice) {
+            localDevices {
+                pixel2Api36 {
                     device = "Pixel 2"
                     apiLevel = 36
                     systemImageSource = "aosp"
-                    setTestedAbi("x86_64")
                 }
             }
         }
