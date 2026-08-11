@@ -28,7 +28,6 @@ Final reviewed commit SHA: `TBD`
 
 - [ ] GitHub Actions required checks pass for the final SHA.
 - [ ] Codex reviewed the final diff; actionable findings are resolved.
-- [ ] Local Claude CLI reviewed the final diff; actionable findings are resolved.
 - [ ] Repository owner reviewed and approved the final diff.
 - [ ] All conversations are resolved and the branch is current with `v2`.
 
@@ -38,7 +37,7 @@ Codex review summary/link:
 
 ```
 
-Claude CLI review command and summary:
+Optional additional model review command and summary:
 
 ```text
 

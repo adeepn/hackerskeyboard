@@ -121,21 +121,21 @@ No PR may merge until all of the following are complete:
 
 1. required local checks and GitHub Actions checks pass;
 2. Codex has reviewed the final diff and all actionable findings are resolved;
-3. the local Claude CLI has reviewed the final diff and all actionable findings
-   are resolved;
-4. the repository owner has approved the PR;
-5. the branch is current with `v2` and the final reviewed commit SHA is the one
+3. the repository owner has approved the PR;
+4. the branch is current with `v2` and the final reviewed commit SHA is the one
    being merged.
 
-After any material code change made in response to review, rerun tests and both
-model reviews. Model review supplements human ownership; it never authorizes a
+After any material code change made in response to review, rerun tests and the
+Codex review. Model review supplements human ownership; it never authorizes a
 merge by itself. Record review evidence in the PR checklist. Never include
 secrets, signing material, user text, or other sensitive data in model prompts.
 
-Claude review is owner-operated by default. Agents must not invoke Claude CLI
-when `ANTHROPIC_API_KEY` is present unless the owner explicitly authorizes that
-exact invocation. An installed CLI must not be assumed to use a local model.
-Never print, persist, transmit, or commit model API keys.
+Additional model reviews, including Claude CLI, are optional and owner-operated.
+Agents must not invoke Claude CLI when `ANTHROPIC_API_KEY` is present unless the
+owner explicitly authorizes that exact invocation. An installed CLI must not be
+assumed to use a local model. Never print, persist, transmit, or commit model API
+keys. An optional review never replaces required tests, Codex review or owner
+approval.
 
 Prefer squash merge for one-issue PRs. The resulting commit should retain the
 issue reference and any required upstream attribution.
