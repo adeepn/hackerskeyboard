@@ -16,6 +16,8 @@
   validation.
 - [Android build toolchain](android-build-toolchain.md) — матрица JDK, Gradle,
   AGP и проверка разрешения plugin.
+- [Android lint](android-lint.md) — обязательный локальный/CI gate, legacy
+  baseline и классификация накопленного долга.
 - [Настройка окружения](developer-setup.md) — JDK 17, `JAVA_HOME` и локальные
   проверки.
 - [Исследование форков](fork-research.md) — сравнение трёх форков и перечень

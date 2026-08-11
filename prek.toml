@@ -17,3 +17,9 @@ hooks = [
   { id = "mixed-line-ending", args = ["--fix=no"], files = "^(AGENTS\\.md|docs/|\\.github/|prek\\.toml$)" },
   { id = "trailing-whitespace", files = "^(AGENTS\\.md|docs/|\\.github/|prek\\.toml$)" },
 ]
+
+[[repos]]
+repo = "local"
+hooks = [
+  { id = "android-lint", name = "Android lint", entry = "./gradlew :app:lintDebug --no-daemon --stacktrace", language = "system", pass_filenames = false, always_run = true, stages = ["manual"] },
+]

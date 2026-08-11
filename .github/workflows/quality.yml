@@ -99,7 +99,7 @@ jobs:
           compression-level: 0
 
   android-lint:
-    name: Android lint diagnostics
+    name: Android lint
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -125,22 +125,17 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Collect Android lint findings
-        continue-on-error: true
-        run: >-
-          ./gradlew :app:lintDebug
-          -Dlint.baselines.continue=true
-          --no-daemon
-          --stacktrace
+      - name: Run Android lint through prek
+        uses: j178/prek-action@v2
+        with:
+          extra-args: --hook-stage manual android-lint
 
       - name: Upload Android lint reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: android-lint-diagnostics-${{ github.sha }}
-          path: |
-            app/lint-baseline.xml
-            app/build/reports/lint-results-debug.*
+          path: app/build/reports/lint-results-debug.*
           if-no-files-found: error
           retention-days: 7
 
