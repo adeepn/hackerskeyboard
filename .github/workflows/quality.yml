@@ -47,3 +47,6 @@ jobs:
 
       - name: Bootstrap Gradle
         run: ./gradlew --version --no-daemon
+
+      - name: Resolve target Android Gradle Plugin
+        run: ./gradlew -p verification/agp-resolution resolveAgp --no-daemon

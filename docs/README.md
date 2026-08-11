@@ -14,6 +14,8 @@
   обязательные проверки для IME.
 - [Gradle wrapper](gradle-wrapper.md) — версия, checksums, provenance и CI
   validation.
+- [Android build toolchain](android-build-toolchain.md) — матрица JDK, Gradle,
+  AGP и проверка разрешения plugin.
 - [Настройка окружения](developer-setup.md) — JDK 17, `JAVA_HOME` и локальные
   проверки.
 - [Исследование форков](fork-research.md) — сравнение трёх форков и перечень
