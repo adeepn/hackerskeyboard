@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'org.pocketworkstation.pckeyboard'
-    compileSdk 26
+    compileSdk 36
     ndkVersion androidNdkVersion
 
     defaultConfig {
