@@ -1,11 +1,14 @@
+// Modified for Hacker's Keyboard v2; see the repository history for details.
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    namespace 'org.pocketworkstation.pckeyboard'
+    compileSdk 26
+
     defaultConfig {
         applicationId 'org.pocketworkstation.pckeyboard'
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdk 14
+        targetSdk 26
         versionCode 1041001
         versionName "v1.41.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -23,16 +26,15 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "CMakeLists.txt"
+            path file('CMakeLists.txt')
         }
     }
-    productFlavors {
-    }
-    lintOptions {
-        checkReleaseBuilds false
+
+    lint {
+        checkReleaseBuilds = false
         // Or, if you prefer, you can continue to check for errors in release builds,
         // but continue the build even when errors are found:
-        //abortOnError false
+        // abortOnError = false
     }
 }
 

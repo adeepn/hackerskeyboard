@@ -29,11 +29,23 @@ build:
 
 ## Следующие blockers
 
-После S1.03 остаются отдельные изменения:
+После S1.05 остаются отдельные изменения:
 
-1. S1.05 — добавить `namespace` и современный Android DSL;
-2. S1.06 — поднять `compileSdk` до 36;
-3. S1.07 — исправить обнаруженные новым AGP resource/build errors.
+1. S1.06 — поднять `compileSdk` до 36;
+2. S1.07 — исправить обнаруженные новым AGP resource/build errors.
+
+## Namespace и Android DSL
+
+Module namespace и application ID намеренно совпадают с историческим package:
+
+```text
+org.pocketworkstation.pckeyboard
+```
+
+`namespace` объявлен в `app/build.gradle`; manifest больше не используется как
+его источник. Относительные имена Android components продолжают разрешаться в
+тот же package. Числовые значения SDK в S1.05 не меняются: compile/target SDK
+остаются 26, min SDK — 14.
 
 ## Репозитории зависимостей
 
