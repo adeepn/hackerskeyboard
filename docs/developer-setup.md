@@ -27,6 +27,24 @@ scripts/verify-apk-native-libs.sh \
 Release APK на этом этапе не подписан и предназначен только для проверки
 release-конфигурации, ресурсов и native packaging.
 
+Android lint запускается той же командой `prek`, которую использует отдельный
+CI job:
+
+```sh
+prek run --hook-stage manual android-lint
+```
+
+Hook сделан manual, потому что ему нужны JDK 17 и полный Android SDK, а полный
+анализ заметно тяжелее быстрых pre-commit checks. Перед PR с изменениями Android
+кода или ресурсов он обязателен. Прямой эквивалент для диагностики:
+
+```sh
+./gradlew :app:lintDebug --no-daemon --stacktrace
+```
+
+Текущий legacy debt зафиксирован в `app/lint-baseline.xml`; новые warnings и
+errors не входят в baseline и останавливают локальную проверку и CI.
+
 Абсолютный путь к JDK зависит от машины и не сохраняется в репозитории.
 
 ## Проверка активной Java

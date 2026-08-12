@@ -78,15 +78,17 @@ notices и решение о необходимом `NOTICE`/third-party attribu
 ```sh
 prek install --prepare-hooks
 prek run --all-files
+prek run --hook-stage manual android-lint
 ```
 
 Обычный commit запускает проверки staged files. Перед push/PR исполнитель всегда
 запускает полный набор `prek run --all-files`. Запрещено обходить проверки через
 `--no-verify` без явного разрешения владельца проекта.
 
-Конфигурация находится в `prek.toml`. В неё постепенно добавляются Gradle,
-Android lint и тестовые команды после восстановления wrapper. Команды должны
-быть одинаковыми локально и в CI.
+Конфигурация находится в `prek.toml`. Быстрые проверки входят в обычный
+pre-commit stage. Android lint доступен отдельным manual hook из-за требований
+к JDK/SDK и времени выполнения; Android lint job в CI запускает тот же hook.
+Подробности baseline и его triage описаны в `docs/android-lint.md`.
 
 На bootstrap-этапе автоматическое исправление whitespace/line endings намеренно
 ограничено новыми файлами `AGENTS.md`, `docs/`, `.github/` и `prek.toml`.

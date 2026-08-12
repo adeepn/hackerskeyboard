@@ -14,8 +14,11 @@
  * the License.
  */
 
+// Modified for Hacker's Keyboard v2; see the repository history for details.
+
 package org.pocketworkstation.pckeyboard;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -318,6 +321,7 @@ public class CandidateView extends View {
         invalidate();
     }
     
+    @SuppressLint("WrongCall")
     public void setSuggestions(List<CharSequence> suggestions, boolean completions,
             boolean typedWordValid, boolean haveMinimalSuggestion) {
         clear();
@@ -334,7 +338,7 @@ public class CandidateView extends View {
         scrollTo(0, getScrollY());
         mTargetScrollX = 0;
         mHaveMinimalSuggestion = haveMinimalSuggestion;
-        // Compute the total width
+        // A null canvas intentionally runs only the measurement/touch calculation pass.
         onDraw(null);
         invalidate();
         requestLayout();

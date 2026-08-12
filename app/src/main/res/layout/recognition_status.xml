@@ -18,6 +18,7 @@
 */
 --> 
 
+<!-- Modified for Hacker's Keyboard v2; see repository history for details. -->
 
 <LinearLayout 
       xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +32,6 @@
 >
 
     <LinearLayout 
-       xmlns:android="http://schemas.android.com/apk/res/android"
        android:id="@+id/main_image"
        android:orientation="vertical"
        android:background="@drawable/voice_ime_background"
@@ -95,4 +95,3 @@
     </LinearLayout>
 
 </LinearLayout>
-
