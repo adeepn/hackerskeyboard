@@ -24,7 +24,7 @@ for apk in "$@"; do
 
   for abi in "${expected_abis[@]}"; do
     entry="lib/${abi}/${native_library}"
-    if ! unzip -Z1 "${apk}" | grep --fixed-strings --line-regexp --quiet "${entry}"; then
+    if ! unzip -Z1 "${apk}" | grep --fixed-strings --line-regexp "${entry}" >/dev/null; then
       echo "Missing ${entry} in ${apk}" >&2
       exit 1
     fi
