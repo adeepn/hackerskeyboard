@@ -23,11 +23,12 @@ cleanup() {
 trap cleanup EXIT
 
 sdkmanager "emulator" "${system_image}"
-printf 'no\n' | avdmanager create avd \
+avdmanager create avd \
   --force \
   --name "${avd_name}" \
   --package "${system_image}" \
-  --device "pixel_2"
+  --device "pixel_2" \
+  <<< "no"
 
 "${android_sdk_root}/emulator/emulator" \
   -avd "${avd_name}" \
