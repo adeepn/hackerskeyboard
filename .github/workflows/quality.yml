@@ -182,6 +182,7 @@ jobs:
           ./gradlew :app:${{ matrix.task }}
           --no-daemon
           --stacktrace
+          -Pandroid.experimental.testOptions.managedDevices.allowOldApiLevelDevices=true
           -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 
       - name: Upload instrumentation results

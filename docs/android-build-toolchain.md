@@ -74,9 +74,11 @@ S1.09 добавил минимальный JNI instrumented test, а S1.15 ра
 ```sh
 ./gradlew :app:pixel2Api24DebugAndroidTest \
   --no-daemon \
+  -Pandroid.experimental.testOptions.managedDevices.allowOldApiLevelDevices=true \
   -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 ./gradlew :app:pixel2Api36DebugAndroidTest \
   --no-daemon \
+  -Pandroid.experimental.testOptions.managedDevices.allowOldApiLevelDevices=true \
   -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 ```
 
@@ -89,7 +91,9 @@ dictionary. Тем самым исполняются загрузка
 `libjni_pckeyboard.so`, регистрация JNI, `openNative`, lookup и `closeNative`.
 
 Команды требуют Android Emulator, system images API 24/36 и аппаратную
-виртуализацию. В CI они запускаются отдельной matrix job на `ubuntu-latest`;
+виртуализацию. AGP 8.13 требует явный experimental opt-in для managed devices на
+API 26 и ниже; флаг ограничен этими test-командами и нужен для принятой нижней
+границы API 24. В CI тесты запускаются отдельной matrix job на `ubuntu-latest`;
 обычная сборка APK остаётся отдельным быстрым gate и публикует installable debug
 APK вместе с unsigned release APK. Для зафиксированного AGP 8.13.2 на GitHub
 runner используется `x86_64`; изменение ABI default в AGP 9 рассматривается
