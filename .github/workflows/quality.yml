@@ -148,7 +148,6 @@ jobs:
       matrix:
         include:
           - api: 24
-            task: pixel2Api24DebugAndroidTest
           - api: 36
             task: pixel2Api36DebugAndroidTest
     steps:
@@ -177,12 +176,16 @@ jobs:
       - name: Enable KVM access
         run: sudo chmod 666 /dev/kvm
 
-      - name: Run application and JNI smoke tests
+      - name: Run application and JNI smoke tests on API 24
+        if: matrix.api == 24
+        run: scripts/run-api24-connected-tests.sh
+
+      - name: Run application and JNI smoke tests on API 36
+        if: matrix.api == 36
         run: >-
           ./gradlew :app:${{ matrix.task }}
           --no-daemon
           --stacktrace
-          -Pandroid.experimental.testOptions.managedDevices.allowOldApiLevelDevices=true
           -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 
       - name: Upload instrumentation results
@@ -191,7 +194,9 @@ jobs:
         with:
           name: application-jni-smoke-api-${{ matrix.api }}-${{ github.sha }}
           path: |
+            app/build/reports/androidTests/connected/
             app/build/reports/androidTests/managedDevice/
+            app/build/outputs/androidTest-results/connected/
             app/build/outputs/androidTest-results/managedDevice/
           if-no-files-found: warn
           retention-days: 7

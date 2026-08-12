@@ -20,12 +20,12 @@ matrix.
 
 ## Реализованный Stage 1 application и native smoke
 
-Instrumented tests запускаются на Gradle Managed Device Pixel 2 / API 24 и API
-36. `ApplicationSmokeTest` подтверждает, что установленный APK зарегистрирован
-системой как IME, а launcher/setup и legacy settings activities запускаются и
-создают обязательные views. `BinaryDictionarySmokeTest` проверяет lookup
-встроенного минимального словаря через полную границу Java → JNI → C++. Локальные
-команды описаны в `android-build-toolchain.md`.
+Instrumented tests запускаются на Android Emulator / API 24 и Gradle Managed
+Device Pixel 2 / API 36. `ApplicationSmokeTest` подтверждает, что установленный
+APK зарегистрирован системой как IME, а launcher/setup и legacy settings
+activities запускаются и создают обязательные views. `BinaryDictionarySmokeTest`
+проверяет lookup встроенного минимального словаря через полную границу Java →
+JNI → C++. Локальные команды описаны в `android-build-toolchain.md`.
 
 Эти smoke tests подтверждают установку test target, регистрацию IME, загрузку
 основных UI resources, загрузку библиотеки, совместимость JNI signatures и один

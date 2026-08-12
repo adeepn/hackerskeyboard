@@ -68,17 +68,15 @@ AGP resource/build errors. Следующие native smoke tests выполня�
 
 S1.09 добавил минимальный JNI instrumented test, а S1.15 расширяет device gate
 до проверки установки, регистрации IME и запуска основных activities на нижней
-и верхней границах Stage 1. Для управляемых Pixel 2 / API 24 и API 36 используются
-команды:
+и верхней границах Stage 1. API 24 запускается через официальный Android
+Emulator и connected test, потому что AGP 8.13.2 не поддерживает managed devices
+на API 26 и ниже без незавершённого experimental path. API 36 остаётся Gradle
+Managed Device. Используются команды:
 
 ```sh
-./gradlew :app:pixel2Api24DebugAndroidTest \
-  --no-daemon \
-  -Pandroid.experimental.testOptions.managedDevices.allowOldApiLevelDevices=true \
-  -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+scripts/run-api24-connected-tests.sh
 ./gradlew :app:pixel2Api36DebugAndroidTest \
   --no-daemon \
-  -Pandroid.experimental.testOptions.managedDevices.allowOldApiLevelDevices=true \
   -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 ```
 
@@ -91,14 +89,12 @@ dictionary. Тем самым исполняются загрузка
 `libjni_pckeyboard.so`, регистрация JNI, `openNative`, lookup и `closeNative`.
 
 Команды требуют Android Emulator, system images API 24/36 и аппаратную
-виртуализацию. AGP 8.13 требует явный experimental opt-in для managed devices на
-API 26 и ниже; флаг ограничен этими test-командами и нужен для принятой нижней
-границы API 24. В CI тесты запускаются отдельной matrix job на `ubuntu-latest`;
-обычная сборка APK остаётся отдельным быстрым gate и публикует installable debug
-APK вместе с unsigned release APK. Для зафиксированного AGP 8.13.2 на GitHub
-runner API 24 AOSP image явно использует native `x86`, а API 36 пока использует
-зафиксированное текущей версией AGP поведение `x86_64`. Полное устранение
-зависимости API 36 от меняющегося default ABI отслеживается в
+виртуализацию. API 24 script создаёт чистый AOSP `x86` AVD, ждёт завершения boot
+и запускает `connectedDebugAndroidTest`. В CI обе границы выполняются отдельной
+matrix job на `ubuntu-latest`; обычная сборка APK остаётся отдельным быстрым gate
+и публикует installable debug APK вместе с unsigned release APK. API 36 пока
+использует зафиксированное текущей версией AGP поведение `x86_64`. Полное
+устранение зависимости API 36 от меняющегося default ABI отслеживается в
 [#33](https://github.com/adeepn/hackerskeyboard/issues/33) до обновления на AGP 9.
 
 Этот baseline не утверждает, что уже проверена полная функциональность набора:

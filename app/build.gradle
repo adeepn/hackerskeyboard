@@ -37,12 +37,6 @@ android {
     testOptions {
         managedDevices {
             localDevices {
-                pixel2Api24 {
-                    device = "Pixel 2"
-                    apiLevel = 24
-                    systemImageSource = "aosp"
-                    testedAbi = "x86"
-                }
                 pixel2Api36 {
                     device = "Pixel 2"
                     apiLevel = 36
