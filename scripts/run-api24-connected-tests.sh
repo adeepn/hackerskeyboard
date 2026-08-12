@@ -23,12 +23,18 @@ cleanup() {
 trap cleanup EXIT
 
 sdkmanager "emulator" "${system_image}"
+avdmanager_status=0
 avdmanager create avd \
   --force \
   --name "${avd_name}" \
   --package "${system_image}" \
-  --device "pixel_2" \
-  <<< "no"
+  --device "pixel" \
+  <<< "no" || avdmanager_status="$?"
+
+if ! avdmanager list avd | grep -Fq "Name: ${avd_name}"; then
+  echo "Android API 24 AVD creation failed with status ${avdmanager_status}" >&2
+  exit 1
+fi
 
 "${android_sdk_root}/emulator/emulator" \
   -avd "${avd_name}" \
