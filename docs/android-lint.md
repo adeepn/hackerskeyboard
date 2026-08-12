@@ -45,28 +45,29 @@ Manual stage выбран намеренно: lint требует JDK 17 и Andr
 
 ## Состав baseline
 
-Финальный baseline создан lint 8.13.2 после перечисленных исправлений и содержит
-541 точный finding. Человекочитаемая классификация:
+Baseline создан lint 8.13.2 после перечисленных исправлений. После механической
+правки XML namespace в #37 он содержит 483 точных finding. Человекочитаемая
+классификация:
 
 | Направление | Findings | Решение |
 | --- | ---: | --- |
 | Переводы и locale metadata | 236 | отдельная инвентаризация переводов в [#39](https://github.com/adeepn/hackerskeyboard/issues/39) |
-| Ресурсы, XML namespace, layout и assets | 257 | namespace [#37](https://github.com/adeepn/hackerskeyboard/issues/37), остальное [#40](https://github.com/adeepn/hackerskeyboard/issues/40) |
+| Ресурсы, layout и assets | 199 | дальнейшая работа [#40](https://github.com/adeepn/hackerskeyboard/issues/40) |
 | Android API, lifecycle, security и accessibility | 42 | compatibility work [#38](https://github.com/adeepn/hackerskeyboard/issues/38) |
 | Gradle/dependency version hints | 4 | обновлять отдельными Dependabot/toolchain PR |
 | Legacy indentation | 2 | исправить отдельным formatting-only PR |
 
 Самые крупные точные группы: `MissingTranslation` — 201,
-`UnusedResources` — 118, `NamespaceTypo` — 58, `InOrMmUsage` — 30 и
-`Overdraw` — 21. `UnusedResources` нельзя подавлять глобально: часть ресурсов
+`UnusedResources` — 118, `InOrMmUsage` — 30 и `Overdraw` — 21.
+`UnusedResources` нельзя подавлять глобально: часть ресурсов
 действительно загружается динамически, но новые мёртвые ресурсы всё равно
 должны обнаруживаться.
 
-58 `NamespaceTypo` относятся к историческим keyboard XML: custom attributes
-корректно используют URI `res-auto`, но сохраняют вводящее в заблуждение имя
-префикса `android`. Механическая замена префикса затрагивает примерно 14 700
-attribute occurrences и поэтому вынесена из этого PR, чтобы diff оставался
-проверяемым. Продолжение ведётся в [#37](https://github.com/adeepn/hackerskeyboard/issues/37).
+58 `NamespaceTypo` из исторических keyboard XML устранены в
+[#37](https://github.com/adeepn/hackerskeyboard/issues/37): custom attributes
+сохранили URI `res-auto`, а вводящий в заблуждение префикс `android` заменён на
+`app`. Prefix-independent snapshot проверяет 76 custom-resource XML, 15 667
+атрибутов и их семантический SHA-256 через `prek`.
 
 ## Правила сопровождения baseline
 

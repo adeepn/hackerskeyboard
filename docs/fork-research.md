@@ -151,7 +151,7 @@ meaningful Java/build diff без whitespace составляет порядка
 | `0205519` | Не использовать: wrapper остаётся неполным |
 | `988f87c` | Пересмотреть после lint baseline; не смешивать с API migration |
 | `454a375` | Default strings проверить выборочно; global Kotlin resolution strategy не брать |
-| `9f1d768` | Не брать: mass formatting скрывает изменения и содержит сомнительные resource moves |
+| `9f1d768` | Не брать целиком: mass formatting и resource moves. Namespace-prefix fix подтверждён как полезный сигнал и независимо реализован в #37 с semantic snapshot |
 
 ### Итог
 

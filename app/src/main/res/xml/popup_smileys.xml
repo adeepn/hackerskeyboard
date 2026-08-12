@@ -1,89 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-/* 
+/*
 **
 ** Copyright 2008, The Android Open Source Project
 **
-** Licensed under the Apache License, Version 2.0 (the "License"); 
-** you may not use this file except in compliance with the License. 
-** You may obtain a copy of the License at 
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
 **
-**     http://www.apache.org/licenses/LICENSE-2.0 
+**     http://www.apache.org/licenses/LICENSE-2.0
 **
-** Unless required by applicable law or agreed to in writing, software 
-** distributed under the License is distributed on an "AS IS" BASIS, 
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-** See the License for the specific language governing permissions and 
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
 ** limitations under the License.
 */
 -->
 
+<!-- Modified for Hacker's Keyboard v2; see repository history for details. -->
 <Keyboard
-    xmlns:android="http://schemas.android.com/apk/res-auto"
-    android:keyWidth="15%p"
-    android:horizontalGap="0px"
-    android:verticalGap="0px"
-    android:keyHeight="@dimen/popup_key_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="15%p"
+    app:horizontalGap="0px"
+    app:verticalGap="0px"
+    app:keyHeight="@dimen/popup_key_height"
 >
     <Row
-        android:rowEdgeFlags="top"
+        app:rowEdgeFlags="top"
     >
         <Key
-            android:keyLabel=":-)"
-            android:keyOutputText=":-) "
-            android:keyEdgeFlags="left" />
+            app:keyLabel=":-)"
+            app:keyOutputText=":-) "
+            app:keyEdgeFlags="left" />
         <Key
-            android:keyLabel=":-("
-            android:keyOutputText=":-( " />
+            app:keyLabel=":-("
+            app:keyOutputText=":-( " />
         <Key
-            android:keyLabel=";-)"
-            android:keyOutputText=";-) " />
+            app:keyLabel=";-)"
+            app:keyOutputText=";-) " />
         <Key
-            android:keyLabel=":-P"
-            android:keyOutputText=":-P " />
+            app:keyLabel=":-P"
+            app:keyOutputText=":-P " />
         <Key
-            android:keyLabel="=-O"
-            android:keyOutputText="=-O "
-            android:keyEdgeFlags="right" />
+            app:keyLabel="=-O"
+            app:keyOutputText="=-O "
+            app:keyEdgeFlags="right" />
     </Row>
     <Row>
         <Key
-            android:keyLabel=":-*"
-            android:keyOutputText=":-* "
-            android:keyEdgeFlags="left" />
+            app:keyLabel=":-*"
+            app:keyOutputText=":-* "
+            app:keyEdgeFlags="left" />
         <Key
-            android:keyLabel=":O"
-            android:keyOutputText=":O " />
+            app:keyLabel=":O"
+            app:keyOutputText=":O " />
         <Key
-            android:keyLabel="B-)"
-            android:keyOutputText="B-) " />
+            app:keyLabel="B-)"
+            app:keyOutputText="B-) " />
         <Key
-            android:keyLabel=":-$"
-            android:keyOutputText=":-$ " />
+            app:keyLabel=":-$"
+            app:keyOutputText=":-$ " />
         <Key
-            android:keyLabel=":-!"
-            android:keyOutputText=":-! "
-            android:keyEdgeFlags="right" />
+            app:keyLabel=":-!"
+            app:keyOutputText=":-! "
+            app:keyEdgeFlags="right" />
     </Row>
     <Row
-        android:rowEdgeFlags="bottom"
+        app:rowEdgeFlags="bottom"
     >
         <Key
-            android:keyLabel=":-["
-            android:keyOutputText=":-[ "
-            android:keyEdgeFlags="left" />
+            app:keyLabel=":-["
+            app:keyOutputText=":-[ "
+            app:keyEdgeFlags="left" />
         <Key
-            android:keyLabel="O:-)"
-            android:keyOutputText="O:-) " />
+            app:keyLabel="O:-)"
+            app:keyOutputText="O:-) " />
         <Key
-            android:keyLabel=":-\\"
-            android:keyOutputText=":-\\ " />
+            app:keyLabel=":-\\"
+            app:keyOutputText=":-\\ " />
         <Key
-            android:keyLabel=":'("
-            android:keyOutputText=":'( " />
+            app:keyLabel=":'("
+            app:keyOutputText=":'( " />
         <Key
-            android:keyLabel=":-D"
-            android:keyOutputText=":-D "
-            android:keyEdgeFlags="right" />
+            app:keyLabel=":-D"
+            app:keyOutputText=":-D "
+            app:keyEdgeFlags="right" />
     </Row>
 </Keyboard>
