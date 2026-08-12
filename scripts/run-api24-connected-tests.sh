@@ -53,7 +53,8 @@ for _attempt in $(seq 1 120); do
     tail -200 "${emulator_log}" >&2
     exit 1
   fi
-  boot_completed="$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')"
+  boot_completed="$(adb shell getprop sys.boot_completed 2>/dev/null || true)"
+  boot_completed="${boot_completed//$'\r'/}"
   if [[ "${boot_completed}" == "1" ]]; then
     break
   fi
