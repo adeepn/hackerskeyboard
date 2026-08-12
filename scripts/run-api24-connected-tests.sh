@@ -11,8 +11,10 @@ fi
 
 avd_name="hackers-keyboard-api24"
 system_image="system-images;android-24;default;x86"
+avd_home="$(mktemp -d)"
 emulator_log="$(mktemp)"
 emulator_pid=""
+export ANDROID_AVD_HOME="${avd_home}"
 
 cleanup() {
   if [[ -n "${emulator_pid}" ]] && kill -0 "${emulator_pid}" 2>/dev/null; then
