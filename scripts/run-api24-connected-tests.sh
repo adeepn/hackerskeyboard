@@ -19,6 +19,15 @@ export ANDROID_AVD_HOME="${avd_home}"
 cleanup() {
   if [[ -n "${emulator_pid}" ]] && kill -0 "${emulator_pid}" 2>/dev/null; then
     kill "${emulator_pid}" 2>/dev/null || true
+    for _attempt in $(seq 1 50); do
+      if ! kill -0 "${emulator_pid}" 2>/dev/null; then
+        break
+      fi
+      sleep 0.1
+    done
+    if kill -0 "${emulator_pid}" 2>/dev/null; then
+      kill -KILL "${emulator_pid}" 2>/dev/null || true
+    fi
     wait "${emulator_pid}" 2>/dev/null || true
   fi
 }
