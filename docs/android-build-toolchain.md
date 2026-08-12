@@ -96,8 +96,10 @@ API 26 и ниже; флаг ограничен этими test-командам
 границы API 24. В CI тесты запускаются отдельной matrix job на `ubuntu-latest`;
 обычная сборка APK остаётся отдельным быстрым gate и публикует installable debug
 APK вместе с unsigned release APK. Для зафиксированного AGP 8.13.2 на GitHub
-runner используется `x86_64`; изменение ABI default в AGP 9 рассматривается
-отдельно до обновления toolchain.
+runner API 24 AOSP image явно использует native `x86`, а API 36 пока использует
+зафиксированное текущей версией AGP поведение `x86_64`. Полное устранение
+зависимости API 36 от меняющегося default ABI отслеживается в
+[#33](https://github.com/adeepn/hackerskeyboard/issues/33) до обновления на AGP 9.
 
 Этот baseline не утверждает, что уже проверена полная функциональность набора:
 нажатия экранных клавиш, modifiers, popup, candidates и interoperability с
