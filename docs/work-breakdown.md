@@ -23,7 +23,8 @@ Epic: **Stage 1: восстановить современную воспрои�
 - S1.12 — добавить `prek` и локальные базовые проверки;
 - S1.13 — добавить GitHub Actions на `ubuntu-latest`;
 - S1.14 — добавить Gradle build/lint/unit jobs в CI;
-- S1.15 — снять baseline APK/AAB и baseline behavior;
+- S1.15 ([#42](https://github.com/adeepn/hackerskeyboard/issues/42)) — снять
+  baseline APK и baseline behavior на API 24/36;
 - S1.16 — описать reproducible developer setup и troubleshooting.
 - S1.17 — исправить legacy executable file modes отдельным механическим PR;
 - S1.18 — спланировать поэтапный whitespace/line-ending cleanup без массового

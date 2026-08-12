@@ -64,27 +64,40 @@ S1.06 поднимает только `compileSdk` с 26 до 36. Это поз�
 S1.07 подтверждает сборку Android application и исправляет обнаруженные новым
 AGP resource/build errors. Следующие native smoke tests выполняются в S1.09.
 
-## JNI dictionary smoke test
+## Application и JNI dictionary smoke tests
 
-S1.09 исполняет минимальный instrumented test на управляемом Gradle эмуляторе
-Pixel 2 / API 36:
+S1.09 добавил минимальный JNI instrumented test, а S1.15 расширяет device gate
+до проверки установки, регистрации IME и запуска основных activities на нижней
+и верхней границах Stage 1. Для управляемых Pixel 2 / API 24 и API 36 используются
+команды:
 
 ```sh
+./gradlew :app:pixel2Api24DebugAndroidTest \
+  --no-daemon \
+  -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 ./gradlew :app:pixel2Api36DebugAndroidTest \
   --no-daemon \
   -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 ```
 
-Тест открывает встроенный `R.raw.main` через `BinaryDictionary`, проверяет
-существующее слово `Android`, отсутствующее контрольное слово `Keyboard` и
-закрывает native dictionary. Тем самым исполняются загрузка
+`ApplicationSmokeTest` подтверждает, что test target APK установлен, `LatinIME`
+обнаруживается через системный `InputMethodManager`, а setup и settings UI
+запускаются и создают обязательные views. `BinaryDictionarySmokeTest` открывает
+встроенный `R.raw.main` через `BinaryDictionary`, проверяет существующее слово
+`Android`, отсутствующее контрольное слово `Keyboard` и закрывает native
+dictionary. Тем самым исполняются загрузка
 `libjni_pckeyboard.so`, регистрация JNI, `openNative`, lookup и `closeNative`.
 
-Команда требует Android Emulator, system image API 36 и аппаратную виртуализацию.
-В CI она запускается отдельным job на `ubuntu-latest`; обычная сборка APK
-остаётся отдельным быстрым gate. Для зафиксированного AGP 8.13.2 на GitHub runner
-используется `x86_64`; изменение ABI default в AGP 9 рассматривается отдельно до
-обновления toolchain.
+Команды требуют Android Emulator, system images API 24/36 и аппаратную
+виртуализацию. В CI они запускаются отдельной matrix job на `ubuntu-latest`;
+обычная сборка APK остаётся отдельным быстрым gate и публикует installable debug
+APK вместе с unsigned release APK. Для зафиксированного AGP 8.13.2 на GitHub
+runner используется `x86_64`; изменение ABI default в AGP 9 рассматривается
+отдельно до обновления toolchain.
+
+Этот baseline не утверждает, что уже проверена полная функциональность набора:
+нажатия экранных клавиш, modifiers, popup, candidates и interoperability с
+редакторами относятся к Stage 3.
 
 ## Namespace и Android DSL
 
