@@ -18,15 +18,19 @@ matrix.
 | Screenshot | layouts, themes, popup/candidates geometry | resource/UI PR и nightly |
 | Manual interoperability | реальные editors и terminal apps | alpha/beta/release |
 
-## Реализованный Stage 1 native smoke
+## Реализованный Stage 1 application и native smoke
 
-Instrumented test `BinaryDictionarySmokeTest` запускается на Gradle Managed
-Device Pixel 2 / API 36 и проверяет lookup встроенного минимального словаря через
-полную границу Java → JNI → C++. Его локальная команда описана в
-`android-build-toolchain.md`.
+Instrumented tests запускаются на Android Emulator / API 24 и Gradle Managed
+Device Pixel 2 / API 36. `ApplicationSmokeTest` подтверждает, что установленный
+APK зарегистрирован системой как IME, а launcher/setup и legacy settings
+activities запускаются и создают обязательные views. `BinaryDictionarySmokeTest`
+проверяет lookup встроенного минимального словаря через полную границу Java →
+JNI → C++. Локальные команды описаны в `android-build-toolchain.md`.
 
-Этот smoke test подтверждает загрузку библиотеки, совместимость JNI signatures и
-один positive/negative lookup. Он не заменяет Stage 3 тесты полноценного corpus,
+Эти smoke tests подтверждают установку test target, регистрацию IME, загрузку
+основных UI resources, загрузку библиотеки, совместимость JNI signatures и один
+positive/negative lookup. Они не вводят текст через экранную клавиатуру и не
+заменяют Stage 3 lifecycle/input/layout matrix, тесты полноценного corpus,
 невалидных словарей и bigrams, а также отдельную проверку 16 KB page size.
 
 ## API и устройства

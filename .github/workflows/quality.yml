@@ -140,9 +140,16 @@ jobs:
           retention-days: 7
 
   android-instrumentation:
-    name: JNI dictionary smoke (API 36)
+    name: Application and JNI smoke (API ${{ matrix.api }})
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - api: 24
+          - api: 36
+            task: pixel2Api36DebugAndroidTest
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -169,9 +176,14 @@ jobs:
       - name: Enable KVM access
         run: sudo chmod 666 /dev/kvm
 
-      - name: Run JNI dictionary smoke test
+      - name: Run application and JNI smoke tests on API 24
+        if: matrix.api == 24
+        run: scripts/run-api24-connected-tests.sh
+
+      - name: Run application and JNI smoke tests on API 36
+        if: matrix.api == 36
         run: >-
-          ./gradlew :app:pixel2Api36DebugAndroidTest
+          ./gradlew :app:${{ matrix.task }}
           --no-daemon
           --stacktrace
           -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
@@ -180,9 +192,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: jni-dictionary-smoke-${{ github.sha }}
+          name: application-jni-smoke-api-${{ matrix.api }}-${{ github.sha }}
           path: |
+            app/build/reports/androidTests/connected/
             app/build/reports/androidTests/managedDevice/
+            app/build/outputs/androidTest-results/connected/
             app/build/outputs/androidTest-results/managedDevice/
           if-no-files-found: warn
           retention-days: 7
