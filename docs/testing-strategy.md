@@ -34,10 +34,11 @@ positive/negative lookup. Они не вводят текст через экр�
 невалидных словарей и bigrams, а также отдельную проверку 16 KB page size.
 
 S1.25 добавляет быстрый identity guard в `prek`. Он фиксирует постоянные
-`applicationId`/namespace, отсутствие старого app identifier в Android inputs,
-новый JNI class path, сохранение `org.pocketworkstation.DICT` и неизменность 66
-legacy preference keys. Device smoke дополнительно утверждает новый package name
-на API 24 и API 36. APK manifest identity проверяется после сборки в CI.
+`applicationId`/namespace, отсутствие исторического и отвергнутого временного
+app identifier в Android inputs, новый JNI class path, сохранение
+`org.pocketworkstation.DICT` и неизменность 66 legacy preference keys. Device
+smoke дополнительно утверждает новый package name на API 24 и API 36. APK
+manifest identity проверяется после сборки в CI.
 Когда Stage 2 добавит release AAB job, тот же gate должен проверять identity в
 bundle до публикации. Будущий settings export/import обязан иметь round-trip
 tests для всех зафиксированных ключей, неизвестных/повреждённых значений и явно

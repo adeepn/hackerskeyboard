@@ -16,6 +16,9 @@ APPLICATION_ID = "com.baodeep.hackerskeyboard"
 LEGACY_APPLICATION_ID = "org.pocketworkstation.pckeyboard"
 LEGACY_PACKAGE_PATH = "org/pocketworkstation/pckeyboard"
 LEGACY_PACKAGE_TOKEN = "org_pocketworkstation_pckeyboard"
+SUPERSEDED_APPLICATION_ID = "io.github.baodeep.hackerskeyboard"
+SUPERSEDED_PACKAGE_PATH = "io/github/baodeep/hackerskeyboard"
+SUPERSEDED_PACKAGE_TOKEN = "io_github_baodeep_hackerskeyboard"
 LEGACY_DICTIONARY_ACTION = "org.pocketworkstation.DICT"
 PREFERENCE_KEY_COUNT = 66
 PREFERENCE_KEYS_SHA256 = (
@@ -61,6 +64,9 @@ def main() -> int:
                 LEGACY_APPLICATION_ID,
                 LEGACY_PACKAGE_PATH,
                 LEGACY_PACKAGE_TOKEN,
+                SUPERSEDED_APPLICATION_ID,
+                SUPERSEDED_PACKAGE_PATH,
+                SUPERSEDED_PACKAGE_TOKEN,
             )
         ):
             errors.append(
