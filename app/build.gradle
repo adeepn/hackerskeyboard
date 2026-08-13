@@ -10,8 +10,8 @@ android {
         applicationId 'com.baodeep.hackerskeyboard'
         minSdk 24
         targetSdk 26
-        versionCode 1041001
-        versionName "v1.41.1"
+        versionCode 2000001
+        versionName "2.0.0-alpha01"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -24,7 +24,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

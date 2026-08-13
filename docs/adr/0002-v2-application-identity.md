@@ -55,13 +55,15 @@ contract even though Android keeps their storage private to each application.
 ## Signing and publication consequences
 
 Changing identity prevents collision with v1 but does not itself establish an
-update chain. Every published v2 release must use one stable protected release
-key from the first public build onward. CI release APKs remain unsigned until
-the owner-managed signing path in #45 exists. GitHub-hosted debug builds use an
-ephemeral debug certificate and therefore prove fresh installation, not the
-ability to update a debug APK downloaded from a different workflow run.
+update chain. Every published v2 release uses one stable protected release key
+from the first public build onward. The owner-managed signing path is isolated
+in the manual `Signed v2 release` workflow described in
+`docs/release-signing.md`. GitHub-hosted debug builds use an ephemeral debug
+certificate and therefore prove fresh installation, not the ability to update
+a debug APK downloaded from a different workflow run.
 
-No private key, keystore or signing secret is committed to the repository.
+No private key, keystore or signing secret is committed to the repository or
+made available to Gradle and ordinary PR workflows.
 
 ## Consequences and rollback
 

@@ -98,6 +98,12 @@ jobs:
           app/build/outputs/apk/debug/app-debug.apk
           app/build/outputs/apk/release/app-release-unsigned.apk
 
+      - name: Enforce release APK size budget
+        run: >-
+          scripts/verify-apk-size.sh
+          app/build/outputs/apk/release/app-release-unsigned.apk
+          3400000
+
       - name: Upload APKs
         uses: actions/upload-artifact@v7
         with:
