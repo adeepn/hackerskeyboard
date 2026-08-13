@@ -9,8 +9,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +20,7 @@ import org.junit.runner.RunWith;
 public class BinaryDictionarySmokeTest {
     @Test
     public void bundledDictionaryLookupCrossesJniBoundary() {
-        Context context = InstrumentationRegistry.getTargetContext();
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         BinaryDictionary dictionary = new BinaryDictionary(
                 context, new int[] {R.raw.main}, Suggest.DIC_MAIN);
 

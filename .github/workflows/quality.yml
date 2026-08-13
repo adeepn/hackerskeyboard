@@ -80,6 +80,9 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      - name: Verify resolved AndroidX dependencies
+        run: scripts/verify-resolved-androidx.sh
+
       - name: Assemble debug and unsigned release APKs
         run: ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon --stacktrace
 

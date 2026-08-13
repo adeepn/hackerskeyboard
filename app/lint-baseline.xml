@@ -289,28 +289,6 @@
     </issue>
 
     <issue
-        id="GradleDependency"
-        message="A newer version of com.android.support:appcompat-v7 than 27.1.1 is available: 28.0.0"
-        errorLine1="    implementation &apos;com.android.support:appcompat-v7:27.1.1&apos;"
-        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="build.gradle"
-            line="59"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of com.android.support:support-compat than 26.0.0 is available: 28.0.0"
-        errorLine1="    implementation &quot;com.android.support:support-compat:26.0.0&quot;"
-        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="build.gradle"
-            line="60"
-            column="20"/>
-    </issue>
-
-    <issue
         id="InOrMmUsage"
         message="Avoid using &quot;`in`&quot; as units (it does not work accurately on all devices); use &quot;`dp`&quot; instead"
         errorLine1="    &lt;dimen name=&quot;key_height&quot;>0.250in&lt;/dimen>"

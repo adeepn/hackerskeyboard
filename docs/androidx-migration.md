@@ -1,9 +1,8 @@
 # План миграции на AndroidX
 
-Статус: инвентаризация S2.01 для
-[#48](https://github.com/adeepn/hackerskeyboard/issues/48), 13 августа 2026 года.
-Этот документ фиксирует границу работ до изменения зависимостей. Он не
-подтверждает, что S2.02 или S2.03 уже реализованы.
+Статус: S2.01 завершён в #48; S2.02 реализуется в
+[#50](https://github.com/adeepn/hackerskeyboard/issues/50), 13 августа 2026 года.
+S2.03 ещё не реализован.
 
 ## Решение
 
@@ -79,6 +78,23 @@ instrumentation configurations. В итоговом graph не должно ос
 
 Если AndroidX API требует runtime-изменения, не связанные с imports, S2.02
 останавливается и создаётся отдельная compatibility issue вместо расширения PR.
+
+### Выбранные версии S2.02
+
+По официальным AndroidX release notes на 13 августа 2026 года выбраны стабильные
+версии:
+
+- `androidx.core:core:1.19.0`;
+- `androidx.test:runner:1.7.0`;
+- `androidx.test.ext:junit:1.3.0`.
+
+Источники: [Core release notes](https://developer.android.com/jetpack/androidx/releases/core)
+и [AndroidX Test release notes](https://developer.android.com/jetpack/androidx/releases/test).
+Неиспользуемые AppCompat и Espresso удаляются без замены. Jetifier остаётся
+выключенным; `scripts/verify-androidx-migration.py` фиксирует dependencies,
+runner/imports и отсутствие Support Library references в bundled JAR.
+`scripts/verify-resolved-androidx.sh` дополнительно проверяет реальные Gradle
+graphs для debug runtime и instrumentation test runtime в CI на JDK 17.
 
 ## Контракт S2.03: settings
 

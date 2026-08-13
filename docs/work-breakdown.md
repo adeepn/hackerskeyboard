@@ -61,7 +61,8 @@ Epic: **Stage 2: AndroidX и targetSdk 36**.
 
 - S2.01 ([#48](https://github.com/adeepn/hackerskeyboard/issues/48)) —
   инвентаризация Support Library и AndroidX migration plan;
-- S2.02 — Core/AppCompat/Test → AndroidX;
+- S2.02 ([#50](https://github.com/adeepn/hackerskeyboard/issues/50)) —
+  Core/AppCompat/Test → AndroidX;
 - S2.03 — settings → `PreferenceFragmentCompat` с migration tests;
 - S2.04 — manifest components и минимальные `android:exported`;
 - S2.05 — explicit intents и PendingIntent mutability;

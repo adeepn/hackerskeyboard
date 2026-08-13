@@ -13,11 +13,12 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,7 @@ public class ApplicationSmokeTest {
     @Test
     public void installedApkRegistersImeAndLaunchesEssentialActivities() {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        Context context = InstrumentationRegistry.getTargetContext();
+        Context context = instrumentation.getTargetContext();
 
         assertEquals(EXPECTED_APPLICATION_ID, context.getPackageName());
         assertEquals(EXPECTED_DISPLAY_NAME,
