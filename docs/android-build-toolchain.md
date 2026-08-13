@@ -14,7 +14,8 @@
 
 AGP 9.1.1 требует Gradle 9.3.1 и JDK 17 и поддерживает API 37. Эта матрица
 выбрана вместо отката AndroidX Core 1.19.0, который требует `compileSdk 37` и
-AGP 9.1.0 или новее. Build Tools остаются на поддерживаемой версии 36.0.0.
+AGP 9.1.0 или новее. Preview-платформа Android 17 публикуется для `sdkmanager`
+под точным package ID `platforms;android-37.0`; Build Tools — `37.0.0`.
 
 ## Проверка разрешения AGP
 
@@ -39,7 +40,7 @@ Debug и unsigned release варианты собираются одной ко�
 ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon
 ```
 
-Для неё необходимы Android Platform 37, Build Tools 36.0.0, NDK
+Для неё необходимы Android Platform 37.0, Build Tools 37.0.0, NDK
 29.0.14206865 и CMake 3.22.1. CI устанавливает именно эти версии, не полагаясь
 на изменяемый состав образа `ubuntu-latest`.
 

@@ -10,8 +10,8 @@
 
 Для полной Android-сборки дополнительно установите через Android SDK Manager:
 
-- Android SDK Platform 37;
-- Android SDK Build Tools 36.0.0;
+- Android SDK Platform 37.0 (`platforms;android-37.0`);
+- Android SDK Build Tools 37.0.0;
 - Android NDK 29.0.14206865;
 - CMake 3.22.1.
 
@@ -80,7 +80,7 @@ tracked files.
 ## Совместимость toolchain
 
 Проект использует единую проверенную матрицу Gradle 9.3.1, AGP 9.1.1, JDK 17 и
-Android SDK Platform 37. Локальный запуск на другой JVM не считается
+Android SDK Platform 37.0. Локальный запуск на другой JVM не считается
 воспроизводимой проверкой, даже если сам Gradle способен на ней стартовать.
 
 ## Дополнительный Claude CLI review и API-ключи
