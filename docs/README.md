@@ -18,6 +18,8 @@
   AGP и проверка разрешения plugin.
 - [Android lint](android-lint.md) — обязательный локальный/CI gate, legacy
   baseline и классификация накопленного долга.
+- [Миграция на AndroidX](androidx-migration.md) — инвентаризация Support
+  Library, границы S2.02/S2.03 и обязательные regression checks.
 - [Настройка окружения](developer-setup.md) — JDK 17, `JAVA_HOME` и локальные
   проверки.
 - [Исследование форков](fork-research.md) — сравнение трёх форков и перечень

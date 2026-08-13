@@ -118,8 +118,14 @@ AndroidX путь, но давно устарел относительно #978/
 неподтверждённое сообщение «does not type well anymore» и нет современных
 device tests.
 
-Решение: reference второго порядка. Использовать только для сравнения истории;
-не строить на нём этап 2.
+Повторная проверка для S2.01 / #48 на head `13f4c54` показала, что полезный
+production diff ограничен двумя imports `NotificationCompat` и
+`NotificationManagerCompat`. PR также переводит test runner, но одновременно
+поднимает SDK, включает Jetifier без dependency evidence и меняет toolchain.
+
+Решение: reference второго порядка. S2.02 независимо повторяет только
+минимальный Core/Test переход, не переносит версии, Jetifier, SDK/toolchain и
+несвязанный cleanup. Полная граница зафиксирована в `androidx-migration.md`.
 
 ### PR #952 — emoji keyboard
 
