@@ -45,6 +45,19 @@ hongkongphoooey также сохраняют его как `namespace`. Гот�
 side-by-side v2, миграции Java/XML/JNI или сохранения dictionary contract нет.
 Поэтому S1.25 реализуется независимо по ADR-0002, без переноса fork code.
 
+### Повторная проверка AndroidX для S2.01
+
+13 августа 2026 года dependency и import diff форков повторно сопоставлен с
+нашей веткой после S1.25. `hongkongphoooey/master` подтверждает возможность
+перейти на AndroidX Core/Test, но добавленный там AppCompat не имеет фактических
+потребителей и не нужен. Jetifier также не обоснован: единственный bundled JAR
+не содержит ссылок на Support Library. Global Kotlin resolution workaround,
+`minSdk 29`, platform fixes и массовое форматирование не относятся к S2.02.
+
+В `max-pulya/master` и Android-части `crab182` пригодной AndroidX migration нет.
+Итоговая граница S2.02/S2.03 и проверки описаны в
+`docs/androidx-migration.md`; fork code для S2.01 не импортировался.
+
 ## max-pulya/hackers_keyboard_by_max_pulya
 
 ### История и масштаб
