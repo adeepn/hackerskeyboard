@@ -36,6 +36,15 @@ Remote configuration хранится в локальном `.git/config` и н�
 а `max-pulya` как набор отдельных behavior fixes/feature proposals. Каждый патч
 нужно переносить поверх чистой архитектуры v2 с тестом, не cherry-pick сериями.
 
+### Повторная проверка application identity для S1.25
+
+13 августа 2026 года все remotes повторно fetched с `--prune`. Их tips не
+изменились, и каждый из трёх форков по-прежнему использует исторический
+`org.pocketworkstation.pckeyboard` как `applicationId`; max-pulya и
+hongkongphoooey также сохраняют его как `namespace`. Готового решения для
+side-by-side v2, миграции Java/XML/JNI или сохранения dictionary contract нет.
+Поэтому S1.25 реализуется независимо по ADR-0002, без переноса fork code.
+
 ## max-pulya/hackers_keyboard_by_max_pulya
 
 ### История и масштаб

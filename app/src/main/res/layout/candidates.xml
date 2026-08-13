@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Modified for Hacker's Keyboard v2; see the repository history for details. -->
 <!--
 /* 
 **
@@ -26,7 +27,7 @@
         android:background="@drawable/keyboard_suggest_strip"
         >
 
-    <org.pocketworkstation.pckeyboard.CandidateView
+    <io.github.baodeep.hackerskeyboard.CandidateView
         android:id="@+id/candidates"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/candidate_strip_height"

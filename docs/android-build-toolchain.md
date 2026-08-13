@@ -103,16 +103,22 @@ matrix job на `ubuntu-latest`; обычная сборка APK остаётс�
 
 ## Namespace и Android DSL
 
-Module namespace и application ID намеренно совпадают с историческим package:
+После S1.25 module namespace и application ID используют отдельную постоянную
+identity v2:
 
 ```text
-org.pocketworkstation.pckeyboard
+io.github.baodeep.hackerskeyboard
 ```
 
 `namespace` объявлен в `app/build.gradle`; manifest больше не используется как
-его источник. Относительные имена Android components продолжают разрешаться в
-тот же package. После S1.06 `compileSdk` равен 36, `targetSdk` временно остаётся
-26, а `minSdk` равен 24 согласно ADR-0001.
+его источник. Код, XML custom views и JNI registration перенесены в тот же
+package. Историческое приложение `org.pocketworkstation.pckeyboard` остаётся
+отдельным и может быть установлено одновременно. После S1.06 `compileSdk` равен
+36, `targetSdk` временно остаётся 26, а `minSdk` равен 24 согласно ADR-0001.
+
+Подробный migration contract, включая отсутствие автоматического переноса
+private settings и требования к будущей стабильной release-подписи, зафиксирован
+в [ADR-0002](adr/0002-v2-application-identity.md).
 
 ## Репозитории зависимостей
 

@@ -21,6 +21,7 @@ hooks = [
 [[repos]]
 repo = "local"
 hooks = [
+  { id = "application-identity", name = "Application identity", entry = "python3 scripts/verify-application-identity.py", language = "system", pass_filenames = false, always_run = true },
   { id = "keyboard-xml-semantics", name = "Keyboard XML semantics", entry = "python3 scripts/verify-keyboard-xml-semantics.py", language = "system", pass_filenames = false, always_run = true },
   { id = "android-lint", name = "Android lint", entry = "./gradlew :app:lintDebug --no-daemon --stacktrace", language = "system", pass_filenames = false, always_run = true, stages = ["manual"] },
 ]

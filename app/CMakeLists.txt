@@ -19,7 +19,7 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/org_pocketworkstation_pckeyboard_BinaryDictionary.cpp
+             src/main/cpp/io_github_baodeep_hackerskeyboard_BinaryDictionary.cpp
              src/main/cpp/dictionary.cpp
              src/main/cpp/char_utils.cpp )
 

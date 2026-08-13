@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Modified for Hacker's Keyboard v2; see the repository history for details. -->
 <!-- Copyright (C) 2008 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +24,7 @@
             android:title="@string/title_keyboard_view_settings"
             android:key="graphics_settings">
 
-    <org.pocketworkstation.pckeyboard.SeekBarPreferenceString
+    <io.github.baodeep.hackerskeyboard.SeekBarPreferenceString
             android:defaultValue="@string/default_height_portrait"
             hk:minValue="15"
             hk:maxValue="75"
@@ -34,7 +35,7 @@
             android:persistent="true"
             />
 
-    <org.pocketworkstation.pckeyboard.SeekBarPreferenceString
+    <io.github.baodeep.hackerskeyboard.SeekBarPreferenceString
             android:defaultValue="@string/default_height_landscape"
             hk:minValue="15"
             hk:maxValue="75"
@@ -45,7 +46,7 @@
             android:persistent="true"
             />
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_keyboard_mode_portrait"
             android:title="@string/title_keyboard_mode_portrait"
             android:entryValues="@array/keyboard_mode_values"
@@ -54,7 +55,7 @@
             android:persistent="true"
             />
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_keyboard_mode_landscape"
             android:title="@string/title_keyboard_mode_landscape"
             android:entryValues="@array/keyboard_mode_values"
@@ -75,7 +76,7 @@
     <PreferenceScreen
             android:title="@string/pref_screen_view_title"
             android:summary="@string/pref_screen_view_title_summary">
-        <intent android:action="org.pocketworkstation.pckeyboard.PREFS_VIEW"/>
+        <intent android:action="io.github.baodeep.hackerskeyboard.PREFS_VIEW"/>
     </PreferenceScreen>
 
     </PreferenceCategory>
@@ -106,7 +107,7 @@
             android:title="@string/language_selection_title"
             android:summary="@string/language_selection_summary">
         <intent
-                android:action="org.pocketworkstation.pckeyboard.INPUT_LANGUAGE_SELECTION"/>
+                android:action="io.github.baodeep.hackerskeyboard.INPUT_LANGUAGE_SELECTION"/>
     </PreferenceScreen>
     </PreferenceCategory>
 
@@ -143,16 +144,16 @@
             android:title="@string/pref_screen_feedback_title"
             android:summary="@string/pref_screen_feedback_title_summary">
         <intent
-                android:action="org.pocketworkstation.pckeyboard.PREFS_FEEDBACK"/>
+                android:action="io.github.baodeep.hackerskeyboard.PREFS_FEEDBACK"/>
     </PreferenceScreen>
 
     <PreferenceScreen
             android:title="@string/pref_screen_actions_title"
             android:summary="@string/pref_screen_actions_title_summary">
-        <intent android:action="org.pocketworkstation.pckeyboard.PREFS_ACTIONS"/>
+        <intent android:action="io.github.baodeep.hackerskeyboard.PREFS_ACTIONS"/>
     </PreferenceScreen>
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_ctrl_a_override"
             android:title="@string/title_ctrl_a_override"
             android:persistent="true"
@@ -161,7 +162,7 @@
             android:defaultValue="@string/default_ctrl_a_override"
             />
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_chording_ctrl_key"
             android:title="@string/title_chording_ctrl_key"
             android:persistent="true"
@@ -170,7 +171,7 @@
             android:defaultValue="@string/default_chording_ctrl_key"
             />
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_chording_alt_key"
             android:title="@string/title_chording_alt_key"
             android:persistent="true"
@@ -179,7 +180,7 @@
             android:defaultValue="@string/default_chording_alt_key"
             />
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_chording_meta_key"
             android:title="@string/title_chording_meta_key"
             android:persistent="true"
@@ -188,7 +189,7 @@
             android:defaultValue="@string/default_chording_meta_key"
             />
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_slide_keys_int"
             android:title="@string/title_slide_keys"
             android:persistent="true" 
@@ -202,7 +203,7 @@
             android:title="@string/title_long_press_alternate_keys"
             android:key="altchar_settings">
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_popup_content"
             android:title="@string/title_popup_content"
             android:persistent="true"
@@ -211,7 +212,7 @@
             android:defaultValue="@string/default_popup_content"
             />
 
-    <org.pocketworkstation.pckeyboard.SeekBarPreferenceString
+    <io.github.baodeep.hackerskeyboard.SeekBarPreferenceString
             android:defaultValue="@string/default_long_press_duration"
             hk:minValue="100"
             hk:maxValue="2000"
@@ -253,7 +254,7 @@
             android:dependency="show_suggestions"
             />
 
-        <org.pocketworkstation.pckeyboard.AutoSummaryEditTextPreference
+        <io.github.baodeep.hackerskeyboard.AutoSummaryEditTextPreference
             android:key="pref_suggested_punctuation"
             android:title="@string/title_suggested_punctuation"
             android:defaultValue="@string/suggested_punctuations"

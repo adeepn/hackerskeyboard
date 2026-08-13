@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Modified for Hacker's Keyboard v2; see the repository history for details. -->
 <!-- Copyright (C) 2008 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +26,7 @@
             android:persistent="true"
             />
 
-    <org.pocketworkstation.pckeyboard.VibratePreference		
+    <io.github.baodeep.hackerskeyboard.VibratePreference
             android:defaultValue="40"
             hk:minValue="5"
             hk:maxValue="200"
@@ -42,7 +43,7 @@
             android:persistent="true" 
             />
 
-    <org.pocketworkstation.pckeyboard.AutoSummaryListPreference
+    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_click_method"
             android:title="@string/title_click_method"
             android:entryValues="@array/click_method_values"
@@ -51,7 +52,7 @@
             android:persistent="true"
             />
     
-    <org.pocketworkstation.pckeyboard.SeekBarPreferenceString
+    <io.github.baodeep.hackerskeyboard.SeekBarPreferenceString
             android:defaultValue="@string/default_click_volume"
             hk:minValue="0"
             hk:maxValue="1"

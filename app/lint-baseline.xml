@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Modified for Hacker's Keyboard v2; see the repository history for details. -->
 <issues format="6" by="lint 8.13.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.2)" variant="all" version="8.13.2">
 
     <issue
@@ -7,7 +8,7 @@
         errorLine1="                attrs, R.styleable.LatinKeyboardBaseView, defStyle, R.style.LatinKeyboardBaseView);"
         errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinKeyboardView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinKeyboardView.java"
             line="131"
             column="24"/>
     </issue>
@@ -18,7 +19,7 @@
         errorLine1="                key.popupCharacters = key.popupCharacters.toString().toUpperCase();"
         errorLine2="                                                                     ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/Keyboard.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/Keyboard.java"
             line="970"
             column="70"/>
     </issue>
@@ -29,7 +30,7 @@
         errorLine1="                        .toString().toLowerCase()));"
         errorLine2="                                    ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="2553"
             column="37"/>
     </issue>
@@ -40,7 +41,7 @@
         errorLine1="                &amp;&amp; !mSuggest.isValidWord(suggestion.toString().toLowerCase());"
         errorLine2="                                                               ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="2655"
             column="64"/>
     </issue>
@@ -51,7 +52,7 @@
         errorLine1="            suggestion = suggestion.toString().toUpperCase(); // all UPPERCASE"
         errorLine2="                                               ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="2697"
             column="48"/>
     </issue>
@@ -62,7 +63,7 @@
         errorLine1="                        .isValidWord(touching.word.toString().toLowerCase()))) {"
         errorLine2="                                                              ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="2741"
             column="63"/>
     </issue>
@@ -73,7 +74,7 @@
         errorLine1="                            .isValidWord(suggestion.toString().toLowerCase()))) {"
         errorLine2="                                                               ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="2822"
             column="64"/>
     </issue>
@@ -84,7 +85,7 @@
         errorLine1="            mStringToPlay = s.toLowerCase();"
         errorLine2="                              ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinKeyboardView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinKeyboardView.java"
             line="617"
             column="31"/>
     </issue>
@@ -95,7 +96,7 @@
         errorLine1="            return String.format(&quot;%d%%&quot;, (int) (val * 100));"
         errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/SeekBarPreference.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/SeekBarPreference.java"
             line="66"
             column="20"/>
     </issue>
@@ -106,7 +107,7 @@
         errorLine1="            mLowerOriginalWord = mOriginalWordString.toLowerCase();"
         errorLine2="                                                     ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/Suggest.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/Suggest.java"
             line="245"
             column="54"/>
     </issue>
@@ -117,7 +118,7 @@
         errorLine1="                CharSequence lowerPrevWord = prevWordForBigram.toString().toLowerCase();"
         errorLine2="                                                                          ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/Suggest.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/Suggest.java"
             line="257"
             column="75"/>
     </issue>
@@ -128,7 +129,7 @@
         errorLine1="                String suggestedWord = mSuggestions.get(i).toString().toLowerCase();"
         errorLine2="                                                                      ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/Suggest.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/Suggest.java"
             line="332"
             column="71"/>
     </issue>
@@ -139,7 +140,7 @@
         errorLine1="            sb.append(new String(word, offset, length).toUpperCase());"
         errorLine2="                                                       ~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/Suggest.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/Suggest.java"
             line="467"
             column="56"/>
     </issue>
@@ -164,11 +165,11 @@
         errorLine1="     for (int i = 1; i &lt; key.length(); ++i) {"
         errorLine2="    ~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/ComposeSequence.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/ComposeSequence.java"
             line="176"
             column="5"/>
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/ComposeSequence.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/ComposeSequence.java"
             line="175"
             column="5"
             message="Previous line indentation here"/>
@@ -180,11 +181,11 @@
         errorLine1="     out.append(&quot;)&quot;);"
         errorLine2="    ~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/InputLanguageSelection.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/InputLanguageSelection.java"
             line="280"
             column="5"/>
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/InputLanguageSelection.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/InputLanguageSelection.java"
             line="276"
             column="5"
             message="Previous line indentation here"/>
@@ -238,7 +239,7 @@
         errorLine1="        conf.locale = locale;"
         errorLine2="             ~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/InputLanguageSelection.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/InputLanguageSelection.java"
             line="213"
             column="14"/>
     </issue>
@@ -249,7 +250,7 @@
         errorLine1="        mPreviewText = (TextView) inflate.inflate(R.layout.candidate_preview, null);"
         errorLine2="                                                                              ~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/CandidateView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/CandidateView.java"
             line="110"
             column="79"/>
     </issue>
@@ -260,18 +261,18 @@
         errorLine1="                    R.layout.candidates, null);"
         errorLine2="                                         ~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="730"
             column="42"/>
     </issue>
 
     <issue
         id="UnspecifiedRegisterReceiverFlag"
-        message="`mNotificationReceiver` is missing `RECEIVER_EXPORTED` or `RECEIVER_NOT_EXPORTED` flag for unprotected broadcasts registered for org.pocketworkstation.pckeyboard.SHOW, org.pocketworkstation.pckeyboard.SETTINGS"
+        message="`mNotificationReceiver` is missing `RECEIVER_EXPORTED` or `RECEIVER_NOT_EXPORTED` flag for unprotected broadcasts registered for io.github.baodeep.hackerskeyboard.SHOW, io.github.baodeep.hackerskeyboard.SETTINGS"
         errorLine1="            registerReceiver(mNotificationReceiver, pFilter);"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="492"
             column="13"/>
     </issue>
@@ -656,7 +657,7 @@
         errorLine1="                            dictionaries.add(res.getIdentifier(dictFileName,"
         errorLine2="                                                 ~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="573"
             column="50"/>
     </issue>
@@ -667,7 +668,7 @@
         errorLine1="                int dictId = res.getIdentifier(&quot;dictionaries&quot;, &quot;xml&quot;, pkgName);"
         errorLine2="                                 ~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/PluginManager.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/PluginManager.java"
             line="62"
             column="34"/>
     </issue>
@@ -678,7 +679,7 @@
         errorLine1="                int langId = res.getIdentifier(&quot;dict_language&quot;, &quot;string&quot;, pkgName);"
         errorLine2="                                 ~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/PluginManager.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/PluginManager.java"
             line="131"
             column="34"/>
     </issue>
@@ -689,7 +690,7 @@
         errorLine1="                int rawId = res.getIdentifier(&quot;main&quot;, &quot;raw&quot;, pkgName);"
         errorLine2="                                ~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/PluginManager.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/PluginManager.java"
             line="137"
             column="33"/>
     </issue>
@@ -700,7 +701,7 @@
         errorLine1="                        int id = res.getIdentifier(&quot;main&quot; + parts, &quot;raw&quot;, pkgName);"
         errorLine2="                                     ~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/PluginManager.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/PluginManager.java"
             line="145"
             column="38"/>
     </issue>
@@ -3061,7 +3062,7 @@
 
     <issue
         id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass org.pocketworkstation.pckeyboard.LatinIMESettings should not be exported"
+        message="`PreferenceActivity` subclass io.github.baodeep.hackerskeyboard.LatinIMESettings should not be exported"
         errorLine1="        &lt;activity android:name=&quot;LatinIMESettings&quot; android:label=&quot;@string/english_ime_settings&quot;>"
         errorLine2="        ^">
         <location
@@ -3072,7 +3073,7 @@
 
     <issue
         id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass org.pocketworkstation.pckeyboard.InputLanguageSelection should not be exported"
+        message="`PreferenceActivity` subclass io.github.baodeep.hackerskeyboard.InputLanguageSelection should not be exported"
         errorLine1="        &lt;activity android:name=&quot;InputLanguageSelection&quot;"
         errorLine2="        ^">
         <location
@@ -3083,7 +3084,7 @@
 
     <issue
         id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass org.pocketworkstation.pckeyboard.PrefScreenActions should not be exported"
+        message="`PreferenceActivity` subclass io.github.baodeep.hackerskeyboard.PrefScreenActions should not be exported"
         errorLine1="        &lt;activity android:name=&quot;PrefScreenActions&quot;"
         errorLine2="        ^">
         <location
@@ -3094,7 +3095,7 @@
 
     <issue
         id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass org.pocketworkstation.pckeyboard.PrefScreenView should not be exported"
+        message="`PreferenceActivity` subclass io.github.baodeep.hackerskeyboard.PrefScreenView should not be exported"
         errorLine1="        &lt;activity android:name=&quot;PrefScreenView&quot;"
         errorLine2="        ^">
         <location
@@ -3105,7 +3106,7 @@
 
     <issue
         id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass org.pocketworkstation.pckeyboard.PrefScreenFeedback should not be exported"
+        message="`PreferenceActivity` subclass io.github.baodeep.hackerskeyboard.PrefScreenFeedback should not be exported"
         errorLine1="        &lt;activity android:name=&quot;PrefScreenFeedback&quot;"
         errorLine2="        ^">
         <location
@@ -3197,7 +3198,7 @@
         errorLine1="            PendingIntent contentIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, notificationIntent, 0);"
         errorLine2="                                                                                                                     ~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="495"
             column="118"/>
     </issue>
@@ -3208,7 +3209,7 @@
         errorLine1="                    PendingIntent.getBroadcast(getApplicationContext(), 2, configIntent, 0);"
         errorLine2="                                                                                         ~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="500"
             column="90"/>
     </issue>
@@ -3230,7 +3231,7 @@
         errorLine1="        TypedArray a = context.obtainStyledAttributes("
         errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinKeyboardBaseView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinKeyboardBaseView.java"
             line="485"
             column="32"/>
     </issue>
@@ -3241,7 +3242,7 @@
         errorLine1="        TypedArray a = context.obtainStyledAttributes("
         errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinKeyboardView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinKeyboardView.java"
             line="130"
             column="32"/>
     </issue>
@@ -3252,7 +3253,7 @@
         errorLine1="        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);"
         errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/SeekBarPreference.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/SeekBarPreference.java"
             line="39"
             column="32"/>
     </issue>
@@ -3318,7 +3319,7 @@
         errorLine1="  if (Build.VERSION.SDK_INT >= 9) {"
         errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/DeadAccentSequence.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/DeadAccentSequence.java"
             line="76"
             column="7"/>
     </issue>
@@ -3329,18 +3330,18 @@
         errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="1463"
             column="13"/>
     </issue>
 
     <issue
         id="StaticFieldLeak"
-        message="This `AsyncTask` class should be static or leaks might occur (org.pocketworkstation.pckeyboard.ExpandableDictionary.LoadDictionaryTask)"
+        message="This `AsyncTask` class should be static or leaks might occur (io.github.baodeep.hackerskeyboard.ExpandableDictionary.LoadDictionaryTask)"
         errorLine1="    private class LoadDictionaryTask extends AsyncTask&lt;Void, Void, Void> {"
         errorLine2="                  ~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/ExpandableDictionary.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/ExpandableDictionary.java"
             line="495"
             column="19"/>
     </issue>
@@ -3351,7 +3352,7 @@
         errorLine1="        private static RingCharBuffer sRingCharBuffer = new RingCharBuffer();"
         errorLine2="                ~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIMEUtil.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIMEUtil.java"
             line="78"
             column="17"/>
     </issue>
@@ -3362,18 +3363,18 @@
         errorLine1="    /* package */Handler mHandler = new Handler() {"
         errorLine2="                                    ^">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinIME.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinIME.java"
             line="339"
             column="37"/>
     </issue>
 
     <issue
         id="HandlerLeak"
-        message="This `Handler` class should be static or leaks might occur (org.pocketworkstation.pckeyboard.LatinKeyboardBaseView.UIHandler)"
+        message="This `Handler` class should be static or leaks might occur (io.github.baodeep.hackerskeyboard.LatinKeyboardBaseView.UIHandler)"
         errorLine1="    class UIHandler extends Handler {"
         errorLine2="          ~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinKeyboardBaseView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinKeyboardBaseView.java"
             line="294"
             column="11"/>
     </issue>
@@ -3384,7 +3385,7 @@
         errorLine1="                mHandler2 = new Handler() {"
         errorLine2="                            ^">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinKeyboardView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinKeyboardView.java"
             line="547"
             column="29"/>
     </issue>
@@ -3395,7 +3396,7 @@
         errorLine1="            mPendingWrites.put(word, freq == 0 ? null : new Integer(freq));"
         errorLine2="                                                        ~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/AutoDictionary.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/AutoDictionary.java"
             line="160"
             column="57"/>
     </issue>
@@ -3881,7 +3882,7 @@
     <issue
         id="UnusedResources"
         message="The resource `R.layout.input_stone_normal` appears to be unused"
-        errorLine1="&lt;org.pocketworkstation.pckeyboard.LatinKeyboardView"
+        errorLine1="&lt;io.github.baodeep.hackerskeyboard.LatinKeyboardView"
         errorLine2="^">
         <location
             file="src/main/res/layout/input_stone_normal.xml"
@@ -4987,7 +4988,7 @@
         errorLine1="    public boolean onTouchEvent(MotionEvent me) {"
         errorLine2="                   ~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/CandidateView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/CandidateView.java"
             line="383"
             column="20"/>
     </issue>
@@ -4998,7 +4999,7 @@
         errorLine1="    public boolean onTouchEvent(MotionEvent me) {"
         errorLine2="                   ~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinKeyboardBaseView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinKeyboardBaseView.java"
             line="1588"
             column="20"/>
     </issue>
@@ -5009,7 +5010,7 @@
         errorLine1="    public boolean onTouchEvent(MotionEvent me) {"
         errorLine2="                   ~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/pocketworkstation/pckeyboard/LatinKeyboardView.java"
+            file="src/main/java/io/github/baodeep/hackerskeyboard/LatinKeyboardView.java"
             line="331"
             column="20"/>
     </issue>
