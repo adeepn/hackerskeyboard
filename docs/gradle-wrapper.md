@@ -1,26 +1,26 @@
 # Gradle wrapper
 
-Репозиторий использует Gradle wrapper 9.3.1 как воспроизводимую точку входа в
-сборку. Версия является минимальной поддерживаемой для Android Gradle Plugin
-9.1.1 и Android API 37.
+Репозиторий использует Gradle wrapper 9.6.1 как воспроизводимую точку входа в
+сборку. Это последний стабильный Gradle, совместимый с Android Gradle Plugin
+9.3.1 и Android API 37 на дату обновления.
 
 ## Состав
 
 - `gradlew` и `gradlew.bat` — launcher scripts;
-- `gradle/wrapper/gradle-wrapper.jar` — официальный wrapper JAR Gradle 9.3.1;
+- `gradle/wrapper/gradle-wrapper.jar` — официальный wrapper JAR Gradle 9.6.1;
 - `gradle/wrapper/gradle-wrapper.properties` — URL и SHA-256 дистрибутива.
 
 Используется компактный официальный дистрибутив
-`https://services.gradle.org/distributions/gradle-9.3.1-bin.zip` с SHA-256:
+`https://services.gradle.org/distributions/gradle-9.6.1-bin.zip` с SHA-256:
 
 ```text
-b266d5ff6b90eada6dc3b20cb090e3731302e553a27c5d3e4df1f0d76beaff06
+9c0f7faeeb306cb14e4279a3e084ca6b596894089a0638e68a07c945a32c9e14
 ```
 
-Wrapper JAR сгенерирован официальным дистрибутивом Gradle 9.3.1. Его SHA-256:
+Wrapper JAR сгенерирован официальным дистрибутивом Gradle 9.6.1. Его SHA-256:
 
 ```text
-b3a875ddc1f044746e1b1a55f645584505f4a10438c1afea9f15e92a7c42ec13
+497c8c2a7e5031f6aa847f88104aa80a93532ec32ee17bdb8d1d2f67a194a9c7
 ```
 
 Оба значения опубликованы в официальном справочнике Gradle release checksums.
@@ -38,5 +38,5 @@ GitHub Actions дополнительно проверяет wrapper JAR чер�
 `gradle/actions/wrapper-validation` и выполняет bootstrap на JDK 17.
 
 Wrapper, AGP и `compileSdk` обновляются как единая совместимая матрица:
-Gradle 9.3.1, AGP 9.1.1 и API 37. Откат только одного элемента этой матрицы
+Gradle 9.6.1, AGP 9.3.1 и API 37. Откат только одного элемента этой матрицы
 запрещён: он снова сделает AndroidX Core 1.19.0 неразрешимой зависимостью.

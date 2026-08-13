@@ -40,7 +40,7 @@ android {
                 pixel2Api37 {
                     device = "Pixel 2"
                     sdkVersion = 37
-                    systemImageSource = "aosp"
+                    systemImageSource = "google"
                     require64Bit = true
                     testedAbi = "x86_64"
                     pageAlignment = com.android.build.api.dsl.ManagedVirtualDevice.PageAlignment.FORCE_4KB_PAGES

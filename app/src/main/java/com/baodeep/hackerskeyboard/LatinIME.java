@@ -23,6 +23,7 @@ import com.google.android.voiceime.VoiceRecognitionTrigger;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -477,6 +478,9 @@ public class LatinIME extends InputMethodService implements
         }
     }
 
+    // S2.05/S2.08 replace the legacy broadcast flow and add notification
+    // permission UX. Keep this migration behavior-neutral until those tests exist.
+    @SuppressLint({"LaunchActivityFromNotification", "MissingPermission"})
     private void setNotification(boolean visible) {
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);

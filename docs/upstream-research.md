@@ -51,7 +51,7 @@ GitHub.
 Почему не cherry-pick/merge:
 
 - 144 файла и массовое форматирование ресурсов скрывают semantic diff;
-- toolchain уже отличается от нашего целевого AGP 9.1.1/Gradle 9.3.1/JDK 17;
+- toolchain уже отличается от нашего целевого AGP 9.3.1/Gradle 9.6.1/JDK 17;
 - CI ориентирован на tag release, Java 21 и содержит signing workflow, но не PR
   test gates;
 - lint `NotificationPermission` подавлен вместо полноценного UX;
@@ -208,7 +208,7 @@ compatibility. Готовой независимой package migration не на
 ## Очередь ближайшего анализа
 
 1. Сравнить wrapper/build/CMake из #978 и #989 с целевыми
-   AGP 9.1.1/Gradle 9.3.1.
+   AGP 9.3.1/Gradle 9.6.1.
 2. Разобрать 52 commits #978, отделив build-only от runtime behavior.
 3. Вынести regressions из обсуждения #978 в автоматизируемые scenarios.
 4. Проверить тесты #980 по одному, начиная с ModifierKeyState и TextEntryState.

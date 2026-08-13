@@ -32,7 +32,7 @@ issues. Каждый нижележащий шаг является отдель
 1. Добавить полный Gradle wrapper и executable bit для `gradlew`.
 2. Зафиксировать JDK 17 в документации и CI.
 3. Перейти на AGP 8.13.x и Gradle 8.13 как воспроизводимый мост к API 36.
-   Последующий переход на AGP 9.1.1/Gradle 9.3.1 выполняется в S2.02 вместе с
+   Последующий переход на AGP 9.3.1/Gradle 9.6.1 выполняется в S2.02 вместе с
    AndroidX Core 1.19.0 и `compileSdk 37`.
 4. Перейти с `jcenter()` на `mavenCentral()` и `google()`.
 5. Добавить `namespace`, современный Android DSL и `compileSdk 36`.

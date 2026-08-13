@@ -5,14 +5,17 @@
 | Компонент | Версия | Состояние |
 | --- | --- | --- |
 | JDK | 17 | зафиксирован в `.java-version` |
-| Gradle | 9.3.1 | зафиксирован wrapper и SHA-256 |
-| Android Gradle Plugin | 9.1.1 | зафиксирован в `gradle.properties` |
+| Gradle | 9.6.1 | зафиксирован wrapper и SHA-256 |
+| Android Gradle Plugin | 9.3.1 | зафиксирован в `gradle.properties` |
 | Android NDK | 29.0.14206865 (r29) | зафиксирован в `gradle.properties` |
 | CMake | 3.22.1 | зафиксирован в `gradle.properties` |
 | min SDK | 24 (Android 7.0) | принято в ADR-0001 |
 | compile SDK | 37 | поднят в S2.02 для AndroidX Core 1.19.0 |
 
-AGP 9.1.1 требует Gradle 9.3.1 и JDK 17 и поддерживает API 37. Эта матрица
+AGP 9.3.1 требует Gradle 9.5.0 или новее и JDK 17 и поддерживает API 37.
+Выбран последний стабильный Gradle 9.6.1; lint-подсказка о 9.7.0 относится к
+release candidate и остаётся в существующей точечной baseline-категории до
+стабильного релиза. Эта матрица
 выбрана вместо отката AndroidX Core 1.19.0, который требует `compileSdk 37` и
 AGP 9.1.0 или новее. Preview-платформа Android 17 публикуется для `sdkmanager`
 под точным package ID `platforms;android-37.0`; Build Tools — `37.0.0`.
@@ -103,7 +106,7 @@ dictionary. Тем самым исполняются загрузка
 и запускает `connectedDebugAndroidTest`. В CI обе границы выполняются отдельной
 matrix job на `ubuntu-latest`; обычная сборка APK остаётся отдельным быстрым gate
 и публикует installable debug APK вместе с unsigned release APK. API 37 smoke
-явно фиксирует 64-bit `x86_64` и 4 KB page alignment, поэтому не зависит от
+явно фиксирует Google 64-bit `x86_64` image и 4 KB page alignment, поэтому не зависит от
 меняющихся defaults AGP. Отдельный 16 KB device gate остаётся частью
 [#33](https://github.com/adeepn/hackerskeyboard/issues/33) и S2.21.
 

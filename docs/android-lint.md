@@ -2,7 +2,7 @@
 
 ## Обязательный gate
 
-Модуль `app` запускает `:app:lintDebug` с Android Gradle Plugin 9.1.1. В
+Модуль `app` запускает `:app:lintDebug` с Android Gradle Plugin 9.3.1. В
 `app/build.gradle` включены `abortOnError` и `warningsAsErrors`, поэтому любая
 новая lint-проблема останавливает проверку. Текущий исторический долг перечислен
 точечно в `app/lint-baseline.xml`; глобальных suppressions категорий нет.

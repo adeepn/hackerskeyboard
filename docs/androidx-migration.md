@@ -89,10 +89,16 @@ instrumentation configurations. В итоговом graph не должно ос
 - `androidx.test.ext:junit:1.3.0`.
 
 AndroidX Core 1.19.0 требует `compileSdk 37` и AGP 9.1.0 или новее. Проект не
-откатывает библиотеку: S2.02 атомарно поднимает `compileSdk` до 37, AGP до 9.1.1
-и обязательный для него Gradle wrapper до 9.3.1. `targetSdk 26` остаётся без
+откатывает библиотеку: S2.02 атомарно поднимает `compileSdk` до 37, AGP до 9.3.1
+и Gradle wrapper до последней стабильной версии 9.6.1. `targetSdk 26` остаётся без
 изменений, поэтому platform behavior migration по-прежнему выполняется
 отдельными checkpoints.
+
+Новый lint видит существующий notification debt, относящийся к S2.05 и S2.08:
+legacy content intent запускает receiver, а permission UX ещё не реализован.
+До соответствующих regression tests `setNotification` имеет только узкую
+method-level аннотацию для этих двух checks; глобальные suppressions и новые
+baseline entries не добавляются, runtime flow не изменяется.
 
 Источники: [Core release notes](https://developer.android.com/jetpack/androidx/releases/core)
 и [AndroidX Test release notes](https://developer.android.com/jetpack/androidx/releases/test).
