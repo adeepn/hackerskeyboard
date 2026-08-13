@@ -2,12 +2,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'org.pocketworkstation.pckeyboard'
+    namespace 'com.baodeep.hackerskeyboard'
     compileSdk 36
     ndkVersion androidNdkVersion
 
     defaultConfig {
-        applicationId 'org.pocketworkstation.pckeyboard'
+        applicationId 'com.baodeep.hackerskeyboard'
         minSdk 24
         targetSdk 26
         versionCode 1041001

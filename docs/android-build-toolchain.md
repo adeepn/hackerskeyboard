@@ -61,6 +61,13 @@ S1.06 поднимает только `compileSdk` с 26 до 36. Это поз�
 поведения платформы: `targetSdk` временно остаётся равен 26. Его переход на 36
 выполняется отдельно на Stage 2 вместе с совместимостными изменениями и тестами.
 
+На современных устройствах промежуточный APK поэтому может показывать системное
+предупреждение о приложении, разработанном для старой версии Android. Это
+ожидаемое следствие `targetSdk 26`, а не ошибка подписи или повреждение APK.
+Предупреждение устраняется последовательной миграцией target API на Stage 2;
+поднимать target только ради скрытия диалога без platform-compatibility fixes
+нельзя.
+
 S1.07 подтверждает сборку Android application и исправляет обнаруженные новым
 AGP resource/build errors. Следующие native smoke tests выполняются в S1.09.
 
@@ -103,16 +110,22 @@ matrix job на `ubuntu-latest`; обычная сборка APK остаётс�
 
 ## Namespace и Android DSL
 
-Module namespace и application ID намеренно совпадают с историческим package:
+После S1.25 module namespace и application ID используют отдельную постоянную
+identity v2:
 
 ```text
-org.pocketworkstation.pckeyboard
+com.baodeep.hackerskeyboard
 ```
 
 `namespace` объявлен в `app/build.gradle`; manifest больше не используется как
-его источник. Относительные имена Android components продолжают разрешаться в
-тот же package. После S1.06 `compileSdk` равен 36, `targetSdk` временно остаётся
-26, а `minSdk` равен 24 согласно ADR-0001.
+его источник. Код, XML custom views и JNI registration перенесены в тот же
+package. Историческое приложение `org.pocketworkstation.pckeyboard` остаётся
+отдельным и может быть установлено одновременно. После S1.06 `compileSdk` равен
+36, `targetSdk` временно остаётся 26, а `minSdk` равен 24 согласно ADR-0001.
+
+Подробный migration contract, включая отсутствие автоматического переноса
+private settings и требования к будущей стабильной release-подписи, зафиксирован
+в [ADR-0002](adr/0002-v2-application-identity.md).
 
 ## Репозитории зависимостей
 

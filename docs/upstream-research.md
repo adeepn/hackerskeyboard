@@ -180,6 +180,15 @@ scope оценивается так же строго независимо от 
 
 ## Регулярный upstream triage
 
+### S1.25 application identity check
+
+13 августа 2026 года canonical remote и GitHub search по open/closed issues и
+PR повторно проверены для `applicationId`, package name, signing и update
+compatibility. Готовой независимой package migration не найдено; upstream
+сохраняет `org.pocketworkstation.pckeyboard`. Issue #958 остаётся общим сигналом
+про release availability, но не предоставляет migration/signing patch. S1.25
+поэтому реализуется независимо по owner decision #26 и ADR-0002.
+
 Перед каждым milestone planning и минимум перед alpha/beta/release:
 
 1. обновить `upstream` remote;
