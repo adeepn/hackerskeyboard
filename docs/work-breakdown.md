@@ -42,7 +42,7 @@ Epic: **Stage 1: восстановить современную воспрои�
 - S1.25 ([decision #26](https://github.com/adeepn/hackerskeyboard/issues/26),
   [implementation #44](https://github.com/adeepn/hackerskeyboard/issues/44)) —
   сменить application identity и code namespace на
-  `io.github.baodeep.hackerskeyboard` по ADR-0002 после зелёного baseline;
+  `com.baodeep.hackerskeyboard` по ADR-0002 после зелёного baseline;
 - S1.26 ([#27](https://github.com/adeepn/hackerskeyboard/issues/27)) — найти и
   лицензировать воспроизводимые источники first-party dictionary packs, сохранив
   совместимость со старым dictionary API;

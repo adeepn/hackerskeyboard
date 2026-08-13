@@ -22,6 +22,6 @@
 <!-- for the Input Method Manager. -->
 
 <input-method xmlns:android="http://schemas.android.com/apk/res/android"
-        android:settingsActivity="io.github.baodeep.hackerskeyboard.LatinIMESettings"
+        android:settingsActivity="com.baodeep.hackerskeyboard.LatinIMESettings"
         android:isDefault="@bool/im_is_default"
 />

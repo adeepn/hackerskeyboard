@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-readonly expected_application_id="io.github.baodeep.hackerskeyboard"
+readonly expected_application_id="com.baodeep.hackerskeyboard"
 readonly legacy_application_id="org.pocketworkstation.pckeyboard"
 
 if [[ $# -eq 0 ]]; then

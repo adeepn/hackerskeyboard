@@ -27,7 +27,7 @@
         android:background="@drawable/keyboard_suggest_strip"
         >
 
-    <io.github.baodeep.hackerskeyboard.CandidateView
+    <com.baodeep.hackerskeyboard.CandidateView
         android:id="@+id/candidates"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/candidate_strip_height"

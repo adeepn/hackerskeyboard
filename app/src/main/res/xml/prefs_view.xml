@@ -23,7 +23,7 @@
         android:key="graphics_settings"
         android:title="@string/pref_screen_view_title" >
 
-        <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
+        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:defaultValue="@string/default_hint_mode"
             android:entries="@array/hint_modes"
             android:entryValues="@array/hint_modes_values"
@@ -31,7 +31,7 @@
             android:persistent="true"
             android:title="@string/title_hint_mode" />
 
-        <io.github.baodeep.hackerskeyboard.SeekBarPreferenceString
+        <com.baodeep.hackerskeyboard.SeekBarPreferenceString
             android:defaultValue="1.0"
             hk:minValue="0.5"
             hk:maxValue="2.0"
@@ -41,7 +41,7 @@
             android:persistent="true"
             android:title="@string/title_label_scale" />
 
-        <io.github.baodeep.hackerskeyboard.SeekBarPreferenceString
+        <com.baodeep.hackerskeyboard.SeekBarPreferenceString
             android:defaultValue="1.0"
             hk:minValue="0.5"
             hk:maxValue="8.0"
@@ -51,7 +51,7 @@
             android:persistent="true"
             android:title="@string/title_candidate_scale" />
 
-        <io.github.baodeep.hackerskeyboard.SeekBarPreferenceString
+        <com.baodeep.hackerskeyboard.SeekBarPreferenceString
             android:defaultValue="1.0"
             hk:minValue="0.5"
             hk:maxValue="1.0"
@@ -61,7 +61,7 @@
             android:persistent="true"
             android:title="@string/title_top_row_scale" />
         
-        <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
+        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:defaultValue="0"
             android:entries="@array/keyboard_layout_modes"
             android:entryValues="@array/keyboard_layout_modes_values"
@@ -69,7 +69,7 @@
             android:persistent="true"
             android:title="@string/keyboard_layout" />
         
-        <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
+        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:defaultValue="@string/default_render_mode"
             android:entries="@array/render_mode_entries"
             android:entryValues="@array/render_mode_values"

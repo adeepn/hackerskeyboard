@@ -2,12 +2,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'io.github.baodeep.hackerskeyboard'
+    namespace 'com.baodeep.hackerskeyboard'
     compileSdk 36
     ndkVersion androidNdkVersion
 
     defaultConfig {
-        applicationId 'io.github.baodeep.hackerskeyboard'
+        applicationId 'com.baodeep.hackerskeyboard'
         minSdk 24
         targetSdk 26
         versionCode 1041001

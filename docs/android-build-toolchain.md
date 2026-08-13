@@ -107,7 +107,7 @@ matrix job на `ubuntu-latest`; обычная сборка APK остаётс�
 identity v2:
 
 ```text
-io.github.baodeep.hackerskeyboard
+com.baodeep.hackerskeyboard
 ```
 
 `namespace` объявлен в `app/build.gradle`; manifest больше не используется как

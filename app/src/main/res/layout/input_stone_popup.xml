@@ -26,7 +26,7 @@
         android:orientation="horizontal"
         android:background="@drawable/keyboard_popup_panel_background"
         >
-    <io.github.baodeep.hackerskeyboard.LatinKeyboardBaseView
+    <com.baodeep.hackerskeyboard.LatinKeyboardBaseView
             xmlns:latin="http://schemas.android.com/apk/res-auto"
             android:id="@+id/LatinKeyboardBaseView"
             android:layout_alignParentBottom="true"

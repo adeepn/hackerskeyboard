@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
-APPLICATION_ID = "io.github.baodeep.hackerskeyboard"
+APPLICATION_ID = "com.baodeep.hackerskeyboard"
 LEGACY_APPLICATION_ID = "org.pocketworkstation.pckeyboard"
 LEGACY_PACKAGE_PATH = "org/pocketworkstation/pckeyboard"
 LEGACY_PACKAGE_TOKEN = "org_pocketworkstation_pckeyboard"

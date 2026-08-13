@@ -26,7 +26,7 @@
             android:persistent="true"
             />
 
-    <io.github.baodeep.hackerskeyboard.VibratePreference
+    <com.baodeep.hackerskeyboard.VibratePreference
             android:defaultValue="40"
             hk:minValue="5"
             hk:maxValue="200"
@@ -43,7 +43,7 @@
             android:persistent="true" 
             />
 
-    <io.github.baodeep.hackerskeyboard.AutoSummaryListPreference
+    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
             android:key="pref_click_method"
             android:title="@string/title_click_method"
             android:entryValues="@array/click_method_values"
@@ -52,7 +52,7 @@
             android:persistent="true"
             />
     
-    <io.github.baodeep.hackerskeyboard.SeekBarPreferenceString
+    <com.baodeep.hackerskeyboard.SeekBarPreferenceString
             android:defaultValue="@string/default_click_volume"
             hk:minValue="0"
             hk:maxValue="1"

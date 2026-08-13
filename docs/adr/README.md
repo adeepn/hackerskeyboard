@@ -20,5 +20,5 @@ application ID или модели совместимости dictionary packs.
 - [ADR-0001](0001-android-7-minimum-and-native-toolchain.md) — Android 7.0 /
   API 24 как минимальная версия, NDK r29 и CMake 3.22.1.
 - [ADR-0002](0002-v2-application-identity.md) — постоянный application ID и
-  namespace `io.github.baodeep.hackerskeyboard`, сосуществование с v1 и границы
+  namespace `com.baodeep.hackerskeyboard`, сосуществование с v1 и границы
   миграции настроек/подписи.

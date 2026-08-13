@@ -13,10 +13,11 @@ application ID and signing certificate match. This repository does not control
 the historical release key, so an independently signed v2 APK must not claim to
 be an update of that package.
 
-The repository owner controls the GitHub account represented by the
-`io.github.baodeep` reverse-DNS namespace and selected
-`io.github.baodeep.hackerskeyboard` in #26. The code namespace, XML custom-view
-names and JNI registration were still coupled to the historical package.
+The repository owner controls the `baodeep.com` domain and selected
+`com.baodeep.hackerskeyboard` in #26. An owned-domain reverse-DNS identifier is
+independent of the current source hosting account. The code namespace, XML
+custom-view names and JNI registration were still coupled to the historical
+package.
 
 External dictionary packs use the independent legacy discovery action
 `org.pocketworkstation.DICT`. That action is an interoperability protocol, not
@@ -30,13 +31,16 @@ contract even though Android keeps their storage private to each application.
 2. Change only `applicationId` and retain the old code namespace. Rejected
    because it leaves manifest, resources, tests and JNI split across two names
    before broader v2 migration.
-3. Rename both identities to `io.github.baodeep.hackerskeyboard`. Accepted as a
-   permanent, maintainer-controlled identity with explicit side-by-side
-   semantics.
+3. Use `io.github.baodeep.hackerskeyboard`. Rejected after confirming control
+   of `baodeep.com`: it is valid, but unnecessarily couples the permanent app
+   identity to the current source-hosting namespace.
+4. Rename both identities to `com.baodeep.hackerskeyboard`. Accepted as a
+   permanent, owner-controlled identity with explicit side-by-side semantics
+   and no dependency on a GitHub account or organization name.
 
 ## Decision
 
-- permanent v2 `applicationId` is `io.github.baodeep.hackerskeyboard`;
+- permanent v2 `applicationId` is `com.baodeep.hackerskeyboard`;
 - Android namespace and Java package use the same value;
 - v2 private intent actions use the new application identity;
 - external action `org.pocketworkstation.DICT` remains unchanged so existing
@@ -74,7 +78,7 @@ No private key, keystore or signing secret is committed to the repository.
 
 ## Evidence
 
-- owner decision: #26;
+- owner decision and confirmation of `baodeep.com` control: #26;
 - bounded implementation: #44;
 - stable signing/update-chain follow-up: #45;
 - canonical upstream has no issue or PR implementing an independent package
