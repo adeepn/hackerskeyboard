@@ -2,16 +2,16 @@
 
 ## Требуемая Java
 
-Проект фиксирует JDK 17 в файле `.java-version`. Эта версия используется для
+Проект фиксирует JDK 21 в файле `.java-version`. Эта версия используется для
 локальных Gradle-команд и в GitHub Actions. Не следует запускать сборку через
 случайно выбранную системную Java или более новый Homebrew JDK.
 
-Подходит любой совместимый JDK 17. В CI используется Eclipse Temurin 17.
+Подходит любой совместимый JDK 21. В CI используется Eclipse Temurin 21.
 
 Для полной Android-сборки дополнительно установите через Android SDK Manager:
 
-- Android SDK Platform 36;
-- Android SDK Build Tools 36.0.0;
+- Android SDK Platform 37.0 (`platforms;android-37.0`);
+- Android SDK Build Tools 37.0.0;
 - Android NDK 29.0.14206865;
 - CMake 3.22.1.
 
@@ -34,7 +34,7 @@ CI job:
 prek run --hook-stage manual android-lint
 ```
 
-Hook сделан manual, потому что ему нужны JDK 17 и полный Android SDK, а полный
+Hook сделан manual, потому что ему нужны JDK 21 и полный Android SDK, а полный
 анализ заметно тяжелее быстрых pre-commit checks. Перед PR с изменениями Android
 кода или ресурсов он обязателен. Прямой эквивалент для диагностики:
 
@@ -56,14 +56,14 @@ java -version
 ./gradlew --version --no-daemon
 ```
 
-Обе команды должны показывать JVM major version 17.
+Обе команды должны показывать JVM major version 21.
 
 ### macOS
 
 Если установленный JDK зарегистрирован в macOS, выберите его для текущей shell:
 
 ```sh
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 export PATH="$JAVA_HOME/bin:$PATH"
 ```
 
@@ -72,18 +72,16 @@ export PATH="$JAVA_HOME/bin:$PATH"
 
 ### Linux
 
-Установите JDK 17 средствами используемого дистрибутива или менеджера версий,
+Установите JDK 21 средствами используемого дистрибутива или менеджера версий,
 затем задайте `JAVA_HOME` на каталог выбранного JDK и добавьте его `bin` в
 `PATH`. Не добавляйте машинный абсолютный путь в `gradle.properties` или другие
 tracked files.
 
-## Текущее ограничение legacy build
+## Совместимость toolchain
 
-Gradle wrapper 8.13 запускается на JDK 17, но Android Gradle Plugin 3.2.1 ещё не
-совместим с этим Gradle API. До выполнения S1.03 команда `./gradlew test` может
-остановиться при применении Android plugin с ошибкой, связанной с
-`BuildCompletionListener`. Это известный toolchain blocker, а не результат
-исполнения тестов приложения.
+Проект использует единую проверенную матрицу Gradle 9.6.1, AGP 9.3.1, JDK 21 и
+Android SDK Platform 37.0. Локальный запуск на другой JVM не считается
+воспроизводимой проверкой, даже если сам Gradle способен на ней стартовать.
 
 ## Дополнительный Claude CLI review и API-ключи
 

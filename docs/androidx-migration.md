@@ -1,9 +1,8 @@
 # План миграции на AndroidX
 
-Статус: инвентаризация S2.01 для
-[#48](https://github.com/adeepn/hackerskeyboard/issues/48), 13 августа 2026 года.
-Этот документ фиксирует границу работ до изменения зависимостей. Он не
-подтверждает, что S2.02 или S2.03 уже реализованы.
+Статус: S2.01 завершён в #48; S2.02 реализуется в
+[#50](https://github.com/adeepn/hackerskeyboard/issues/50), 13 августа 2026 года.
+S2.03 ещё не реализован.
 
 ## Решение
 
@@ -73,12 +72,41 @@ instrumentation configurations. В итоговом graph не должно ос
 - Android lint без глобальных suppressions;
 - unit tests;
 - merged-manifest/application identity checks;
-- application и JNI dictionary smoke на API 24 и API 36;
+- application и JNI dictionary smoke на API 24 и API 37;
 - проверка APK ABI и package/label;
 - negative source/dependency guard против возврата `android.support`.
 
 Если AndroidX API требует runtime-изменения, не связанные с imports, S2.02
 останавливается и создаётся отдельная compatibility issue вместо расширения PR.
+
+### Выбранные версии S2.02
+
+По официальным AndroidX release notes на 13 августа 2026 года выбраны стабильные
+версии:
+
+- `androidx.core:core:1.19.0`;
+- `androidx.test:runner:1.7.0`;
+- `androidx.test.ext:junit:1.3.0`.
+
+AndroidX Core 1.19.0 требует `compileSdk 37` и AGP 9.1.0 или новее. Проект не
+откатывает библиотеку: S2.02 атомарно поднимает `compileSdk` до 37, AGP до 9.3.1
+и Gradle wrapper до последней стабильной версии 9.6.1. `targetSdk 26` остаётся без
+изменений, поэтому platform behavior migration по-прежнему выполняется
+отдельными checkpoints.
+
+Новый lint видит существующий notification debt, относящийся к S2.05 и S2.08:
+legacy content intent запускает receiver, а permission UX ещё не реализован.
+До соответствующих regression tests `setNotification` имеет только узкую
+method-level аннотацию для этих двух checks; глобальные suppressions и новые
+baseline entries не добавляются, runtime flow не изменяется.
+
+Источники: [Core release notes](https://developer.android.com/jetpack/androidx/releases/core)
+и [AndroidX Test release notes](https://developer.android.com/jetpack/androidx/releases/test).
+Неиспользуемые AppCompat и Espresso удаляются без замены. Jetifier остаётся
+выключенным; `scripts/verify-androidx-migration.py` фиксирует dependencies,
+runner/imports и отсутствие Support Library references в bundled JAR.
+`scripts/verify-resolved-androidx.sh` дополнительно проверяет реальные Gradle
+graphs для debug runtime и instrumentation test runtime в CI на JDK 21.
 
 ## Контракт S2.03: settings
 

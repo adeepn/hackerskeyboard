@@ -38,7 +38,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -61,7 +61,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -72,13 +72,16 @@ jobs:
         with:
           packages: >-
             platform-tools
-            platforms;android-36
-            build-tools;36.0.0
+            platforms;android-37.0
+            build-tools;37.0.0
             ndk;29.0.14206865
             cmake;3.22.1
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
+
+      - name: Verify resolved AndroidX dependencies
+        run: scripts/verify-resolved-androidx.sh
 
       - name: Assemble debug and unsigned release APKs
         run: ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon --stacktrace
@@ -112,7 +115,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -123,8 +126,8 @@ jobs:
         with:
           packages: >-
             platform-tools
-            platforms;android-36
-            build-tools;36.0.0
+            platforms;android-37.0
+            build-tools;37.0.0
             ndk;29.0.14206865
             cmake;3.22.1
 
@@ -154,13 +157,13 @@ jobs:
       matrix:
         include:
           - api: 24
-          - api: 36
-            task: pixel2Api36DebugAndroidTest
+          - api: 37
+            task: pixel2Api37DebugAndroidTest
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -171,8 +174,8 @@ jobs:
         with:
           packages: >-
             platform-tools
-            platforms;android-36
-            build-tools;36.0.0
+            platforms;android-37.0
+            build-tools;37.0.0
             ndk;29.0.14206865
             cmake;3.22.1
 
@@ -186,8 +189,8 @@ jobs:
         if: matrix.api == 24
         run: scripts/run-api24-connected-tests.sh
 
-      - name: Run application and JNI smoke tests on API 36
-        if: matrix.api == 36
+      - name: Run application and JNI smoke tests on API 37
+        if: matrix.api == 37
         run: >-
           ./gradlew :app:${{ matrix.task }}
           --no-daemon

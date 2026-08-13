@@ -2,7 +2,7 @@
 
 ## Цель и ограничения
 
-Цель — выпустить поддерживаемую версию Hacker's Keyboard с `targetSdk 36`, не
+Цель — выпустить поддерживаемую версию Hacker's Keyboard с `targetSdk 37`, не
 потеряв поведение, ради которого используется проект. Миграция идёт четырьмя
 последовательными этапами. Feature work допускается отдельно от migration work,
 чтобы регрессии можно было локализовать.
@@ -31,8 +31,10 @@ issues. Каждый нижележащий шаг является отдель
 
 1. Добавить полный Gradle wrapper и executable bit для `gradlew`.
 2. Зафиксировать JDK 17 в документации и CI.
-3. Перейти на AGP 8.13.x и Gradle 8.13 как консервативный мост к API 36. После
-   стабильного релиза отдельно оценить AGP 9.x.
+3. Перейти на AGP 8.13.x и Gradle 8.13 как воспроизводимый мост к API 36.
+   Последующий переход на AGP 9.3.1/Gradle 9.6.1 выполняется в S2.02 вместе с
+   AndroidX Core 1.19.0 и `compileSdk 37`; проектный JDK поднимается до 21,
+   поскольку lint AGP 9.3.1 использует Java 21 API в security detector.
 4. Перейти с `jcenter()` на `mavenCentral()` и `google()`.
 5. Добавить `namespace`, современный Android DSL и `compileSdk 36`.
 6. Сначала оставить `targetSdk 26`, чтобы отделить build migration от platform
@@ -49,7 +51,7 @@ issues. Каждый нижележащий шаг является отдель
 
 ### Критерии завершения
 
-- clean checkout собирается одной командой wrapper на JDK 17;
+- clean checkout собирается одной командой wrapper на зафиксированном JDK;
 - debug и non-debuggable release APK успешно создаются;
 - все ABI содержат `libjni_pckeyboard.so` и проходят smoke lookup;
 - нет `jcenter()` и недекларированных локальных prerequisites;
@@ -65,7 +67,7 @@ issues. Каждый нижележащий шаг является отдель
 Эти ошибки исправляются минимальными патчами; AndroidX migration относится к
 этапу 2.
 
-## Этап 2. AndroidX и targetSdk 36
+## Этап 2. AndroidX и targetSdk 37
 
 ### Результат
 
@@ -98,19 +100,19 @@ issues. Каждый нижележащий шаг является отдель
 11. Удалить или заменить `AsyncTask` там, где lifecycle/cancellation уже создают
     ошибки; полная декомпозиция остаётся этапом 4.
 12. Поднимать target последовательно через поведенческие границы
-    28 → 31 → 33 → 34 → 35 → 36, фиксируя результаты тестов.
+    28 → 31 → 33 → 34 → 35 → 36 → 37, фиксируя результаты тестов.
 13. Проверить edge-to-edge/window insets, popup placement, candidates view,
     extract/fullscreen mode, portrait/landscape и multi-window.
 14. Собрать Android App Bundle и выполнить Play pre-launch проверки.
 
 ### Критерии завершения
 
-- `compileSdk 36`, `targetSdk 36`, выбранный `minSdk` обоснован данными;
+- `compileSdk 37`, `targetSdk 37`, выбранный `minSdk` обоснован данными;
 - AndroidX, без Support Library и Jetifier-зависимости в финальном состоянии;
 - нет `QUERY_ALL_PACKAGES`, отсутствующих exported/receiver/pending-intent flags;
 - отказ в notification permission не ломает клавиатуру;
 - dictionary packs обнаруживаются через узкие queries;
-- нет runtime crash на Android 12, 13, 14, 15 и 16 в основной матрице;
+- нет runtime crash на Android 12, 13, 14, 15, 16 и 17 в основной матрице;
 - native library протестирована на 16 KB page-size image;
 - release AAB проходит lint и базовую Play проверку.
 
@@ -201,7 +203,7 @@ issues. Каждый нижележащий шаг является отдель
 ## Порядок релизов
 
 - `v2-dev`: завершён этап 1, внутренние APK.
-- `v2-alpha`: target 36 и AndroidX, основная функциональность работает.
+- `v2-alpha`: target 37 и AndroidX, основная функциональность работает.
 - `v2-beta`: завершена критическая матрица этапа 3, тестирование пользователями.
 - `v2.0`: Play-ready release без известных блокирующих регрессий.
 - `v2.x`: архитектурный этап 4 и отобранные новые функции.

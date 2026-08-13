@@ -144,7 +144,7 @@ meaningful Java/build diff без whitespace составляет порядка
 
 ### Проблемы и ограничения
 
-- AGP 8.1/target 34 уже ниже цели API 36;
+- AGP 8.1/target 34 уже ниже цели API 37;
 - `minSdk` без необходимости поднят с 14 до 29, исключая старые устройства и
   позволяя скрыть compatibility work;
 - `gradlew` изменён, но `gradle/wrapper/gradle-wrapper.jar` и properties в tip не
@@ -179,7 +179,7 @@ meaningful Java/build diff без whitespace составляет порядка
 
 Fork подтверждает, что legacy Java можно адаптировать без полного rewrite, но не
 является готовой основой v2. Полезные API patterns нужно реализовать заново на
-API 36, сохраняя более низкий `minSdk` и добавляя тесты.
+API 37, сохраняя более низкий `minSdk` и добавляя тесты.
 
 ## crab182/hackerskeyboard
 
@@ -211,7 +211,7 @@ API 36, сохраняя более низкий `minSdk` и добавляя т
 ## Очередь исследования и портирования
 
 1. На этапе 2 адаптировать из `hongkongphoooey` manifest/package visibility,
-   PendingIntent, receiver и modern PackageManager patterns — вручную для API 36.
+   PendingIntent, receiver и modern PackageManager patterns — вручную для API 37.
 2. На этапе 3 воспроизвести и покрыть тестами `max-pulya` fixes:
    candidates → landscape width → Fn comma → modifier indicators/language.
 3. После parity отдельно рассмотреть Ctrl+Backspace и mixed en/ru layouts.

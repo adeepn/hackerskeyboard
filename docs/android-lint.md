@@ -2,7 +2,7 @@
 
 ## Обязательный gate
 
-Модуль `app` запускает `:app:lintDebug` с Android Gradle Plugin 8.13.2. В
+Модуль `app` запускает `:app:lintDebug` с Android Gradle Plugin 9.3.1. В
 `app/build.gradle` включены `abortOnError` и `warningsAsErrors`, поэтому любая
 новая lint-проблема останавливает проверку. Текущий исторический долг перечислен
 точечно в `app/lint-baseline.xml`; глобальных suppressions категорий нет.
@@ -19,10 +19,15 @@ prek run --hook-stage manual android-lint
 ./gradlew :app:lintDebug --no-daemon --stacktrace
 ```
 
-Manual stage выбран намеренно: lint требует JDK 17 и Android SDK 36 и не должен
+Manual stage выбран намеренно: lint требует JDK 21 и Android SDK 37 и не должен
 замедлять каждый маленький commit. Он обязателен перед PR, меняющим Android
 код, manifest, ресурсы или Gradle-конфигурацию. GitHub Actions запускает тот же
 `prek` hook на бесплатном `ubuntu-latest` runner и всегда сохраняет lint report.
+
+JDK 21 закреплён не ради обхода проверки: `BidirectionalTextDetector` из lint
+AGP 9.3.1 вызывает `java.util.List.removeLast()`. На JDK 17 анализ падал внутри
+lint до формирования отчёта. Детектор `BidiSpoofing` остаётся включённым, а
+локальная и CI-среда используют одинаковый JDK 21 LTS.
 
 ## Что исправлено до baseline
 
