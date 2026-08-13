@@ -106,7 +106,7 @@ baseline entries не добавляются, runtime flow не изменяет
 выключенным; `scripts/verify-androidx-migration.py` фиксирует dependencies,
 runner/imports и отсутствие Support Library references в bundled JAR.
 `scripts/verify-resolved-androidx.sh` дополнительно проверяет реальные Gradle
-graphs для debug runtime и instrumentation test runtime в CI на JDK 17.
+graphs для debug runtime и instrumentation test runtime в CI на JDK 21.
 
 ## Контракт S2.03: settings
 

@@ -28,14 +28,14 @@ Gradle распространяется под Apache License 2.0.
 
 ## Проверка
 
-Для запуска wrapper требуется JDK 17:
+Для запуска wrapper требуется проектный JDK 21:
 
 ```sh
 ./gradlew --version --no-daemon
 ```
 
 GitHub Actions дополнительно проверяет wrapper JAR через официальный
-`gradle/actions/wrapper-validation` и выполняет bootstrap на JDK 17.
+`gradle/actions/wrapper-validation` и выполняет bootstrap на JDK 21.
 
 Wrapper, AGP и `compileSdk` обновляются как единая совместимая матрица:
 Gradle 9.6.1, AGP 9.3.1 и API 37. Откат только одного элемента этой матрицы

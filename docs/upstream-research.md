@@ -51,7 +51,7 @@ GitHub.
 Почему не cherry-pick/merge:
 
 - 144 файла и массовое форматирование ресурсов скрывают semantic diff;
-- toolchain уже отличается от нашего целевого AGP 9.3.1/Gradle 9.6.1/JDK 17;
+- toolchain уже отличается от нашего целевого AGP 9.3.1/Gradle 9.6.1/JDK 21;
 - CI ориентирован на tag release, Java 21 и содержит signing workflow, но не PR
   test gates;
 - lint `NotificationPermission` подавлен вместо полноценного UX;

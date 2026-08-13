@@ -4,7 +4,7 @@
 
 | Компонент | Версия | Состояние |
 | --- | --- | --- |
-| JDK | 17 | зафиксирован в `.java-version` |
+| JDK | 21 | зафиксирован в `.java-version` |
 | Gradle | 9.6.1 | зафиксирован wrapper и SHA-256 |
 | Android Gradle Plugin | 9.3.1 | зафиксирован в `gradle.properties` |
 | Android NDK | 29.0.14206865 (r29) | зафиксирован в `gradle.properties` |
@@ -12,10 +12,13 @@
 | min SDK | 24 (Android 7.0) | принято в ADR-0001 |
 | compile SDK | 37 | поднят в S2.02 для AndroidX Core 1.19.0 |
 
-AGP 9.3.1 требует Gradle 9.5.0 или новее и JDK 17 и поддерживает API 37.
+AGP 9.3.1 требует Gradle 9.5.0 или новее, минимум JDK 17 и поддерживает API 37.
 Выбран последний стабильный Gradle 9.6.1; lint-подсказка о 9.7.0 относится к
 release candidate и остаётся в существующей точечной baseline-категории до
-стабильного релиза. Эта матрица
+стабильного релиза. Проект фиксирует JDK 21 LTS: lint из AGP 9.3.1 использует
+`List.removeLast()` в `BidirectionalTextDetector`, из-за чего анализ падает на
+JDK 17 до создания отчёта. JDK 21 позволяет оставить security detector
+`BidiSpoofing` включённым. Эта матрица
 выбрана вместо отката AndroidX Core 1.19.0, который требует `compileSdk 37` и
 AGP 9.1.0 или новее. Preview-платформа Android 17 публикуется для `sdkmanager`
 под точным package ID `platforms;android-37.0`; Build Tools — `37.0.0`.

@@ -20,7 +20,7 @@
   baseline и классификация накопленного долга.
 - [Миграция на AndroidX](androidx-migration.md) — инвентаризация Support
   Library, границы S2.02/S2.03 и обязательные regression checks.
-- [Настройка окружения](developer-setup.md) — JDK 17, `JAVA_HOME` и локальные
+- [Настройка окружения](developer-setup.md) — JDK 21, `JAVA_HOME` и локальные
   проверки.
 - [Исследование форков](fork-research.md) — сравнение трёх форков и перечень
   изменений, которые стоит портировать или отвергнуть.
@@ -36,7 +36,7 @@
 
 ## Целевое состояние v2
 
-- воспроизводимая сборка на JDK 17 с Gradle wrapper;
+- воспроизводимая сборка на JDK 21 с Gradle wrapper;
 - `compileSdk` и `targetSdk` 37;
 - публикационная совместимость с требованиями Google Play 2026;
 - AndroidX вместо старой Support Library;
