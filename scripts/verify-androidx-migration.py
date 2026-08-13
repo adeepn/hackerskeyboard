@@ -20,7 +20,7 @@ EXPECTED_DEPENDENCIES = {
 }
 EXPECTED_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
 EXPECTED_SDK_LEVELS = {
-    "compileSdk": "36",
+    "compileSdk": "37",
     "minSdk": "24",
     "targetSdk": "26",
 }

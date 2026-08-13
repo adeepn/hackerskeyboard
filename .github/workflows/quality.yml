@@ -72,7 +72,7 @@ jobs:
         with:
           packages: >-
             platform-tools
-            platforms;android-36
+            platforms;android-37
             build-tools;36.0.0
             ndk;29.0.14206865
             cmake;3.22.1
@@ -126,7 +126,7 @@ jobs:
         with:
           packages: >-
             platform-tools
-            platforms;android-36
+            platforms;android-37
             build-tools;36.0.0
             ndk;29.0.14206865
             cmake;3.22.1
@@ -157,8 +157,8 @@ jobs:
       matrix:
         include:
           - api: 24
-          - api: 36
-            task: pixel2Api36DebugAndroidTest
+          - api: 37
+            task: pixel2Api37DebugAndroidTest
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
@@ -174,7 +174,7 @@ jobs:
         with:
           packages: >-
             platform-tools
-            platforms;android-36
+            platforms;android-37
             build-tools;36.0.0
             ndk;29.0.14206865
             cmake;3.22.1
@@ -189,8 +189,8 @@ jobs:
         if: matrix.api == 24
         run: scripts/run-api24-connected-tests.sh
 
-      - name: Run application and JNI smoke tests on API 36
-        if: matrix.api == 36
+      - name: Run application and JNI smoke tests on API 37
+        if: matrix.api == 37
         run: >-
           ./gradlew :app:${{ matrix.task }}
           --no-daemon

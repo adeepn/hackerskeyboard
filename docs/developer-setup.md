@@ -10,7 +10,7 @@
 
 Для полной Android-сборки дополнительно установите через Android SDK Manager:
 
-- Android SDK Platform 36;
+- Android SDK Platform 37;
 - Android SDK Build Tools 36.0.0;
 - Android NDK 29.0.14206865;
 - CMake 3.22.1.
@@ -77,13 +77,11 @@ export PATH="$JAVA_HOME/bin:$PATH"
 `PATH`. Не добавляйте машинный абсолютный путь в `gradle.properties` или другие
 tracked files.
 
-## Текущее ограничение legacy build
+## Совместимость toolchain
 
-Gradle wrapper 8.13 запускается на JDK 17, но Android Gradle Plugin 3.2.1 ещё не
-совместим с этим Gradle API. До выполнения S1.03 команда `./gradlew test` может
-остановиться при применении Android plugin с ошибкой, связанной с
-`BuildCompletionListener`. Это известный toolchain blocker, а не результат
-исполнения тестов приложения.
+Проект использует единую проверенную матрицу Gradle 9.3.1, AGP 9.1.1, JDK 17 и
+Android SDK Platform 37. Локальный запуск на другой JVM не считается
+воспроизводимой проверкой, даже если сам Gradle способен на ней стартовать.
 
 ## Дополнительный Claude CLI review и API-ключи
 

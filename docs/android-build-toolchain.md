@@ -5,15 +5,16 @@
 | Компонент | Версия | Состояние |
 | --- | --- | --- |
 | JDK | 17 | зафиксирован в `.java-version` |
-| Gradle | 8.13 | зафиксирован wrapper и SHA-256 |
-| Android Gradle Plugin | 8.13.2 | зафиксирован в `gradle.properties` |
+| Gradle | 9.3.1 | зафиксирован wrapper и SHA-256 |
+| Android Gradle Plugin | 9.1.1 | зафиксирован в `gradle.properties` |
 | Android NDK | 29.0.14206865 (r29) | зафиксирован в `gradle.properties` |
 | CMake | 3.22.1 | зафиксирован в `gradle.properties` |
 | min SDK | 24 (Android 7.0) | принято в ADR-0001 |
-| compile SDK | 36 | зафиксирован в S1.06 |
+| compile SDK | 37 | поднят в S2.02 для AndroidX Core 1.19.0 |
 
-AGP 8.13 требует Gradle 8.13 и JDK 17 и поддерживает API 36.1. Patch release
-8.13.2 выбран внутри этой совместимой линии.
+AGP 9.1.1 требует Gradle 9.3.1 и JDK 17 и поддерживает API 37. Эта матрица
+выбрана вместо отката AndroidX Core 1.19.0, который требует `compileSdk 37` и
+AGP 9.1.0 или новее. Build Tools остаются на поддерживаемой версии 36.0.0.
 
 ## Проверка разрешения AGP
 
@@ -38,7 +39,7 @@ Debug и unsigned release варианты собираются одной ко�
 ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon
 ```
 
-Для неё необходимы Android Platform 36, Build Tools 36.0.0, NDK
+Для неё необходимы Android Platform 37, Build Tools 36.0.0, NDK
 29.0.14206865 и CMake 3.22.1. CI устанавливает именно эти версии, не полагаясь
 на изменяемый состав образа `ubuntu-latest`.
 
@@ -56,9 +57,10 @@ release-компиляцию. Он ещё не является публикуе
 
 ## Разделение compile SDK и target SDK
 
-S1.06 поднимает только `compileSdk` с 26 до 36. Это позволяет компилировать код
+S1.06 поднял `compileSdk` с 26 до 36, а S2.02 — с 36 до 37 как обязательную
+часть перехода на AndroidX Core 1.19.0. Это позволяет компилировать код
 против актуального Android API, но само по себе не включает новые изменения
-поведения платформы: `targetSdk` временно остаётся равен 26. Его переход на 36
+поведения платформы: `targetSdk` временно остаётся равен 26. Его переход на 37
 выполняется отдельно на Stage 2 вместе с совместимостными изменениями и тестами.
 
 На современных устройствах промежуточный APK поэтому может показывать системное
@@ -75,14 +77,14 @@ AGP resource/build errors. Следующие native smoke tests выполня�
 
 S1.09 добавил минимальный JNI instrumented test, а S1.15 расширяет device gate
 до проверки установки, регистрации IME и запуска основных activities на нижней
-и верхней границах Stage 1. API 24 запускается через официальный Android
-Emulator и connected test, потому что AGP 8.13.2 не поддерживает managed devices
-на API 26 и ниже без незавершённого experimental path. API 36 остаётся Gradle
-Managed Device. Используются команды:
+и верхней границах. API 24 запускается через явно создаваемый Android Emulator
+и connected test, что сохраняет контролируемый AOSP `x86` образ нижней границы.
+Верхняя граница проверяется Gradle Managed Device на API 37. Используются
+команды:
 
 ```sh
 scripts/run-api24-connected-tests.sh
-./gradlew :app:pixel2Api36DebugAndroidTest \
+./gradlew :app:pixel2Api37DebugAndroidTest \
   --no-daemon \
   -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 ```
@@ -95,14 +97,14 @@ scripts/run-api24-connected-tests.sh
 dictionary. Тем самым исполняются загрузка
 `libjni_pckeyboard.so`, регистрация JNI, `openNative`, lookup и `closeNative`.
 
-Команды требуют Android Emulator, system images API 24/36 и аппаратную
+Команды требуют Android Emulator, system images API 24/37 и аппаратную
 виртуализацию. API 24 script создаёт чистый AOSP `x86` AVD, ждёт завершения boot
 и запускает `connectedDebugAndroidTest`. В CI обе границы выполняются отдельной
 matrix job на `ubuntu-latest`; обычная сборка APK остаётся отдельным быстрым gate
-и публикует installable debug APK вместе с unsigned release APK. API 36 пока
-использует зафиксированное текущей версией AGP поведение `x86_64`. Полное
-устранение зависимости API 36 от меняющегося default ABI отслеживается в
-[#33](https://github.com/adeepn/hackerskeyboard/issues/33) до обновления на AGP 9.
+и публикует installable debug APK вместе с unsigned release APK. API 37 smoke
+явно фиксирует 64-bit `x86_64` и 4 KB page alignment, поэтому не зависит от
+меняющихся defaults AGP. Отдельный 16 KB device gate остаётся частью
+[#33](https://github.com/adeepn/hackerskeyboard/issues/33) и S2.21.
 
 Этот baseline не утверждает, что уже проверена полная функциональность набора:
 нажатия экранных клавиш, modifiers, popup, candidates и interoperability с
@@ -121,7 +123,7 @@ com.baodeep.hackerskeyboard
 его источник. Код, XML custom views и JNI registration перенесены в тот же
 package. Историческое приложение `org.pocketworkstation.pckeyboard` остаётся
 отдельным и может быть установлено одновременно. После S1.06 `compileSdk` равен
-36, `targetSdk` временно остаётся 26, а `minSdk` равен 24 согласно ADR-0001.
+37, `targetSdk` временно остаётся 26, а `minSdk` равен 24 согласно ADR-0001.
 
 Подробный migration contract, включая отсутствие автоматического переноса
 private settings и требования к будущей стабильной release-подписи, зафиксирован

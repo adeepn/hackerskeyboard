@@ -21,7 +21,7 @@ matrix.
 ## Реализованный Stage 1 application и native smoke
 
 Instrumented tests запускаются на Android Emulator / API 24 и Gradle Managed
-Device Pixel 2 / API 36. `ApplicationSmokeTest` подтверждает, что установленный
+Device Pixel 2 / API 37. `ApplicationSmokeTest` подтверждает, что установленный
 APK зарегистрирован системой как IME, а launcher/setup и legacy settings
 activities запускаются и создают обязательные views. `BinaryDictionarySmokeTest`
 проверяет lookup встроенного минимального словаря через полную границу Java →
@@ -37,7 +37,7 @@ S1.25 добавляет быстрый identity guard в `prek`. Он фикс�
 `applicationId`/namespace, отсутствие исторического и отвергнутого временного
 app identifier в Android inputs, новый JNI class path, сохранение
 `org.pocketworkstation.DICT` и неизменность 66 legacy preference keys. Device
-smoke дополнительно утверждает новый package name на API 24 и API 36. APK
+smoke дополнительно утверждает новый package name на API 24 и API 37. APK
 manifest identity проверяется после сборки в CI.
 Когда Stage 2 добавит release AAB job, тот же gate должен проверять identity в
 bundle до публикации. Будущий settings export/import обязан иметь round-trip
@@ -55,7 +55,8 @@ tests для всех зафиксированных ключей, неизве�
 - Android 13/API 33 — notifications и receiver APIs;
 - Android 14/API 34 — runtime receiver restrictions;
 - Android 15/API 35 — 16 KB support и window behavior;
-- Android 16/API 36 — целевой релиз;
+- Android 16/API 36 — обязательная compatibility boundary;
+- Android 17/API 37 — целевой релиз;
 - минимум одно 16 KB page-size устройство/образ;
 - phone и tablet profiles, portrait и landscape.
 

@@ -55,9 +55,9 @@ Epic: **Stage 1: восстановить современную воспрои�
 Зависимости: S1.01 → S1.03 → S1.05/S1.06/S1.07; S1.08 → S1.09; стабильная
 сборка → S1.14/S1.15. S1.12 и базовая часть S1.13 могут выполняться раньше.
 
-## Milestone: V2 / Stage 2 — Android 16 Compatibility
+## Milestone: V2 / Stage 2 — Android 17 Compatibility
 
-Epic: **Stage 2: AndroidX и targetSdk 36**.
+Epic: **Stage 2: AndroidX и targetSdk 37**.
 
 - S2.01 ([#48](https://github.com/adeepn/hackerskeyboard/issues/48)) —
   инвентаризация Support Library и AndroidX migration plan;
@@ -79,10 +79,11 @@ Epic: **Stage 2: AndroidX и targetSdk 36**.
 - S2.16 — target SDK 34 и compatibility report;
 - S2.17 — target SDK 35 и compatibility report;
 - S2.18 — target SDK 36 и compatibility report;
-- S2.19 — popup/candidates/window insets fixes;
-- S2.20 — 16 KB native compatibility;
-- S2.21 — release AAB и Play readiness checklist.
-- S2.22 — regression tests для navigation bar/insets и самопроизвольного показа
+- S2.19 — target SDK 37 и compatibility report;
+- S2.20 — popup/candidates/window insets fixes;
+- S2.21 — 16 KB native compatibility;
+- S2.22 — release AAB и Play readiness checklist.
+- S2.23 — regression tests для navigation bar/insets и самопроизвольного показа
   IME, обнаруженных в обсуждении upstream PR #978.
 
 Target SDK steps выполняются последовательно. Независимые API migrations можно

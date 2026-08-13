@@ -72,7 +72,7 @@ instrumentation configurations. В итоговом graph не должно ос
 - Android lint без глобальных suppressions;
 - unit tests;
 - merged-manifest/application identity checks;
-- application и JNI dictionary smoke на API 24 и API 36;
+- application и JNI dictionary smoke на API 24 и API 37;
 - проверка APK ABI и package/label;
 - negative source/dependency guard против возврата `android.support`.
 
@@ -87,6 +87,12 @@ instrumentation configurations. В итоговом graph не должно ос
 - `androidx.core:core:1.19.0`;
 - `androidx.test:runner:1.7.0`;
 - `androidx.test.ext:junit:1.3.0`.
+
+AndroidX Core 1.19.0 требует `compileSdk 37` и AGP 9.1.0 или новее. Проект не
+откатывает библиотеку: S2.02 атомарно поднимает `compileSdk` до 37, AGP до 9.1.1
+и обязательный для него Gradle wrapper до 9.3.1. `targetSdk 26` остаётся без
+изменений, поэтому platform behavior migration по-прежнему выполняется
+отдельными checkpoints.
 
 Источники: [Core release notes](https://developer.android.com/jetpack/androidx/releases/core)
 и [AndroidX Test release notes](https://developer.android.com/jetpack/androidx/releases/test).

@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'com.baodeep.hackerskeyboard'
-    compileSdk 36
+    compileSdk 37
     ndkVersion androidNdkVersion
 
     defaultConfig {
@@ -25,7 +25,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     externalNativeBuild {
@@ -37,10 +37,13 @@ android {
     testOptions {
         managedDevices {
             localDevices {
-                pixel2Api36 {
+                pixel2Api37 {
                     device = "Pixel 2"
-                    apiLevel = 36
+                    sdkVersion = 37
                     systemImageSource = "aosp"
+                    require64Bit = true
+                    testedAbi = "x86_64"
+                    pageAlignment = com.android.build.api.dsl.ManagedVirtualDevice.PageAlignment.FORCE_4KB_PAGES
                 }
             }
         }
