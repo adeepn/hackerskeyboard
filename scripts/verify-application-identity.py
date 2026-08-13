@@ -35,7 +35,22 @@ def main() -> int:
         if not re.search(pattern, build_gradle):
             errors.append(f"app/build.gradle: {property_name} must be {APPLICATION_ID}")
 
-    text_suffixes = {".gradle", ".java", ".cpp", ".xml"}
+    text_suffixes = {
+        ".c",
+        ".cc",
+        ".cmake",
+        ".cpp",
+        ".gradle",
+        ".h",
+        ".hpp",
+        ".java",
+        ".kt",
+        ".kts",
+        ".pro",
+        ".properties",
+        ".txt",
+        ".xml",
+    }
     for path in sorted(app.rglob("*")):
         if not path.is_file() or path.suffix not in text_suffixes or "build" in path.parts:
             continue
