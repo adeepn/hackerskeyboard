@@ -85,5 +85,5 @@ No private key, keystore or signing secret is committed to the repository.
   identity migration;
 - all three researched forks retain `org.pocketworkstation.pckeyboard` and
   provide no migration patch;
-- API 24 and API 36 instrumentation tests provide the installation, component
+- API 24 and API 37 instrumentation tests provide the installation, component
   and JNI baseline that the renamed package must preserve.
