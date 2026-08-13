@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 public class ApplicationSmokeTest {
     private static final String EXPECTED_APPLICATION_ID =
             "com.baodeep.hackerskeyboard";
+    private static final String EXPECTED_DISPLAY_NAME = "Hacker's Keyboard v2";
 
     @Test
     public void installedApkRegistersImeAndLaunchesEssentialActivities() {
@@ -33,12 +34,15 @@ public class ApplicationSmokeTest {
         Context context = InstrumentationRegistry.getTargetContext();
 
         assertEquals(EXPECTED_APPLICATION_ID, context.getPackageName());
+        assertEquals(EXPECTED_DISPLAY_NAME,
+                context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
         assertEquals(EXPECTED_APPLICATION_ID + ".LatinIME", LatinIME.class.getName());
         assertEquals("org.pocketworkstation.DICT", PluginManager.HK_INTENT_DICT);
         assertImeIsRegistered(context);
 
         Main main = launchActivity(instrumentation, context, Main.class);
         try {
+            assertEquals(EXPECTED_DISPLAY_NAME, main.getTitle().toString());
             assertVisible(main, R.id.main_description);
             assertVisible(main, R.id.main_setup_btn_configure_imes);
             assertVisible(main, R.id.main_setup_btn_set_ime);
@@ -68,6 +72,8 @@ public class ApplicationSmokeTest {
         for (InputMethodInfo inputMethod : manager.getInputMethodList()) {
             if (expectedPackage.equals(inputMethod.getServiceInfo().packageName)
                     && expectedService.equals(inputMethod.getServiceInfo().name)) {
+                assertEquals(EXPECTED_DISPLAY_NAME,
+                        inputMethod.loadLabel(context.getPackageManager()).toString());
                 found = true;
                 break;
             }
