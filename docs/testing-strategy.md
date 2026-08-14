@@ -119,3 +119,16 @@ tests для всех зафиксированных ключей, неизве�
 устройства/API, результат 16 KB test, список известных отклонений и ручной
 checklist. Утверждение «работает на Android N» без устройства/образа и сценария
 не считается проверкой.
+
+Для каждого подписанного alpha APK workflow дополнительно проверяет package,
+`versionCode`, `versionName`, SHA-256 сертификата и подпись `apksigner`, а также
+сохраняет SHA-256 самого APK в `release-evidence.txt`. Release build проходит
+R8/resource shrinking, JNI smoke на debug variant защищает Java/native
+контракт, а keep guards фиксируют JNI class name и динамически найденный
+`@raw/main`. Размер unsigned release ограничен CI budget 3 400 000 байт.
+
+Первый APK со стабильным owner key проверяется свежей установкой. Если на
+устройстве уже стоит CI/debug APK `com.baodeep.hackerskeyboard` с эфемерным
+сертификатом, его нужно один раз удалить. Затем проверяются последовательные
+обновления только APK, подписанными тем же owner key и с возрастающим
+`versionCode`.

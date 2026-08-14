@@ -50,7 +50,8 @@ Epic: **Stage 1: восстановить современную воспрои�
   определить ABI Gradle Managed Device до оценки перехода на AGP 9.
 - S1.28 ([#45](https://github.com/adeepn/hackerskeyboard/issues/45)) — настроить
   owner-controlled release signing и стабильную v2 update chain без ключей в
-  Git или доступа из обычных PR workflows.
+  Git или доступа из обычных PR workflows; использовать ручной workflow только
+  из `v2`, отдельные build/sign jobs и обязательную проверку сертификата.
 
 Зависимости: S1.01 → S1.03 → S1.05/S1.06/S1.07; S1.08 → S1.09; стабильная
 сборка → S1.14/S1.15. S1.12 и базовая часть S1.13 могут выполняться раньше.

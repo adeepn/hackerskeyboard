@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# JNI_OnLoad resolves this class and registers its native methods by their exact
+# binary names. Renaming or removing either side breaks dictionary loading.
+-keep class com.baodeep.hackerskeyboard.BinaryDictionary {
+    *;
+}

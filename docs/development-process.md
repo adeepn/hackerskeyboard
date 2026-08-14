@@ -115,6 +115,14 @@ issues, не смешивая форматирование с изменение
 CI не заменяет локальные проверки: локальный `prek` даёт быстрый feedback, CI
 подтверждает результат в чистом Linux-окружении.
 
+Release signing не выполняется в PR и push workflow. Ручной workflow доступен
+только для `v2`; его signing job использует GitHub Environment `release` и не
+делает checkout репозитория. Владелец явно выбрал branch restriction без
+required reviewer для Environment. Это не отменяет обычные PR/CI/owner gates и
+компенсируется разделением build/sign jobs, проверкой публичного SHA-256
+сертификата и отсутствием секретов во всех командах Gradle. Полная модель угроз
+и процедура выпуска описаны в `release-signing.md`.
+
 ## Обязательные ревью перед merge
 
 Каждый PR проходит три независимых gate:

@@ -1,0 +1,170 @@
+# SPDX-License-Identifier: Apache-2.0
+
+name: Signed v2 release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signed-v2-release
+  cancel-in-progress: false
+
+jobs:
+  build-release:
+    name: Build unsigned release
+    if: github.ref == 'refs/heads/v2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out v2
+        uses: actions/checkout@9c971963bec38e04b3d30dcc455b5382be2fdbfb
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version-file: .java-version
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699
+        with:
+          packages: >-
+            platform-tools
+            platforms;android-37.0
+            build-tools;37.0.0
+            ndk;29.0.14206865
+            cmake;3.22.1
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@4733eaac7c1b0da527e4206b7671e0061de1ce37
+
+      - name: Build unsigned release APK
+        run: ./gradlew :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Verify unsigned release APK
+        run: |
+          scripts/verify-apk-native-libs.sh app/build/outputs/apk/release/app-release-unsigned.apk
+          scripts/verify-apk-identity.sh app/build/outputs/apk/release/app-release-unsigned.apk
+          scripts/verify-apk-size.sh app/build/outputs/apk/release/app-release-unsigned.apk 3400000
+
+      - name: Upload unsigned release APK
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: unsigned-v2-release-${{ github.sha }}
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+
+  sign-release:
+    name: Sign and verify release
+    needs: build-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release
+    steps:
+      - name: Set up JDK 21 for apksigner
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android build tools
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699
+        with:
+          packages: >-
+            platform-tools
+            build-tools;37.0.0
+
+      - name: Download unsigned release APK
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: unsigned-v2-release-${{ github.sha }}
+          path: unsigned
+
+      - name: Sign APK and verify release identity
+        id: sign
+        shell: bash
+        env:
+          KEYSTORE_BASE64: ${{ secrets.V2_RELEASE_KEYSTORE_BASE64 }}
+          KEY_ALIAS: ${{ secrets.V2_RELEASE_KEY_ALIAS }}
+          STORE_PASSWORD: ${{ secrets.V2_RELEASE_STORE_PASSWORD }}
+          STORE_TYPE: ${{ vars.V2_RELEASE_STORE_TYPE }}
+          EXPECTED_CERT_SHA256: ${{ vars.V2_RELEASE_CERT_SHA256 }}
+        run: |
+          set -euo pipefail
+
+          readonly unsigned_apk="unsigned/app-release-unsigned.apk"
+          readonly signed_apk="signed/hackers-keyboard-v2-2.0.0-alpha01.apk"
+          readonly keystore="${RUNNER_TEMP}/hackers-keyboard-v2-release.p12"
+          readonly apksigner="${ANDROID_SDK_ROOT}/build-tools/37.0.0/apksigner"
+          readonly apkanalyzer="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/apkanalyzer"
+          mkdir -p signed
+          trap 'rm -f "${keystore}"' EXIT
+
+          if [[ -z "${KEYSTORE_BASE64}" || -z "${KEY_ALIAS}" || -z "${STORE_PASSWORD}" ]]; then
+            echo "Required release signing secret is missing" >&2
+            exit 1
+          fi
+
+          printf '%s' "${KEYSTORE_BASE64}" | base64 --decode > "${keystore}"
+          chmod 600 "${keystore}"
+
+          "${apksigner}" sign \
+            --ks "${keystore}" \
+            --ks-type "${STORE_TYPE:-PKCS12}" \
+            --ks-key-alias "${KEY_ALIAS}" \
+            --ks-pass env:STORE_PASSWORD \
+            --key-pass env:STORE_PASSWORD \
+            --out "${signed_apk}" \
+            "${unsigned_apk}"
+
+          "${apksigner}" verify --verbose --print-certs "${signed_apk}"
+
+          actual_cert="$("${apksigner}" verify --print-certs "${signed_apk}" \
+            | awk -F ': ' '/Signer #1 certificate SHA-256 digest:/ {print $2; exit}' \
+            | tr -d '[:space:]:' \
+            | tr '[:lower:]' '[:upper:]')"
+          expected_cert="$(printf '%s' "${EXPECTED_CERT_SHA256}" \
+            | tr -d '[:space:]:' \
+            | tr '[:lower:]' '[:upper:]')"
+          if [[ ! "${expected_cert}" =~ ^[0-9A-F]{64}$ ]]; then
+            echo "V2_RELEASE_CERT_SHA256 is not a SHA-256 digest" >&2
+            exit 1
+          fi
+          if [[ "${actual_cert}" != "${expected_cert}" ]]; then
+            echo "Signed APK certificate does not match V2_RELEASE_CERT_SHA256" >&2
+            exit 1
+          fi
+
+          application_id="$("${apkanalyzer}" manifest application-id "${signed_apk}" | tr -d '\r')"
+          version_code="$("${apkanalyzer}" manifest version-code "${signed_apk}" | tr -d '\r')"
+          version_name="$("${apkanalyzer}" manifest version-name "${signed_apk}" | tr -d '\r')"
+          debuggable="$("${apkanalyzer}" manifest debuggable "${signed_apk}" | tr -d '\r')"
+          [[ "${application_id}" == "com.baodeep.hackerskeyboard" ]]
+          [[ "${version_code}" == "2000001" ]]
+          [[ "${version_name}" == "2.0.0-alpha01" ]]
+          [[ "${debuggable}" == "false" ]]
+
+          apk_sha256="$(sha256sum "${signed_apk}" | awk '{print $1}')"
+          {
+            echo "commit=${GITHUB_SHA}"
+            echo "application_id=${application_id}"
+            echo "version_code=${version_code}"
+            echo "version_name=${version_name}"
+            echo "debuggable=${debuggable}"
+            echo "certificate_sha256=${actual_cert}"
+            echo "apk_sha256=${apk_sha256}"
+          } > signed/release-evidence.txt
+
+      - name: Upload signed release APK
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: hackers-keyboard-v2-2.0.0-alpha01-${{ github.sha }}
+          path: signed/
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
