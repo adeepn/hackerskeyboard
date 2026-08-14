@@ -723,7 +723,7 @@
         "entry_values": "@array/swipe_action_values",
         "key": "pref_swipe_up",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_swipe_down",
@@ -732,7 +732,7 @@
         "entry_values": "@array/swipe_action_values",
         "key": "pref_swipe_down",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_swipe_left",
@@ -741,7 +741,7 @@
         "entry_values": "@array/swipe_action_values",
         "key": "pref_swipe_left",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_swipe_right",
@@ -750,7 +750,7 @@
         "entry_values": "@array/swipe_action_values",
         "key": "pref_swipe_right",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": null,
@@ -768,7 +768,7 @@
         "entry_values": "@array/swipe_action_values",
         "key": "pref_vol_up",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_vol_down",
@@ -777,7 +777,7 @@
         "entry_values": "@array/swipe_action_values",
         "key": "pref_vol_down",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       }
     ],
     "prefs_feedback.xml": [

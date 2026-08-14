@@ -144,3 +144,11 @@ navigation actions и два programmatic language keys с reviewed fixture. В
 baseline входят 48 persisted XML keys (18 boolean, 30 string) и два string keys
 вне XML; float и string-set значений нет. Unit mutation tests доказывают, что
 удаление key и смена типа делают gate красным.
+
+S2.03b расширяет application instrumentation smoke первым AndroidX settings
+screen. Тест записывает существующее string value напрямую в
+`com.baodeep.hackerskeyboard_preferences`, запускает
+`${applicationId}.PREFS_ACTIONS`, проверяет выбранный entry/summary и выполняет
+`Activity.recreate()`. После recreation должен существовать ровно один
+восстановленный Fragment с тем же значением; это negative regression case
+против ручного создания второго Fragment и хранения live Preference object.

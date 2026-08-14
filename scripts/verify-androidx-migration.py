@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 
-"""Guard the minimal AndroidX Core/Test dependency migration."""
+"""Guard the approved AndroidX dependency and incremental migration boundary."""
 
 from __future__ import annotations
 
@@ -12,7 +12,10 @@ from pathlib import Path
 
 
 EXPECTED_DEPENDENCIES = {
-    "implementation": {"androidx.core:core:1.19.0"},
+    "implementation": {
+        "androidx.core:core:1.19.0",
+        "androidx.preference:preference:1.2.1",
+    },
     "androidTestImplementation": {
         "androidx.test.ext:junit:1.3.0",
         "androidx.test:runner:1.7.0",
@@ -88,6 +91,62 @@ def main() -> int:
             if token in text:
                 errors.append(f"{path.relative_to(repository)}: forbidden token {token}")
 
+    actions_activity = (
+        app
+        / "src"
+        / "main"
+        / "java"
+        / "com"
+        / "baodeep"
+        / "hackerskeyboard"
+        / "PrefScreenActions.java"
+    ).read_text(encoding="utf-8")
+    for token in (
+        "extends FragmentActivity",
+        "extends PreferenceFragmentCompat",
+        "if (icicle == null)",
+        ".commitNow()",
+        "registerOnSharedPreferenceChangeListener(this)",
+        "unregisterOnSharedPreferenceChangeListener(this)",
+        "new BackupManager(requireContext())",
+    ):
+        if token not in actions_activity:
+            errors.append(f"PrefScreenActions.java: missing migration guard {token}")
+    for token in ("android.preference.", "PreferenceActivity", "setTargetFragment("):
+        if token in actions_activity:
+            errors.append(f"PrefScreenActions.java: forbidden migration token {token}")
+
+    actions_xml = (app / "src" / "main" / "res" / "xml" / "prefs_actions.xml")
+    actions_xml_text = actions_xml.read_text(encoding="utf-8")
+    if 'xmlns:app="http://schemas.android.com/apk/res-auto"' not in actions_xml_text:
+        errors.append("prefs_actions.xml: AndroidX app namespace is missing")
+    if actions_xml_text.count("<ListPreference") != 6:
+        errors.append("prefs_actions.xml: expected six AndroidX ListPreference nodes")
+    if actions_xml_text.count('app:useSimpleSummaryProvider="true"') != 6:
+        errors.append("prefs_actions.xml: every action must retain an automatic summary")
+    if "AutoSummaryListPreference" in actions_xml_text:
+        errors.append("prefs_actions.xml: legacy custom ListPreference remains")
+
+    manifest = (app / "src" / "main" / "AndroidManifest.xml").read_text(
+        encoding="utf-8"
+    )
+    actions_manifest = re.search(
+        r'<activity\s+android:name="PrefScreenActions"(?P<attributes>[^>]*)>',
+        manifest,
+    )
+    if actions_manifest is None or 'android:theme="@style/SettingsTheme"' not in (
+        actions_manifest.group("attributes") if actions_manifest else ""
+    ):
+        errors.append("AndroidManifest.xml: PrefScreenActions SettingsTheme is missing")
+
+    styles = (app / "src" / "main" / "res" / "values" / "styles.xml").read_text(
+        encoding="utf-8"
+    )
+    if '<style name="SettingsTheme"' not in styles or (
+        '<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>' not in styles
+    ):
+        errors.append("styles.xml: AndroidX preference theme overlay is missing")
+
     jar_count = 0
     for path in sorted((app / "libs").glob("*.jar")):
         jar_count += 1
@@ -110,7 +169,8 @@ def main() -> int:
         return 1
 
     print(
-        "AndroidX migration verified: Core 1.19.0; Test runner 1.7.0; "
+        "AndroidX migration verified: Core 1.19.0; Preference 1.2.1; "
+        "Test runner 1.7.0; "
         f"JUnit extension 1.3.0; Jetifier disabled; {jar_count} JAR checked"
     )
     return 0

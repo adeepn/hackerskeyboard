@@ -50,7 +50,8 @@
         </activity>
 
         <activity android:name="PrefScreenActions"
-                android:label="@string/pref_screen_actions_title">
+                android:label="@string/pref_screen_actions_title"
+                android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="${applicationId}.PREFS_ACTIONS"/>

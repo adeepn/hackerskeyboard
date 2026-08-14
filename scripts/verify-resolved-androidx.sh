@@ -35,7 +35,8 @@ if grep -E "$forbidden_pattern" "$report_dir/debug-runtime.txt" \
 fi
 
 require_coordinate "androidx.core:core:1.19.0" "$report_dir/debug-runtime.txt"
+require_coordinate "androidx.preference:preference:1.2.1" "$report_dir/debug-runtime.txt"
 require_coordinate "androidx.test:runner:1.7.0" "$report_dir/android-test-runtime.txt"
 require_coordinate "androidx.test.ext:junit:1.3.0" "$report_dir/android-test-runtime.txt"
 
-echo "Resolved AndroidX dependencies verified: Core 1.19.0; runner 1.7.0; JUnit 1.3.0"
+echo "Resolved AndroidX dependencies verified: Core 1.19.0; Preference 1.2.1; runner 1.7.0; JUnit 1.3.0"

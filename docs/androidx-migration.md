@@ -3,8 +3,10 @@
 Статус: S2.01 завершён в #48; S2.02 завершён в
 [#50](https://github.com/adeepn/hackerskeyboard/issues/50). S2.03 ведётся в
 [#58](https://github.com/adeepn/hackerskeyboard/issues/58); первый отдельный
-шаг S2.03a фиксирует settings contract в
-[#59](https://github.com/adeepn/hackerskeyboard/issues/59).
+шаг S2.03a зафиксировал settings contract в
+[#59](https://github.com/adeepn/hackerskeyboard/issues/59), S2.03b мигрирует
+первый изолированный actions screen в
+[#61](https://github.com/adeepn/hackerskeyboard/issues/61).
 
 ## Решение
 
@@ -135,6 +137,16 @@ keyed XML nodes, из них 48 уникальных persisted keys (18 boolean 
 Сохранённых float/string-set значений сейчас нет; `SeekBarPreferenceString`
 намеренно хранит значения как string для совместимости. Подробности и порядок
 осознанного обновления fixture описаны в `settings-contract.md`.
+
+S2.03b добавляет официальный stable Java artifact
+`androidx.preference:preference:1.2.1` и переводит только `PrefScreenActions`.
+Activity создаёт initial `PreferenceFragmentCompat` синхронно только при
+`savedInstanceState == null`; после configuration change восстановлением
+владеет `FragmentManager`. Listener принадлежит Fragment lifecycle, live
+`Preference` objects не передаются через arguments и deprecated
+`setTargetFragment` не используется. Шесть string-backed actions сохраняют
+прежние keys/defaults/entryValues, а summary предоставляет штатный
+`ListPreference.SimpleSummaryProvider`.
 
 XML можно переводить по одному экрану, но нельзя одновременно переименовывать
 ключи, менять defaults, реструктурировать весь settings UX или внедрять Compose.
