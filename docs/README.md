@@ -20,6 +20,8 @@
   baseline и классификация накопленного долга.
 - [Миграция на AndroidX](androidx-migration.md) — инвентаризация Support
   Library, границы S2.02/S2.03 и обязательные regression checks.
+- [Контракт хранения настроек](settings-contract.md) — зафиксированные keys,
+  типы, defaults и автоматический guard миграции settings UI.
 - [Подпись и выпуск v2](release-signing.md) — стабильная update chain,
   изоляция ключа, ручной workflow и проверка готового APK.
 - [Настройка окружения](developer-setup.md) — JDK 21, `JAVA_HOME` и локальные

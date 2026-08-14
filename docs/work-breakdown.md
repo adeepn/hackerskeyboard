@@ -67,7 +67,10 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   инвентаризация Support Library и AndroidX migration plan;
 - S2.02 ([#50](https://github.com/adeepn/hackerskeyboard/issues/50)) —
   Core/AppCompat/Test → AndroidX;
-- S2.03 — settings → `PreferenceFragmentCompat` с migration tests;
+- S2.03 ([#58](https://github.com/adeepn/hackerskeyboard/issues/58)) — settings
+  → `PreferenceFragmentCompat` с migration tests; первый bounded slice S2.03a
+  ([#59](https://github.com/adeepn/hackerskeyboard/issues/59)) фиксирует keys,
+  storage types, defaults и navigation до production migration;
 - S2.04 — manifest components и минимальные `android:exported`;
 - S2.05 — explicit intents и PendingIntent mutability;
 - S2.06 — runtime receiver export policy;

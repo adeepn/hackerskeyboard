@@ -1,0 +1,962 @@
+{
+  "_license": "SPDX-License-Identifier: Apache-2.0",
+  "application_id": "com.baodeep.hackerskeyboard",
+  "default_shared_preferences_name": "com.baodeep.hackerskeyboard_preferences",
+  "navigation_actions": {
+    "language_prefs.xml": [],
+    "prefs.xml": [
+      "com.baodeep.hackerskeyboard.PREFS_VIEW",
+      "com.baodeep.hackerskeyboard.INPUT_LANGUAGE_SELECTION",
+      "com.baodeep.hackerskeyboard.PREFS_FEEDBACK",
+      "com.baodeep.hackerskeyboard.PREFS_ACTIONS"
+    ],
+    "prefs_actions.xml": [],
+    "prefs_feedback.xml": [],
+    "prefs_for_debug.xml": [],
+    "prefs_view.xml": []
+  },
+  "persisted_xml_keys": [
+    "auto_cap",
+    "auto_complete",
+    "connectbot_tab_hack",
+    "debug_mode",
+    "enable_logging",
+    "force_keyboard_on",
+    "fullscreen_override",
+    "keyboard_notification",
+    "popup_on",
+    "pref_candidate_scale",
+    "pref_caps_lock",
+    "pref_chording_alt_key",
+    "pref_chording_ctrl_key",
+    "pref_chording_meta_key",
+    "pref_click_method",
+    "pref_click_volume",
+    "pref_ctrl_a_override",
+    "pref_hint_mode",
+    "pref_keyboard_layout",
+    "pref_keyboard_layout_20100902",
+    "pref_keyboard_mode_landscape",
+    "pref_keyboard_mode_portrait",
+    "pref_label_scale_v2",
+    "pref_long_press_duration",
+    "pref_popup_content",
+    "pref_render_mode",
+    "pref_shift_lock_modifiers",
+    "pref_slide_keys_int",
+    "pref_suggested_punctuation",
+    "pref_swipe_down",
+    "pref_swipe_left",
+    "pref_swipe_right",
+    "pref_swipe_up",
+    "pref_top_row_scale",
+    "pref_touch_pos",
+    "pref_vol_down",
+    "pref_vol_up",
+    "quick_fixes",
+    "recorrection_enabled",
+    "settings_height_landscape",
+    "settings_height_portrait",
+    "settings_key",
+    "show_suggestions",
+    "sound_on",
+    "suggestions_in_landscape",
+    "vibrate_len",
+    "vibrate_on",
+    "voice_mode"
+  ],
+  "preference_resources": [
+    "language_prefs.xml",
+    "prefs.xml",
+    "prefs_actions.xml",
+    "prefs_feedback.xml",
+    "prefs_for_debug.xml",
+    "prefs_view.xml"
+  ],
+  "programmatic_preferences": [
+    {
+      "constant": "PREF_INPUT_LANGUAGE",
+      "key": "input_language",
+      "read_defaults": [
+        "null"
+      ],
+      "readers": [
+        "LanguageSwitcher.java"
+      ],
+      "type": "string",
+      "writers": [
+        "LanguageSwitcher.java"
+      ]
+    },
+    {
+      "constant": "PREF_SELECTED_LANGUAGES",
+      "key": "selected_languages",
+      "read_defaults": [
+        "empty string",
+        "null"
+      ],
+      "readers": [
+        "InputLanguageSelection.java",
+        "LanguageSwitcher.java"
+      ],
+      "type": "string",
+      "writers": [
+        "InputLanguageSelection.java"
+      ]
+    }
+  ],
+  "referenced_resource_variants": {
+    "@array/chording_alt_key_values": {
+      "values": [
+        "0",
+        "57",
+        "58"
+      ]
+    },
+    "@array/chording_ctrl_key_values": {
+      "values": [
+        "0",
+        "113",
+        "114"
+      ]
+    },
+    "@array/chording_meta_key_values": {
+      "values": [
+        "0",
+        "117",
+        "118"
+      ]
+    },
+    "@array/click_method_values": {
+      "values": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    "@array/ctrl_a_override_values": {
+      "values": [
+        "0",
+        "1",
+        "2"
+      ]
+    },
+    "@array/hint_modes_values": {
+      "values": [
+        "0",
+        "1",
+        "2"
+      ]
+    },
+    "@array/keyboard_layout_modes_values": {
+      "values": [
+        "0",
+        "6",
+        "5",
+        "4",
+        "7",
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    "@array/keyboard_mode_values": {
+      "values": [
+        "0",
+        "1",
+        "2"
+      ]
+    },
+    "@array/popup_content_values": {
+      "values": [
+        "256",
+        "768",
+        "0",
+        "1",
+        "3",
+        "7"
+      ]
+    },
+    "@array/render_mode_values": {
+      "values": [
+        "0",
+        "1",
+        "2"
+      ]
+    },
+    "@array/settings_key_modes_values": {
+      "values": [
+        "@string/settings_key_mode_auto",
+        "@string/settings_key_mode_always_show",
+        "@string/settings_key_mode_always_hide"
+      ]
+    },
+    "@array/slide_keys_values": {
+      "values": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    "@array/swipe_action_values": {
+      "values": [
+        "none",
+        "close",
+        "extension",
+        "settings",
+        "suggestions",
+        "voice_input",
+        "full_mode",
+        "height_up",
+        "height_down",
+        "lang_prev",
+        "lang_next"
+      ]
+    },
+    "@array/voice_input_modes_values": {
+      "values": [
+        "@string/voice_mode_main",
+        "@string/voice_mode_symbols",
+        "@string/voice_mode_off"
+      ]
+    },
+    "@bool/default_auto_cap": {
+      "values": "true",
+      "values-ar": "false",
+      "values-he": "false",
+      "values-iw": "false"
+    },
+    "@bool/default_caps_lock": {
+      "values": "true"
+    },
+    "@bool/default_force_keyboard_on": {
+      "values": "false"
+    },
+    "@bool/default_fullscreen_override": {
+      "values": "false"
+    },
+    "@bool/default_keyboard_notification": {
+      "values": "false"
+    },
+    "@bool/default_popup_preview": {
+      "values": "true",
+      "values-xlarge": "false"
+    },
+    "@bool/default_quick_fixes": {
+      "values": "true"
+    },
+    "@bool/default_recorrection_enabled": {
+      "values": "false"
+    },
+    "@bool/default_shift_lock_modifiers": {
+      "values": "true"
+    },
+    "@bool/default_suggestions": {
+      "values": "true"
+    },
+    "@bool/default_suggestions_in_landscape": {
+      "values": "false"
+    },
+    "@bool/enable_autocorrect": {
+      "values": "false"
+    },
+    "@string/default_chording_alt_key": {
+      "values": "0"
+    },
+    "@string/default_chording_ctrl_key": {
+      "values": "0"
+    },
+    "@string/default_chording_meta_key": {
+      "values": "0"
+    },
+    "@string/default_click_method": {
+      "values": "0"
+    },
+    "@string/default_click_volume": {
+      "values": "0.2"
+    },
+    "@string/default_ctrl_a_override": {
+      "values": "0"
+    },
+    "@string/default_height_landscape": {
+      "values": "55%",
+      "values-xlarge": "45%"
+    },
+    "@string/default_height_portrait": {
+      "values": "35%",
+      "values-xlarge": "25%"
+    },
+    "@string/default_hint_mode": {
+      "values": "1"
+    },
+    "@string/default_keyboard_mode_landscape": {
+      "values": "2"
+    },
+    "@string/default_keyboard_mode_portrait": {
+      "values": "0",
+      "values-xlarge": "2"
+    },
+    "@string/default_long_press_duration": {
+      "values": "400 ms"
+    },
+    "@string/default_popup_content": {
+      "values": "1"
+    },
+    "@string/default_render_mode": {
+      "values": "1"
+    },
+    "@string/default_swipe_down": {
+      "values": "close"
+    },
+    "@string/default_swipe_left": {
+      "values": "none"
+    },
+    "@string/default_swipe_right": {
+      "values": "none"
+    },
+    "@string/default_swipe_up": {
+      "values": "extension"
+    },
+    "@string/default_vol_down": {
+      "values": "none"
+    },
+    "@string/default_vol_up": {
+      "values": "none"
+    },
+    "@string/settings_key_mode_always_hide": {
+      "values": "2"
+    },
+    "@string/settings_key_mode_always_show": {
+      "values": "1"
+    },
+    "@string/settings_key_mode_auto": {
+      "values": "0"
+    },
+    "@string/suggested_punctuations": {
+      "values": "!?,\\u0022\\u0027:;()-/@_",
+      "values-ar": "!؟،«»:؛()-\\u0022/@_",
+      "values-fa": "!؟،«»:؛()-\\u0022/@_"
+    },
+    "@string/voice_mode_main": {
+      "values": "0"
+    },
+    "@string/voice_mode_off": {
+      "values": "2"
+    },
+    "@string/voice_mode_symbols": {
+      "values": "1"
+    }
+  },
+  "schema": 1,
+  "xml_entries": {
+    "language_prefs.xml": [],
+    "prefs.xml": [
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "english_ime_settings",
+        "type": "none",
+        "widget": "PreferenceScreen"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "graphics_settings",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@string/default_height_portrait",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "settings_height_portrait",
+        "type": "string",
+        "widget": "SeekBarPreferenceString"
+      },
+      {
+        "default": "@string/default_height_landscape",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "settings_height_landscape",
+        "type": "string",
+        "widget": "SeekBarPreferenceString"
+      },
+      {
+        "default": "@string/default_keyboard_mode_portrait",
+        "dependency": null,
+        "entries": "@array/keyboard_mode_entries",
+        "entry_values": "@array/keyboard_mode_values",
+        "key": "pref_keyboard_mode_portrait",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_keyboard_mode_landscape",
+        "dependency": null,
+        "entries": "@array/keyboard_mode_entries",
+        "entry_values": "@array/keyboard_mode_values",
+        "key": "pref_keyboard_mode_landscape",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@bool/default_suggestions_in_landscape",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "suggestions_in_landscape",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "layout_settings",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@string/settings_key_mode_auto",
+        "dependency": null,
+        "entries": "@array/settings_key_modes",
+        "entry_values": "@array/settings_key_modes_values",
+        "key": "settings_key",
+        "type": "string",
+        "widget": "ListPreference"
+      },
+      {
+        "default": "@string/voice_mode_symbols",
+        "dependency": null,
+        "entries": "@array/voice_input_modes",
+        "entry_values": "@array/voice_input_modes_values",
+        "key": "voice_mode",
+        "type": "string",
+        "widget": "ListPreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "key_settings",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@bool/default_auto_cap",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "auto_cap",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@bool/default_caps_lock",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_caps_lock",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@bool/default_shift_lock_modifiers",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_shift_lock_modifiers",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@string/default_ctrl_a_override",
+        "dependency": null,
+        "entries": "@array/ctrl_a_override_entries",
+        "entry_values": "@array/ctrl_a_override_values",
+        "key": "pref_ctrl_a_override",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_chording_ctrl_key",
+        "dependency": null,
+        "entries": "@array/chording_ctrl_key_entries",
+        "entry_values": "@array/chording_ctrl_key_values",
+        "key": "pref_chording_ctrl_key",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_chording_alt_key",
+        "dependency": null,
+        "entries": "@array/chording_alt_key_entries",
+        "entry_values": "@array/chording_alt_key_values",
+        "key": "pref_chording_alt_key",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_chording_meta_key",
+        "dependency": null,
+        "entries": "@array/chording_meta_key_entries",
+        "entry_values": "@array/chording_meta_key_values",
+        "key": "pref_chording_meta_key",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "0",
+        "dependency": null,
+        "entries": "@array/slide_keys_entries",
+        "entry_values": "@array/slide_keys_values",
+        "key": "pref_slide_keys_int",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "altchar_settings",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@string/default_popup_content",
+        "dependency": null,
+        "entries": "@array/popup_content_entries",
+        "entry_values": "@array/popup_content_values",
+        "key": "pref_popup_content",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_long_press_duration",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_long_press_duration",
+        "type": "string",
+        "widget": "SeekBarPreferenceString"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "prediction_settings",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@bool/default_quick_fixes",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "quick_fixes",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@bool/default_suggestions",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "show_suggestions",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@bool/enable_autocorrect",
+        "dependency": "show_suggestions",
+        "entries": null,
+        "entry_values": null,
+        "key": "auto_complete",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@string/suggested_punctuations",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_suggested_punctuation",
+        "type": "string",
+        "widget": "AutoSummaryEditTextPreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "graphics_settings",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@bool/default_recorrection_enabled",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "recorrection_enabled",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@bool/default_fullscreen_override",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "fullscreen_override",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@bool/default_force_keyboard_on",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "force_keyboard_on",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@bool/default_keyboard_notification",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "keyboard_notification",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "application_settings",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "true",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "connectbot_tab_hack",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "debugging",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "false",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_touch_pos",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "input_connection_info",
+        "type": "none",
+        "widget": "Preference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "label_version",
+        "type": "none",
+        "widget": "Preference"
+      }
+    ],
+    "prefs_actions.xml": [
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "prefs_actions",
+        "type": "none",
+        "widget": "PreferenceScreen"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "swipe_actions",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@string/default_swipe_up",
+        "dependency": null,
+        "entries": "@array/swipe_action_entries",
+        "entry_values": "@array/swipe_action_values",
+        "key": "pref_swipe_up",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_swipe_down",
+        "dependency": null,
+        "entries": "@array/swipe_action_entries",
+        "entry_values": "@array/swipe_action_values",
+        "key": "pref_swipe_down",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_swipe_left",
+        "dependency": null,
+        "entries": "@array/swipe_action_entries",
+        "entry_values": "@array/swipe_action_values",
+        "key": "pref_swipe_left",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_swipe_right",
+        "dependency": null,
+        "entries": "@array/swipe_action_entries",
+        "entry_values": "@array/swipe_action_values",
+        "key": "pref_swipe_right",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "key_actions",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@string/default_vol_up",
+        "dependency": null,
+        "entries": "@array/swipe_action_entries",
+        "entry_values": "@array/swipe_action_values",
+        "key": "pref_vol_up",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_vol_down",
+        "dependency": null,
+        "entries": "@array/swipe_action_entries",
+        "entry_values": "@array/swipe_action_values",
+        "key": "pref_vol_down",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      }
+    ],
+    "prefs_feedback.xml": [
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "feedback_settings",
+        "type": "none",
+        "widget": "PreferenceScreen"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "vibrate_on",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "40",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "vibrate_len",
+        "type": "string",
+        "widget": "VibratePreference"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "sound_on",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "@string/default_click_method",
+        "dependency": null,
+        "entries": "@array/click_method_entries",
+        "entry_values": "@array/click_method_values",
+        "key": "pref_click_method",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_click_volume",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_click_volume",
+        "type": "string",
+        "widget": "SeekBarPreferenceString"
+      },
+      {
+        "default": "@bool/default_popup_preview",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "popup_on",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      }
+    ],
+    "prefs_for_debug.xml": [
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "english_ime_debug_settings",
+        "type": "none",
+        "widget": "PreferenceScreen"
+      },
+      {
+        "default": "false",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "enable_logging",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      },
+      {
+        "default": "4",
+        "dependency": null,
+        "entries": "@array/keyboard_layout_modes",
+        "entry_values": "@array/keyboard_layout_modes_values",
+        "key": "pref_keyboard_layout_20100902",
+        "type": "string",
+        "widget": "ListPreference"
+      },
+      {
+        "default": "false",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "debug_mode",
+        "type": "boolean",
+        "widget": "CheckBoxPreference"
+      }
+    ],
+    "prefs_view.xml": [
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "prefs_view",
+        "type": "none",
+        "widget": "PreferenceScreen"
+      },
+      {
+        "default": null,
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "graphics_settings",
+        "type": "none",
+        "widget": "PreferenceCategory"
+      },
+      {
+        "default": "@string/default_hint_mode",
+        "dependency": null,
+        "entries": "@array/hint_modes",
+        "entry_values": "@array/hint_modes_values",
+        "key": "pref_hint_mode",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "1.0",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_label_scale_v2",
+        "type": "string",
+        "widget": "SeekBarPreferenceString"
+      },
+      {
+        "default": "1.0",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_candidate_scale",
+        "type": "string",
+        "widget": "SeekBarPreferenceString"
+      },
+      {
+        "default": "1.0",
+        "dependency": null,
+        "entries": null,
+        "entry_values": null,
+        "key": "pref_top_row_scale",
+        "type": "string",
+        "widget": "SeekBarPreferenceString"
+      },
+      {
+        "default": "0",
+        "dependency": null,
+        "entries": "@array/keyboard_layout_modes",
+        "entry_values": "@array/keyboard_layout_modes_values",
+        "key": "pref_keyboard_layout",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      },
+      {
+        "default": "@string/default_render_mode",
+        "dependency": null,
+        "entries": "@array/render_mode_entries",
+        "entry_values": "@array/render_mode_values",
+        "key": "pref_render_mode",
+        "type": "string",
+        "widget": "AutoSummaryListPreference"
+      }
+    ]
+  },
+  "xml_entry_count": 66
+}
