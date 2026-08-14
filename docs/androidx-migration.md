@@ -65,8 +65,10 @@ S2.02 должен быть dependency-only migration с минимальным�
 
 До и после изменения нужно сохранить dependency reports для debug и
 instrumentation configurations. В итоговом graph не должно остаться artifacts
-`com.android.support:*`; одновременно не должно появиться неиспользуемого
-`androidx.appcompat` или транзитивного Kotlin workaround.
+`com.android.support:*`. S2.03b разрешает только транзитивные AppCompat artifacts,
+которые входят в официальный dependency graph AndroidX Preference 1.2.1;
+прямое объявление AppCompat и использование его API в source по-прежнему
+запрещены static guard. Транзитивный Kotlin workaround также не допускается.
 
 ### Проверки S2.02
 
