@@ -132,3 +132,8 @@ R8/resource shrinking, JNI smoke на debug variant защищает Java/native
 сертификатом, его нужно один раз удалить. Затем проверяются последовательные
 обновления только APK, подписанными тем же owner key и с возрастающим
 `versionCode`.
+
+S1.29 фиксирует первый обязательный update-chain case: owner-signed alpha02 с
+`versionCode 2000002` устанавливается поверх owner-signed alpha01 с
+`versionCode 2000001` на OnePlus 13 / Android 16 без uninstall. После update
+владелец проверяет сохранение настроек, enable/select state IME и базовый ввод.

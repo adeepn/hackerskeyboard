@@ -7,6 +7,12 @@
 же application ID обязан быть подписан тем же owner-controlled ключом и иметь
 строго больший `versionCode`; иначе Android не примет его как обновление.
 
+Текущие `versionCode` и `versionName` определяются только свойствами
+`appVersionCode` и `appVersionName` в корневом `gradle.properties`. Gradle
+читает их напрямую, а signing workflow извлекает и проверяет фактические
+значения из собранного APK. Для следующего выпуска нельзя дублировать номер или
+имя версии в workflow.
+
 Старый Hacker's Keyboard `org.pocketworkstation.pckeyboard` остаётся отдельным
 приложением и может быть установлен одновременно. Ранее скачанные из CI debug
 APK нового пакета подписывались эфемерными debug keys. Перед первой установкой
@@ -47,6 +53,11 @@ Environment разрешает только exact branch `v2`. По явному
 Обычные `pull_request` и `push` jobs никогда не получают signing secrets.
 Workflow и third-party actions для signing path закреплены полными commit SHA.
 
+Package `com.baodeep.hackerskeyboard` и публичный app-signing certificate
+SHA-256 зарегистрированы владельцем в Google Play Console. Сертификат Play
+должен оставаться тем же, что проверяется `V2_RELEASE_CERT_SHA256`; отдельный
+upload key для будущих AAB не меняет device-side app-signing identity.
+
 ## Оптимизация и функциональная безопасность
 
 Release variant использует R8 (`minifyEnabled`) и resource shrinking. Это
@@ -79,6 +90,11 @@ Minified release дополнительно обязан собраться, п�
 5. Проверить свежую установку на поддерживаемой версии Android. Затем собрать
    тестовый APK с большим `versionCode` тем же workflow и проверить update без
    удаления данных/IME settings.
+
+Первое обновление update chain проверяется переходом с `2.0.0-alpha01` /
+`2000001` на `2.0.0-alpha02` / `2000002` на OnePlus 13 с Android 16. Alpha02
+должна устанавливаться поверх alpha01 без удаления. После обновления проверяются
+сохранение настроек, включённое состояние IME, выбор клавиатуры и базовый ввод.
 
 Не следует публиковать обычный debug APK как v2 release: его сертификат не
 стабилен между GitHub runners. Нельзя вручную переподписывать опубликованный

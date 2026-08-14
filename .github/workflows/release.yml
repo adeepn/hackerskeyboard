@@ -98,7 +98,6 @@ jobs:
           set -euo pipefail
 
           readonly unsigned_apk="unsigned/app-release-unsigned.apk"
-          readonly signed_apk="signed/hackers-keyboard-v2-2.0.0-alpha01.apk"
           readonly keystore="${RUNNER_TEMP}/hackers-keyboard-v2-release.p12"
           readonly apksigner="${ANDROID_SDK_ROOT}/build-tools/37.0.0/apksigner"
           readonly apkanalyzer="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/apkanalyzer"
@@ -109,6 +108,28 @@ jobs:
             echo "Required release signing secret is missing" >&2
             exit 1
           fi
+
+          application_id="$("${apkanalyzer}" manifest application-id "${unsigned_apk}" | tr -d '\r')"
+          version_code="$("${apkanalyzer}" manifest version-code "${unsigned_apk}" | tr -d '\r')"
+          version_name="$("${apkanalyzer}" manifest version-name "${unsigned_apk}" | tr -d '\r')"
+          debuggable="$("${apkanalyzer}" manifest debuggable "${unsigned_apk}" | tr -d '\r')"
+          if [[ "${application_id}" != "com.baodeep.hackerskeyboard" ]]; then
+            echo "Unexpected release application ID: ${application_id}" >&2
+            exit 1
+          fi
+          if [[ ! "${version_code}" =~ ^[0-9]+$ ]] || (( version_code <= 2000001 )); then
+            echo "Invalid v2 release versionCode: ${version_code}" >&2
+            exit 1
+          fi
+          if [[ ! "${version_name}" =~ ^2\.[0-9]+\.[0-9]+(-(alpha|beta|rc)[0-9]+)?$ ]]; then
+            echo "Invalid v2 release versionName: ${version_name}" >&2
+            exit 1
+          fi
+          if [[ "${debuggable}" != "false" ]]; then
+            echo "Release APK must not be debuggable" >&2
+            exit 1
+          fi
+          readonly signed_apk="signed/hackers-keyboard-v2-${version_name}.apk"
 
           printf '%s' "${KEYSTORE_BASE64}" | base64 --decode > "${keystore}"
           chmod 600 "${keystore}"
@@ -144,14 +165,14 @@ jobs:
             exit 1
           fi
 
-          application_id="$("${apkanalyzer}" manifest application-id "${signed_apk}" | tr -d '\r')"
-          version_code="$("${apkanalyzer}" manifest version-code "${signed_apk}" | tr -d '\r')"
-          version_name="$("${apkanalyzer}" manifest version-name "${signed_apk}" | tr -d '\r')"
-          debuggable="$("${apkanalyzer}" manifest debuggable "${signed_apk}" | tr -d '\r')"
-          [[ "${application_id}" == "com.baodeep.hackerskeyboard" ]]
-          [[ "${version_code}" == "2000001" ]]
-          [[ "${version_name}" == "2.0.0-alpha01" ]]
-          [[ "${debuggable}" == "false" ]]
+          signed_application_id="$("${apkanalyzer}" manifest application-id "${signed_apk}" | tr -d '\r')"
+          signed_version_code="$("${apkanalyzer}" manifest version-code "${signed_apk}" | tr -d '\r')"
+          signed_version_name="$("${apkanalyzer}" manifest version-name "${signed_apk}" | tr -d '\r')"
+          signed_debuggable="$("${apkanalyzer}" manifest debuggable "${signed_apk}" | tr -d '\r')"
+          [[ "${signed_application_id}" == "${application_id}" ]]
+          [[ "${signed_version_code}" == "${version_code}" ]]
+          [[ "${signed_version_name}" == "${version_name}" ]]
+          [[ "${signed_debuggable}" == "${debuggable}" ]]
 
           apk_sha256="$(sha256sum "${signed_apk}" | awk '{print $1}')"
           {
@@ -163,11 +184,15 @@ jobs:
             echo "certificate_sha256=${actual_cert}"
             echo "apk_sha256=${apk_sha256}"
           } > signed/release-evidence.txt
+          {
+            echo "version_code=${version_code}"
+            echo "version_name=${version_name}"
+          } >> "${GITHUB_OUTPUT}"
 
       - name: Upload signed release APK
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: hackers-keyboard-v2-2.0.0-alpha01-${{ github.sha }}
+          name: hackers-keyboard-v2-${{ steps.sign.outputs.version_name }}-${{ github.sha }}
           path: signed/
           if-no-files-found: error
           retention-days: 30

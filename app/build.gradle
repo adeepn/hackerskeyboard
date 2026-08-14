@@ -10,8 +10,8 @@ android {
         applicationId 'com.baodeep.hackerskeyboard'
         minSdk 24
         targetSdk 26
-        versionCode 2000001
-        versionName "2.0.0-alpha01"
+        versionCode providers.gradleProperty('appVersionCode').get().toInteger()
+        versionName providers.gradleProperty('appVersionName').get()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
