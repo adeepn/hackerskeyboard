@@ -137,3 +137,10 @@ S1.29 фиксирует первый обязательный update-chain case
 `versionCode 2000002` устанавливается поверх owner-signed alpha01 с
 `versionCode 2000001` на OnePlus 13 / Android 16 без uninstall. После update
 владелец проверяет сохранение настроек, enable/select state IME и базовый ввод.
+
+S2.03a добавляет быстрый settings-contract gate до миграции UI. Он сравнивает
+фактические XML keys, semantic storage types, defaults, persisted list values,
+navigation actions и два programmatic language keys с reviewed fixture. В
+baseline входят 48 persisted XML keys (18 boolean, 30 string) и два string keys
+вне XML; float и string-set значений нет. Unit mutation tests доказывают, что
+удаление key и смена типа делают gate красным.

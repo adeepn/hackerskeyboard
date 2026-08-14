@@ -1,8 +1,10 @@
 # План миграции на AndroidX
 
-Статус: S2.01 завершён в #48; S2.02 реализуется в
-[#50](https://github.com/adeepn/hackerskeyboard/issues/50), 13 августа 2026 года.
-S2.03 ещё не реализован.
+Статус: S2.01 завершён в #48; S2.02 завершён в
+[#50](https://github.com/adeepn/hackerskeyboard/issues/50). S2.03 ведётся в
+[#58](https://github.com/adeepn/hackerskeyboard/issues/58); первый отдельный
+шаг S2.03a фиксирует settings contract в
+[#59](https://github.com/adeepn/hackerskeyboard/issues/59).
 
 ## Решение
 
@@ -127,6 +129,13 @@ graphs для debug runtime и instrumentation test runtime в CI на JDK 21.
 - запуск settings activities из launcher, IME и notification flows;
 - process recreation и смена ориентации.
 
+S2.03a зафиксировал machine-readable baseline до изменения production UI: 66
+keyed XML nodes, из них 48 уникальных persisted keys (18 boolean и 30 string),
+а также два programmatic string keys `selected_languages` и `input_language`.
+Сохранённых float/string-set значений сейчас нет; `SeekBarPreferenceString`
+намеренно хранит значения как string для совместимости. Подробности и порядок
+осознанного обновления fixture описаны в `settings-contract.md`.
+
 XML можно переводить по одному экрану, но нельзя одновременно переименовывать
 ключи, менять defaults, реструктурировать весь settings UX или внедрять Compose.
 
@@ -136,6 +145,7 @@ XML можно переводить по одному экрану, но нел�
 |---|---|---|
 | [upstream PR #867](https://github.com/klausw/hackerskeyboard/pull/867), head `13f4c54` | подтверждает два notification imports и AndroidX Test runner | устаревшие versions, `minSdk`/`targetSdk` change, необоснованный Jetifier, wrapper и cleanup в одном PR |
 | [upstream PR #989](https://github.com/klausw/hackerskeyboard/pull/989), head `54d39f6` | удаляет AppCompat и оставляет Core/Test | target 35, PendingIntent behavior, toolchain, app defaults и version change смешаны с миграцией |
+| [upstream issue #939](https://github.com/klausw/hackerskeyboard/issues/939), `SeventhM/workingBranch` @ `f194e0b` | подтверждает `FragmentActivity` + `PreferenceFragmentCompat` и отдельный dialog boundary для custom seek bar | не копировать `abd51f5`: широкий mixed diff, deprecated `setTargetFragment`, live `Preference` внутри Fragment и пометка автора `Needs better solution` |
 | `hongkongphoooey/master` @ `9f1d768` | подтверждает Core/Test/AppCompat mapping как checklist | AppCompat здесь также не нужен; не брать Jetifier, global Kotlin resolution, `minSdk 29`, mass formatting и platform fixes |
 | `max-pulya/master` @ `981313f` | AndroidX migration отсутствует | старые Support Library dependencies |
 | `crab182/master` @ `e4d7422` | AndroidX migration отсутствует | unrelated `diyRAG/` и WIP branches |
@@ -148,6 +158,7 @@ scope examples.
 
 1. Закрыть S2.01 документационным PR.
 2. Завести и выполнить S2.02 с dependency/import migration и полной CI matrix.
-3. Завести S2.03 с characterization/migration tests для settings.
+3. Выполнить декомпозированный S2.03: сначала #59 с characterization contract,
+   затем lifecycle-safe host/navigation, экраны и custom dialog preferences.
 4. После зелёных S2.02/S2.03 перейти к platform/API issues S2.04–S2.12.
 5. Повышать `targetSdk` только отдельными checkpoints S2.13–S2.18.

@@ -195,6 +195,32 @@ compatibility. Готовой независимой package migration не на
 про release availability, но не предоставляет migration/signing patch. S1.25
 поэтому реализуется независимо по owner decision #26 и ADR-0002.
 
+### S2.03 settings migration check
+
+14 августа 2026 года поиск `PreferenceFragmentCompat`, `android.preference` и
+AndroidX settings повторён по open/closed issues и PR canonical upstream.
+Готового reviewable PR не найдено. Наиболее полезный материал находится в
+обсуждении issue
+[#939](https://github.com/klausw/hackerskeyboard/issues/939): участник SeventhM
+описал переход на `FragmentActivity` + `PreferenceFragmentCompat` и отдельный
+`PreferenceDialogFragmentCompat` для custom seek bar.
+
+Связанная ветка `SeventhM/hackerskeyboard:workingBranch` проверена на commit
+`f194e0bce49307d1de94b84db012d26e44f18ec3`; settings migration в основном
+появилась в `abd51f5`. Репозиторий сохраняет исходную Apache-2.0 license, но код
+не является candidate для cherry-pick: commit смешивает десятки production и
+resource files, mass formatting, notification/candidates behavior и settings.
+Кроме того, реализация передаёт live `Preference` объект в Fragment field,
+использует deprecated `setTargetFragment`, и сам commit помечает settings fix
+как `Needs better solution`. Для v2 это только архитектурный сигнал и набор
+negative lifecycle cases: process recreation, dialog recreation и момент
+готовности fragment view.
+
+Issue [#986](https://github.com/klausw/hackerskeyboard/issues/986) также попала
+в поиск по `android.preference`, но её AI-generated attachment остаётся
+untrusted и не загружалась. S2.03 реализуется независимо: сначала executable
+contract #59, затем маленькие lifecycle/navigation/custom-widget PR.
+
 Перед каждым milestone planning и минимум перед alpha/beta/release:
 
 1. обновить `upstream` remote;
