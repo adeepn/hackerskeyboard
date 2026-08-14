@@ -52,6 +52,9 @@ Epic: **Stage 1: восстановить современную воспрои�
   owner-controlled release signing и стабильную v2 update chain без ключей в
   Git или доступа из обычных PR workflows; использовать ручной workflow только
   из `v2`, отдельные build/sign jobs и обязательную проверку сертификата.
+- S1.29 ([#56](https://github.com/adeepn/hackerskeyboard/issues/56)) —
+  централизовать release version, собрать owner-signed alpha02 и доказать
+  обновление поверх alpha01 без uninstall или потери состояния приложения.
 
 Зависимости: S1.01 → S1.03 → S1.05/S1.06/S1.07; S1.08 → S1.09; стабильная
 сборка → S1.14/S1.15. S1.12 и базовая часть S1.13 могут выполняться раньше.
