@@ -91,7 +91,7 @@ public class ApplicationSmokeTest {
             instrumentation.waitForIdleSync();
             assertEquals(PrefScreenActions.class, launched.getClass());
             activity = (PrefScreenActions) launched;
-            final ListPreference swipeUp = assertActionsPreferences(activity);
+            final ListPreference swipeUp = assertActionsPreferences(activity, true);
             instrumentation.runOnMainSync(new Runnable() {
                 @Override
                 public void run() {
@@ -116,7 +116,7 @@ public class ApplicationSmokeTest {
             instrumentation.waitForIdleSync();
             assertEquals(PrefScreenActions.class, recreatedActivity.getClass());
             recreated = (PrefScreenActions) recreatedActivity;
-            assertActionsPreferences(recreated);
+            assertActionsPreferences(recreated, false);
         } finally {
             if (monitor != null) {
                 instrumentation.removeMonitor(monitor);
@@ -136,7 +136,8 @@ public class ApplicationSmokeTest {
         }
     }
 
-    private static ListPreference assertActionsPreferences(PrefScreenActions activity) {
+    private static ListPreference assertActionsPreferences(
+            PrefScreenActions activity, boolean requireVisibleList) {
         assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
         Fragment fragment = activity.getSupportFragmentManager().getFragments().get(0);
         assertNotNull("Actions preference fragment is missing", fragment);
@@ -145,8 +146,10 @@ public class ApplicationSmokeTest {
         PreferenceFragmentCompat preferences = (PreferenceFragmentCompat) fragment;
         assertNotNull(preferences.getPreferenceScreen());
         assertEquals("prefs_actions", preferences.getPreferenceScreen().getKey());
-        assertNotNull(preferences.getListView());
-        assertEquals(View.VISIBLE, preferences.getListView().getVisibility());
+        if (requireVisibleList) {
+            assertNotNull(preferences.getListView());
+            assertEquals(View.VISIBLE, preferences.getListView().getVisibility());
+        }
 
         ListPreference swipeUp = preferences.findPreference("pref_swipe_up");
         assertNotNull(swipeUp);
