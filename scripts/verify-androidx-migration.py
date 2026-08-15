@@ -143,7 +143,7 @@ def main() -> int:
         encoding="utf-8"
     )
     if (
-        '<style name="SettingsTheme" parent="@android:style/Theme.Material">'
+        '<style name="SettingsTheme" parent="@android:style/Theme.Material.NoActionBar">'
         not in styles
     ) or (
         '<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>' not in styles
