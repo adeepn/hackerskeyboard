@@ -138,8 +138,7 @@ public class ApplicationSmokeTest {
 
     private static ListPreference assertActionsPreferences(PrefScreenActions activity) {
         assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
-        Fragment fragment = activity.getSupportFragmentManager()
-                .findFragmentById(android.R.id.content);
+        Fragment fragment = activity.getSupportFragmentManager().getFragments().get(0);
         assertNotNull("Actions preference fragment is missing", fragment);
         assertTrue(fragment instanceof PrefScreenActions.ActionsPreferenceFragment);
 
