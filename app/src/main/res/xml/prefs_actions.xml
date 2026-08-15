@@ -14,65 +14,71 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:key="prefs_actions"
-    android:title="@string/pref_screen_actions_title" >
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="prefs_actions"
+    app:title="@string/pref_screen_actions_title" >
 
     <PreferenceCategory
-        android:key="swipe_actions"
-        android:title="@string/title_swipe_gestures" >
+        app:key="swipe_actions"
+        app:title="@string/title_swipe_gestures" >
 
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="@string/default_swipe_up"
-            android:entries="@array/swipe_action_entries"
-            android:entryValues="@array/swipe_action_values"
-            android:key="pref_swipe_up"
-            android:persistent="true"
-            android:title="@string/title_swipe_up" />
+        <ListPreference
+            app:defaultValue="@string/default_swipe_up"
+            app:entries="@array/swipe_action_entries"
+            app:entryValues="@array/swipe_action_values"
+            app:key="pref_swipe_up"
+            app:persistent="true"
+            app:title="@string/title_swipe_up"
+            app:useSimpleSummaryProvider="true" />
 
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="@string/default_swipe_down"
-            android:entries="@array/swipe_action_entries"
-            android:entryValues="@array/swipe_action_values"
-            android:key="pref_swipe_down"
-            android:persistent="true"
-            android:title="@string/title_swipe_down" />
+        <ListPreference
+            app:defaultValue="@string/default_swipe_down"
+            app:entries="@array/swipe_action_entries"
+            app:entryValues="@array/swipe_action_values"
+            app:key="pref_swipe_down"
+            app:persistent="true"
+            app:title="@string/title_swipe_down"
+            app:useSimpleSummaryProvider="true" />
 
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="@string/default_swipe_left"
-            android:entries="@array/swipe_action_entries"
-            android:entryValues="@array/swipe_action_values"
-            android:key="pref_swipe_left"
-            android:persistent="true"
-            android:title="@string/title_swipe_left" />
+        <ListPreference
+            app:defaultValue="@string/default_swipe_left"
+            app:entries="@array/swipe_action_entries"
+            app:entryValues="@array/swipe_action_values"
+            app:key="pref_swipe_left"
+            app:persistent="true"
+            app:title="@string/title_swipe_left"
+            app:useSimpleSummaryProvider="true" />
 
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="@string/default_swipe_right"
-            android:entries="@array/swipe_action_entries"
-            android:entryValues="@array/swipe_action_values"
-            android:key="pref_swipe_right"
-            android:persistent="true"
-            android:title="@string/title_swipe_right" />
+        <ListPreference
+            app:defaultValue="@string/default_swipe_right"
+            app:entries="@array/swipe_action_entries"
+            app:entryValues="@array/swipe_action_values"
+            app:key="pref_swipe_right"
+            app:persistent="true"
+            app:title="@string/title_swipe_right"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="key_actions"
-        android:title="@string/title_hardware_key_actions" >
+        app:key="key_actions"
+        app:title="@string/title_hardware_key_actions" >
 
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="@string/default_vol_up"
-            android:entries="@array/swipe_action_entries"
-            android:entryValues="@array/swipe_action_values"
-            android:key="pref_vol_up"
-            android:persistent="true"
-            android:title="@string/title_vol_up" />
+        <ListPreference
+            app:defaultValue="@string/default_vol_up"
+            app:entries="@array/swipe_action_entries"
+            app:entryValues="@array/swipe_action_values"
+            app:key="pref_vol_up"
+            app:persistent="true"
+            app:title="@string/title_vol_up"
+            app:useSimpleSummaryProvider="true" />
 
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="@string/default_vol_down"
-            android:entries="@array/swipe_action_entries"
-            android:entryValues="@array/swipe_action_values"
-            android:key="pref_vol_down"
-            android:persistent="true"
-            android:title="@string/title_vol_down" />
+        <ListPreference
+            app:defaultValue="@string/default_vol_down"
+            app:entries="@array/swipe_action_entries"
+            app:entryValues="@array/swipe_action_values"
+            app:key="pref_vol_down"
+            app:persistent="true"
+            app:title="@string/title_vol_down"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>

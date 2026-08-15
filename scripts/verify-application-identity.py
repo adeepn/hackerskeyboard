@@ -24,7 +24,10 @@ PREFERENCE_KEY_COUNT = 66
 PREFERENCE_KEYS_SHA256 = (
     "892fcfdad06f2326d76c436ae074a76a299ef7e7ebf5c4d2e5b35d00ba764ba6"
 )
-ANDROID_KEY = "{http://schemas.android.com/apk/res/android}key"
+PREFERENCE_KEY_ATTRIBUTES = (
+    "{http://schemas.android.com/apk/res/android}key",
+    "{http://schemas.android.com/apk/res-auto}key",
+)
 
 
 def main() -> int:
@@ -119,8 +122,18 @@ def main() -> int:
     preference_keys: list[str] = []
     for path in sorted((app / "src" / "main" / "res" / "xml").glob("prefs*.xml")):
         for element in ET.parse(path).iter():
-            if ANDROID_KEY in element.attrib:
-                preference_keys.append(element.attrib[ANDROID_KEY])
+            keys = [
+                element.attrib[attribute]
+                for attribute in PREFERENCE_KEY_ATTRIBUTES
+                if attribute in element.attrib
+            ]
+            if len(keys) > 1:
+                errors.append(
+                    f"{path.relative_to(repository)}: preference has duplicate "
+                    "android/app key attributes"
+                )
+            elif keys:
+                preference_keys.append(keys[0])
     preference_keys.sort()
     preference_digest = hashlib.sha256("\n".join(preference_keys).encode()).hexdigest()
     if len(preference_keys) != PREFERENCE_KEY_COUNT:

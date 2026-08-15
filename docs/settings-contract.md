@@ -58,3 +58,12 @@ resource variants и сравнивает его с committed JSON fixture. Об
 
 S2.03 не меняет keys, storage types или defaults. Если такое изменение окажется
 необходимым, оно выносится за границы AndroidX UI migration.
+
+## Первый AndroidX screen
+
+S2.03b / #61 переводит `prefs_actions.xml` на AndroidX namespace и заменяет
+шесть legacy `AutoSummaryListPreference` на стандартный `ListPreference` с
+`useSimpleSummaryProvider`. Fixture изменяет только widget implementation для
+этих шести entries. Все 66 keyed nodes, 48 persisted XML keys, два
+programmatic keys, типы, defaults, entryValues и navigation actions остаются
+идентичными baseline S2.03a.

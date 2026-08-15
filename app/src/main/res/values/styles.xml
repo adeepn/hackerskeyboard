@@ -14,7 +14,13 @@
      limitations under the License.
 -->
 
+<!-- Modified for Hacker's Keyboard v2; see the repository history for details. -->
+
 <resources>
+    <style name="SettingsTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
     <style name="LatinKeyboardBaseView">
         <item name="android:background">@drawable/keyboard_background</item>
 

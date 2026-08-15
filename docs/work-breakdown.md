@@ -70,7 +70,9 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
 - S2.03 ([#58](https://github.com/adeepn/hackerskeyboard/issues/58)) — settings
   → `PreferenceFragmentCompat` с migration tests; первый bounded slice S2.03a
   ([#59](https://github.com/adeepn/hackerskeyboard/issues/59)) фиксирует keys,
-  storage types, defaults и navigation до production migration;
+  storage types, defaults и navigation до production migration; S2.03b
+  ([#61](https://github.com/adeepn/hackerskeyboard/issues/61)) добавляет
+  Preference 1.2.1 и мигрирует actions screen с recreation test;
 - S2.04 — manifest components и минимальные `android:exported`;
 - S2.05 — explicit intents и PendingIntent mutability;
 - S2.06 — runtime receiver export policy;
