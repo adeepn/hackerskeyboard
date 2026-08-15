@@ -17,7 +17,7 @@
 <!-- Modified for Hacker's Keyboard v2; see the repository history for details. -->
 
 <resources>
-    <style name="SettingsTheme" parent="@android:style/Theme.DeviceDefault">
+    <style name="SettingsTheme" parent="@android:style/Theme.Material">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 

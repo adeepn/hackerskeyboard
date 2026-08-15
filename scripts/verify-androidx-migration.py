@@ -142,10 +142,13 @@ def main() -> int:
     styles = (app / "src" / "main" / "res" / "values" / "styles.xml").read_text(
         encoding="utf-8"
     )
-    if '<style name="SettingsTheme"' not in styles or (
+    if (
+        '<style name="SettingsTheme" parent="@android:style/Theme.Material">'
+        not in styles
+    ) or (
         '<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>' not in styles
     ):
-        errors.append("styles.xml: AndroidX preference theme overlay is missing")
+        errors.append("styles.xml: compatible AndroidX preference theme is missing")
 
     jar_count = 0
     for path in sorted((app / "libs").glob("*.jar")):

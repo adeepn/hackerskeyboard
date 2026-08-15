@@ -152,3 +152,6 @@ screen. Тест записывает существующее string value на
 `Activity.recreate()`. После recreation должен существовать ровно один
 восстановленный Fragment с тем же значением; это negative regression case
 против ручного создания второго Fragment и хранения live Preference object.
+Запуск на API 24 также защищает совместимый platform `Theme.Material`: явный
+`Theme.DeviceDefault` аварийно завершает inflate системного Toolbar до
+`Activity.onCreate()` на этой версии Android.

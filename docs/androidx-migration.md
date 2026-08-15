@@ -148,7 +148,10 @@ Activity создаёт initial `PreferenceFragmentCompat` синхронно т
 `Preference` objects не передаются через arguments и deprecated
 `setTargetFragment` не используется. Шесть string-backed actions сохраняют
 прежние keys/defaults/entryValues, а summary предоставляет штатный
-`ListPreference.SimpleSummaryProvider`.
+`ListPreference.SimpleSummaryProvider`. Экран наследует platform
+`Theme.Material` и добавляет только `PreferenceThemeOverlay`: явный
+`Theme.DeviceDefault` нельзя использовать, поскольку его decor Toolbar падает
+при inflate на нижней границе API 24.
 
 XML можно переводить по одному экрану, но нельзя одновременно переименовывать
 ключи, менять defaults, реструктурировать весь settings UX или внедрять Compose.
