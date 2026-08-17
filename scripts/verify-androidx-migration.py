@@ -91,6 +91,38 @@ def main() -> int:
             if token in text:
                 errors.append(f"{path.relative_to(repository)}: forbidden token {token}")
 
+    language_activity = (
+        app
+        / "src"
+        / "main"
+        / "java"
+        / "com"
+        / "baodeep"
+        / "hackerskeyboard"
+        / "InputLanguageSelection.java"
+    ).read_text(encoding="utf-8")
+    for token in (
+        "extends FragmentActivity",
+        "extends PreferenceFragmentCompat",
+        "if (icicle == null)",
+        ".commitNow()",
+        "setPreferencesFromResource(R.xml.language_prefs, rootKey)",
+        "pref.setPersistent(false)",
+        "String selectedLanguagePref = mPreferences.getString(",
+        "editor.putString(LatinIME.PREF_SELECTED_LANGUAGES, checkedLanguages)",
+    ):
+        if token not in language_activity:
+            errors.append(f"InputLanguageSelection.java: missing migration guard {token}")
+    for token in ("android.preference.", "PreferenceActivity", "setTargetFragment("):
+        if token in language_activity:
+            errors.append(f"InputLanguageSelection.java: forbidden migration token {token}")
+
+    language_xml_text = (
+        app / "src" / "main" / "res" / "xml" / "language_prefs.xml"
+    ).read_text(encoding="utf-8")
+    if 'xmlns:app="http://schemas.android.com/apk/res-auto"' not in language_xml_text:
+        errors.append("language_prefs.xml: AndroidX app namespace is missing")
+
     actions_activity = (
         app
         / "src"
@@ -242,6 +274,14 @@ def main() -> int:
     manifest = (app / "src" / "main" / "AndroidManifest.xml").read_text(
         encoding="utf-8"
     )
+    language_manifest = re.search(
+        r'<activity\s+android:name="InputLanguageSelection"(?P<attributes>[^>]*)>',
+        manifest,
+    )
+    if language_manifest is None or 'android:theme="@style/SettingsTheme"' not in (
+        language_manifest.group("attributes") if language_manifest else ""
+    ):
+        errors.append("AndroidManifest.xml: InputLanguageSelection SettingsTheme is missing")
     actions_manifest = re.search(
         r'<activity\s+android:name="PrefScreenActions"(?P<attributes>[^>]*)>',
         manifest,

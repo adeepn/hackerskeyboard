@@ -41,7 +41,8 @@
         </activity>
 
         <activity android:name="InputLanguageSelection"
-                android:label="@string/language_selection_title">
+                android:label="@string/language_selection_title"
+                android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="${applicationId}.INPUT_LANGUAGE_SELECTION"/>

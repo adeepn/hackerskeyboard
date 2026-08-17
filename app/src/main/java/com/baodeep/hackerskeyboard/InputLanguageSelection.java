@@ -25,21 +25,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceGroup;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-public class InputLanguageSelection extends PreferenceActivity {
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
+
+public class InputLanguageSelection extends FragmentActivity {
     private static final String TAG = "PCKeyboardILS";
-    private ArrayList<Loc> mAvailableLanguages = new ArrayList<Loc>();
+    static final String FRAGMENT_TAG = "language_preferences";
     private static final String[] BLACKLIST_LANGUAGES = {
         "ko", "ja", "zh"
     };
@@ -148,66 +150,103 @@ public class InputLanguageSelection extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        addPreferencesFromResource(R.xml.language_prefs);
-        // Get the settings preferences
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String selectedLanguagePref = sp.getString(LatinIME.PREF_SELECTED_LANGUAGES, "");
-        Log.i(TAG, "selected languages: " + selectedLanguagePref);
-        String[] languageList = selectedLanguagePref.split(",");
-        
-        mAvailableLanguages = getUniqueLocales();
-
-        // Compatibility hack for v1.22 and older - if a selected language 5-code isn't
-        // found in the current list of available languages, try adding the 2-letter
-        // language code. For example, "en_US" is no longer listed, so use "en" instead.
-        Set<String> availableLanguages = new HashSet<String>();
-        for (int i = 0; i < mAvailableLanguages.size(); i++) {
-            Locale locale = mAvailableLanguages.get(i).locale;
-            availableLanguages.add(get5Code(locale));
-        }
-        Set<String> languageSelections = new HashSet<String>();
-        for (int i = 0; i < languageList.length; ++i) {
-            String spec = languageList[i];
-            if (availableLanguages.contains(spec)) {
-                languageSelections.add(spec);
-            } else if (spec.length() > 2) {
-                String lang = spec.substring(0, 2);
-                if (availableLanguages.contains(lang)) languageSelections.add(lang);
-            }
-        }
-
-        PreferenceGroup parent = getPreferenceScreen();
-        for (int i = 0; i < mAvailableLanguages.size(); i++) {
-            CheckBoxPreference pref = new CheckBoxPreference(this);
-            Locale locale = mAvailableLanguages.get(i).locale;
-            pref.setTitle(mAvailableLanguages.get(i).label +
-            		" [" + locale.toString() + "]");
-            String fivecode = get5Code(locale);
-            String language = locale.getLanguage();
-            boolean checked = languageSelections.contains(fivecode);
-            pref.setChecked(checked);
-            boolean has4Row = arrayContains(KBD_4_ROW, fivecode) || arrayContains(KBD_4_ROW, language);
-            boolean has5Row = arrayContains(KBD_5_ROW, fivecode) || arrayContains(KBD_5_ROW, language);
-            List<String> summaries = new ArrayList<String>(3);
-            if (has5Row) summaries.add("5-row");           
-            if (has4Row) summaries.add("4-row");           
-            if (hasDictionary(locale)) {
-            	summaries.add(getResources().getString(R.string.has_dictionary));
-            }
-            if (!summaries.isEmpty()) {
-            	StringBuilder summary = new StringBuilder();
-            	for (int j = 0; j < summaries.size(); ++j) {
-            		if (j > 0) summary.append(", ");
-            		summary.append(summaries.get(j));
-            	}
-            	pref.setSummary(summary.toString());
-            }
-            parent.addPreference(pref);
+        if (icicle == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content, new LanguagePreferenceFragment(), FRAGMENT_TAG)
+                    .commitNow();
         }
     }
 
-    private boolean hasDictionary(Locale locale) {
-        Resources res = getResources();
+    public static class LanguagePreferenceFragment extends PreferenceFragmentCompat {
+        private ArrayList<Loc> mAvailableLanguages = new ArrayList<Loc>();
+        private SharedPreferences mPreferences;
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.language_prefs, rootKey);
+            mPreferences = getPreferenceManager().getSharedPreferences();
+            String selectedLanguagePref = mPreferences.getString(
+                    LatinIME.PREF_SELECTED_LANGUAGES, "");
+            Log.i(TAG, "selected languages: " + selectedLanguagePref);
+            String[] languageList = selectedLanguagePref.split(",");
+
+            mAvailableLanguages = getUniqueLocales();
+
+            // Compatibility hack for v1.22 and older - if a selected language 5-code isn't
+            // found in the current list of available languages, try adding the 2-letter
+            // language code. For example, "en_US" is no longer listed, so use "en" instead.
+            Set<String> availableLanguages = new HashSet<String>();
+            for (int i = 0; i < mAvailableLanguages.size(); i++) {
+                Locale locale = mAvailableLanguages.get(i).locale;
+                availableLanguages.add(get5Code(locale));
+            }
+            Set<String> languageSelections = new HashSet<String>();
+            for (int i = 0; i < languageList.length; ++i) {
+                String spec = languageList[i];
+                if (availableLanguages.contains(spec)) {
+                    languageSelections.add(spec);
+                } else if (spec.length() > 2) {
+                    String lang = spec.substring(0, 2);
+                    if (availableLanguages.contains(lang)) languageSelections.add(lang);
+                }
+            }
+
+            PreferenceGroup parent = getPreferenceScreen();
+            for (int i = 0; i < mAvailableLanguages.size(); i++) {
+                CheckBoxPreference pref = new CheckBoxPreference(requireContext());
+                Locale locale = mAvailableLanguages.get(i).locale;
+                pref.setTitle(mAvailableLanguages.get(i).label
+                        + " [" + locale.toString() + "]");
+                pref.setPersistent(false);
+                String fivecode = get5Code(locale);
+                String language = locale.getLanguage();
+                boolean checked = languageSelections.contains(fivecode);
+                pref.setChecked(checked);
+                boolean has4Row = arrayContains(KBD_4_ROW, fivecode)
+                        || arrayContains(KBD_4_ROW, language);
+                boolean has5Row = arrayContains(KBD_5_ROW, fivecode)
+                        || arrayContains(KBD_5_ROW, language);
+                List<String> summaries = new ArrayList<String>(3);
+                if (has5Row) summaries.add("5-row");
+                if (has4Row) summaries.add("4-row");
+                if (hasDictionary(requireContext(), getResources(), locale)) {
+                    summaries.add(getResources().getString(R.string.has_dictionary));
+                }
+                if (!summaries.isEmpty()) {
+                    StringBuilder summary = new StringBuilder();
+                    for (int j = 0; j < summaries.size(); ++j) {
+                        if (j > 0) summary.append(", ");
+                        summary.append(summaries.get(j));
+                    }
+                    pref.setSummary(summary.toString());
+                }
+                parent.addPreference(pref);
+            }
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            // Save the selected languages
+            String checkedLanguages = "";
+            PreferenceGroup parent = getPreferenceScreen();
+            int count = parent.getPreferenceCount();
+            for (int i = 0; i < count; i++) {
+                CheckBoxPreference pref = (CheckBoxPreference) parent.getPreference(i);
+                if (pref.isChecked()) {
+                    Locale locale = mAvailableLanguages.get(i).locale;
+                    checkedLanguages += get5Code(locale) + ",";
+                }
+            }
+            if (checkedLanguages.length() < 1) checkedLanguages = null; // Save null
+            Editor editor = mPreferences.edit();
+            editor.putString(LatinIME.PREF_SELECTED_LANGUAGES, checkedLanguages);
+            SharedPreferencesCompat.apply(editor);
+        }
+    }
+
+    private static boolean hasDictionary(Context context, Resources res, Locale locale) {
         Configuration conf = res.getConfiguration();
         Locale saveLocale = conf.locale;
         boolean haveDictionary = false;
@@ -215,14 +254,15 @@ public class InputLanguageSelection extends PreferenceActivity {
         res.updateConfiguration(conf, res.getDisplayMetrics());
 
         int[] dictionaries = LatinIME.getDictionary(res);
-        BinaryDictionary bd = new BinaryDictionary(this, dictionaries, Suggest.DIC_MAIN);
+        BinaryDictionary bd = new BinaryDictionary(context, dictionaries, Suggest.DIC_MAIN);
 
         // Is the dictionary larger than a placeholder? Arbitrarily chose a lower limit of
         // 4000-5000 words, whereas the LARGE_DICTIONARY is about 20000+ words.
         if (bd.getSize() > Suggest.LARGE_DICTIONARY_THRESHOLD / 4) {
             haveDictionary = true;
         } else {
-            BinaryDictionary plug = PluginManager.getDictionary(getApplicationContext(), locale.getLanguage());
+            BinaryDictionary plug = PluginManager.getDictionary(
+                    context.getApplicationContext(), locale.getLanguage());
             if (plug != null) {
                 bd.close();
                 bd = plug;
@@ -236,36 +276,10 @@ public class InputLanguageSelection extends PreferenceActivity {
         return haveDictionary;
     }
 
-    private String get5Code(Locale locale) {
+    private static String get5Code(Locale locale) {
         String country = locale.getCountry();
         return locale.getLanguage()
                 + (TextUtils.isEmpty(country) ? "" : "_" + country);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // Save the selected languages
-        String checkedLanguages = "";
-        PreferenceGroup parent = getPreferenceScreen();
-        int count = parent.getPreferenceCount();
-        for (int i = 0; i < count; i++) {
-            CheckBoxPreference pref = (CheckBoxPreference) parent.getPreference(i);
-            if (pref.isChecked()) {
-                Locale locale = mAvailableLanguages.get(i).locale;
-                checkedLanguages += get5Code(locale) + ",";
-            }
-        }
-        if (checkedLanguages.length() < 1) checkedLanguages = null; // Save null
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        Editor editor = sp.edit();
-        editor.putString(LatinIME.PREF_SELECTED_LANGUAGES, checkedLanguages);
-        SharedPreferencesCompat.apply(editor);
     }
 
     private static String asString(Set<String> set) {
@@ -282,7 +296,7 @@ public class InputLanguageSelection extends PreferenceActivity {
     	return out.toString();
     }
     
-    ArrayList<Loc> getUniqueLocales() {
+    private static ArrayList<Loc> getUniqueLocales() {
         Set<String> localeSet = new HashSet<String>();
         Set<String> langSet = new HashSet<String>();
         // Ignore the system (asset) locale list, it's inconsistent and incomplete
@@ -375,7 +389,7 @@ public class InputLanguageSelection extends PreferenceActivity {
         return uniqueLocales;
     }
 
-    private boolean arrayContains(String[] array, String value) {
+    private static boolean arrayContains(String[] array, String value) {
         for (int i = 0; i < array.length; i++) {
             if (array[i].equalsIgnoreCase(value)) return true;
         }

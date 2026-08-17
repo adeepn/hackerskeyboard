@@ -77,6 +77,9 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   lifecycle-safe AndroidX seek-bar dialogs и мигрирует feedback screen; S2.03d
   ([#65](https://github.com/adeepn/hackerskeyboard/issues/65)) переносит view
   screen на ту же основу, сохраняя string-backed sliders и render-mode fallback;
+  S2.03e ([#70](https://github.com/adeepn/hackerskeyboard/issues/70)) переносит
+  динамический выбор языков, сохраняя consolidated string storage и legacy
+  locale fallback;
 - S2.04 — manifest components и минимальные `android:exported`;
 - S2.05 — explicit intents и PendingIntent mutability;
 - S2.06 — runtime receiver export policy;
