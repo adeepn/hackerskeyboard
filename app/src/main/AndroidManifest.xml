@@ -69,7 +69,8 @@
         </activity>
 
         <activity android:name="PrefScreenFeedback"
-                android:label="@string/pref_screen_feedback_title">
+                android:label="@string/pref_screen_feedback_title"
+                android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="${applicationId}.PREFS_FEEDBACK"/>

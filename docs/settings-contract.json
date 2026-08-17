@@ -806,7 +806,7 @@
         "entry_values": null,
         "key": "vibrate_len",
         "type": "string",
-        "widget": "VibratePreference"
+        "widget": "VibratePreferenceCompat"
       },
       {
         "default": null,
@@ -824,7 +824,7 @@
         "entry_values": "@array/click_method_values",
         "key": "pref_click_method",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_click_volume",
@@ -833,7 +833,7 @@
         "entry_values": null,
         "key": "pref_click_volume",
         "type": "string",
-        "widget": "SeekBarPreferenceString"
+        "widget": "SeekBarPreferenceStringCompat"
       },
       {
         "default": "@bool/default_popup_preview",

@@ -67,3 +67,13 @@ S2.03b / #61 переводит `prefs_actions.xml` на AndroidX namespace и �
 этих шести entries. Все 66 keyed nodes, 48 persisted XML keys, два
 programmatic keys, типы, defaults, entryValues и navigation actions остаются
 идентичными baseline S2.03a.
+
+S2.03c / #63 переводит `prefs_feedback.xml` и `PrefScreenFeedback` на AndroidX.
+`pref_click_method` использует стандартный `ListPreference`, а string-backed
+`vibrate_len` и `pref_click_volume` — параллельные AndroidX custom widgets с
+суффиксом `Compat`. Legacy widgets остаются для ещё не перенесённых экранов.
+Изменяются только реализации трёх widgets: ключи, defaults, entryValues и тип
+хранения `string` остаются неизменными; открытие и отмена диалога не переписывают
+существующую строку. Prefix-independent XML digest обновляется в том же PR:
+`prefs_feedback.xml` становится шестидесятым resource-файлом с `app:` namespace
+и добавляет единственный новый semantic attribute `useSimpleSummaryProvider`.

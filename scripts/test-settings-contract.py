@@ -68,6 +68,18 @@ class SettingsContractTest(unittest.TestCase):
             MODULE.preference_attribute(androidx_element, "key"),
         )
 
+    def test_androidx_custom_widgets_preserve_string_storage(self) -> None:
+        self.assertEqual(
+            "string",
+            MODULE.value_type(
+                "com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat"
+            ),
+        )
+        self.assertEqual(
+            "string",
+            MODULE.value_type("com.baodeep.hackerskeyboard.VibratePreferenceCompat"),
+        )
+
     def test_type_mutation_is_reported(self) -> None:
         mutated = copy.deepcopy(self.contract)
         mutated["xml_entries"]["prefs.xml"][2]["type"] = "float"

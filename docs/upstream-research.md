@@ -197,7 +197,7 @@ compatibility. Готовой независимой package migration не на
 
 ### S2.03 settings migration check
 
-14 августа 2026 года поиск `PreferenceFragmentCompat`, `android.preference` и
+17 августа 2026 года поиск `PreferenceFragmentCompat`, `android.preference` и
 AndroidX settings повторён по open/closed issues и PR canonical upstream.
 Готового reviewable PR не найдено. Наиболее полезный материал находится в
 обсуждении issue
@@ -218,8 +218,9 @@ negative lifecycle cases: process recreation, dialog recreation и момент
 
 Issue [#986](https://github.com/klausw/hackerskeyboard/issues/986) также попала
 в поиск по `android.preference`, но её AI-generated attachment остаётся
-untrusted и не загружалась. S2.03 реализуется независимо: сначала executable
-contract #59, затем маленькие lifecycle/navigation/custom-widget PR.
+untrusted и не загружалась. Новых reviewable settings PR не найдено. S2.03
+реализуется независимо: executable contract #59, actions #61 и
+feedback/custom-dialog slice #63, затем маленькие screen-specific PR.
 
 Перед каждым milestone planning и минимум перед alpha/beta/release:
 

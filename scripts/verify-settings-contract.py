@@ -73,7 +73,9 @@ def value_type(tag: str) -> str:
         "EditTextPreference",
         "ListPreference",
         "SeekBarPreferenceString",
+        "SeekBarPreferenceStringCompat",
         "VibratePreference",
+        "VibratePreferenceCompat",
     }:
         return "string"
     if name == "SeekBarPreference":

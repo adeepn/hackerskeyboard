@@ -10,22 +10,34 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Instrumentation;
+import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Collection;
 
 @RunWith(AndroidJUnit4.class)
 public class ApplicationSmokeTest {
@@ -136,6 +148,84 @@ public class ApplicationSmokeTest {
         }
     }
 
+    @Test
+    public void feedbackSeekBarPreservesStringAndPendingValueAcrossRecreation() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context context = instrumentation.getTargetContext();
+        SharedPreferences preferences = context.getSharedPreferences(
+                DEFAULT_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String key = "pref_click_volume";
+        boolean hadOriginalValue = preferences.contains(key);
+        String originalValue = preferences.getString(key, null);
+        preferences.edit().putString(key, "0.25%").apply();
+
+        PrefScreenFeedback activity = null;
+        PrefScreenFeedback recreated = null;
+        try {
+            Intent intent = new Intent(EXPECTED_APPLICATION_ID + ".PREFS_FEEDBACK");
+            intent.setPackage(EXPECTED_APPLICATION_ID);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Activity launched = instrumentation.startActivitySync(intent);
+            instrumentation.waitForIdleSync();
+            assertEquals(PrefScreenFeedback.class, launched.getClass());
+            activity = (PrefScreenFeedback) launched;
+
+            SeekBarPreferenceStringCompat clickVolume =
+                    assertFeedbackPreferences(instrumentation, activity, "25%");
+            assertEquals("0.25%", preferences.getString(key, null));
+
+            SeekBarPreferenceDialogFragmentCompat cancelledDialog =
+                    openSeekBarDialog(instrumentation, activity, clickVolume);
+            dragSeekBar(instrumentation, cancelledDialog, 50);
+            assertDialogValue(cancelledDialog, "50%");
+            clickDialogButton(instrumentation, cancelledDialog,
+                    DialogInterface.BUTTON_NEGATIVE);
+            assertEquals("0.25%", preferences.getString(key, null));
+            assertEquals("25%", clickVolume.getSummary());
+
+            SeekBarPreferenceDialogFragmentCompat pendingDialog =
+                    openSeekBarDialog(instrumentation, activity, clickVolume);
+            dragSeekBar(instrumentation, pendingDialog, 75);
+            assertDialogValue(pendingDialog, "75%");
+            assertEquals("0.25%", preferences.getString(key, null));
+
+            final PrefScreenFeedback activityToRecreate = activity;
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    activityToRecreate.recreate();
+                }
+            });
+            recreated = waitForResumedActivity(
+                    instrumentation, PrefScreenFeedback.class, activityToRecreate);
+
+            SeekBarPreferenceStringCompat restoredPreference =
+                    assertFeedbackPreferences(instrumentation, recreated, "25%");
+            SeekBarPreferenceDialogFragmentCompat restoredDialog =
+                    waitForSeekBarDialog(instrumentation, recreated);
+            assertDialogValue(restoredDialog, "75%");
+            assertEquals("0.25%", preferences.getString(key, null));
+
+            clickDialogButton(instrumentation, restoredDialog,
+                    DialogInterface.BUTTON_POSITIVE);
+            assertEquals("0.75", preferences.getString(key, null));
+            assertEquals("75%", restoredPreference.getSummary());
+        } finally {
+            if (recreated != null) {
+                finishActivity(instrumentation, recreated);
+            } else if (activity != null) {
+                finishActivity(instrumentation, activity);
+            }
+            SharedPreferences.Editor editor = preferences.edit();
+            if (hadOriginalValue) {
+                editor.putString(key, originalValue);
+            } else {
+                editor.remove(key);
+            }
+            editor.apply();
+        }
+    }
+
     private static ListPreference assertActionsPreferences(
             PrefScreenActions activity, boolean requireVisibleList) {
         assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
@@ -156,6 +246,201 @@ public class ApplicationSmokeTest {
         assertEquals("settings", swipeUp.getValue());
         assertEquals(swipeUp.getEntry(), swipeUp.getSummary());
         return swipeUp;
+    }
+
+    private static SeekBarPreferenceStringCompat assertFeedbackPreferences(
+            Instrumentation instrumentation, PrefScreenFeedback activity,
+            String expectedSummary) {
+        PrefScreenFeedback.FeedbackPreferenceFragment fragment =
+                waitForFeedbackFragment(instrumentation, activity);
+        assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
+        PreferenceFragmentCompat preferences = fragment;
+        assertNotNull(preferences.getPreferenceScreen());
+        assertEquals("feedback_settings", preferences.getPreferenceScreen().getKey());
+
+        SeekBarPreferenceStringCompat clickVolume =
+                preferences.findPreference("pref_click_volume");
+        assertNotNull(clickVolume);
+        assertEquals(expectedSummary, clickVolume.getSummary());
+        return clickVolume;
+    }
+
+    private static SeekBarPreferenceDialogFragmentCompat openSeekBarDialog(
+            Instrumentation instrumentation, PrefScreenFeedback activity,
+            final SeekBarPreferenceStringCompat preference) {
+        PrefScreenFeedback.FeedbackPreferenceFragment fragment =
+                waitForFeedbackFragment(instrumentation, activity);
+        final ViewGroup preferenceList = fragment.getListView();
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                View preferenceRow = null;
+                for (int index = 0; index < preferenceList.getChildCount(); index++) {
+                    View child = preferenceList.getChildAt(index);
+                    TextView title = (TextView) child.findViewById(android.R.id.title);
+                    if (title != null && preference.getTitle().equals(title.getText())) {
+                        preferenceRow = child;
+                        break;
+                    }
+                }
+                assertNotNull("Visible preference row is missing", preferenceRow);
+                assertTrue("Preference row click was not handled", preferenceRow.performClick());
+            }
+        });
+        instrumentation.waitForIdleSync();
+        return waitForSeekBarDialog(instrumentation, activity);
+    }
+
+    private static PrefScreenFeedback.FeedbackPreferenceFragment waitForFeedbackFragment(
+            Instrumentation instrumentation, final PrefScreenFeedback activity) {
+        final PrefScreenFeedback.FeedbackPreferenceFragment[] result =
+                new PrefScreenFeedback.FeedbackPreferenceFragment[1];
+        long deadline = SystemClock.uptimeMillis() + 5_000;
+        while (result[0] == null && SystemClock.uptimeMillis() < deadline) {
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    FragmentManager manager = activity.getSupportFragmentManager();
+                    if (!manager.isDestroyed()) {
+                        manager.executePendingTransactions();
+                        Fragment candidate = manager.findFragmentByTag(
+                                PrefScreenFeedback.FRAGMENT_TAG);
+                        if (candidate instanceof PrefScreenFeedback.FeedbackPreferenceFragment
+                                && candidate.isAdded()) {
+                            result[0] =
+                                    (PrefScreenFeedback.FeedbackPreferenceFragment) candidate;
+                        }
+                    }
+                }
+            });
+            if (result[0] == null) {
+                SystemClock.sleep(50);
+            }
+        }
+        assertNotNull("Attached feedback preference fragment is missing", result[0]);
+        return result[0];
+    }
+
+    private static SeekBarPreferenceDialogFragmentCompat waitForSeekBarDialog(
+            Instrumentation instrumentation, PrefScreenFeedback activity) {
+        final PrefScreenFeedback.FeedbackPreferenceFragment parent =
+                waitForFeedbackFragment(instrumentation, activity);
+        final SeekBarPreferenceDialogFragmentCompat[] result =
+                new SeekBarPreferenceDialogFragmentCompat[1];
+        long deadline = SystemClock.uptimeMillis() + 5_000;
+        while (result[0] == null && SystemClock.uptimeMillis() < deadline) {
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    FragmentManager manager = parent.getChildFragmentManager();
+                    if (!manager.isDestroyed()) {
+                        manager.executePendingTransactions();
+                        Fragment candidate = manager.findFragmentByTag(
+                                SeekBarPreferenceFragmentCompat.DIALOG_TAG);
+                        if (candidate instanceof SeekBarPreferenceDialogFragmentCompat
+                                && candidate.isAdded()
+                                && ((SeekBarPreferenceDialogFragmentCompat) candidate).getDialog()
+                                        != null) {
+                            result[0] = (SeekBarPreferenceDialogFragmentCompat) candidate;
+                        }
+                    }
+                }
+            });
+            if (result[0] == null) {
+                SystemClock.sleep(50);
+            }
+        }
+        assertNotNull("Attached seek-bar dialog fragment is missing", result[0]);
+        return result[0];
+    }
+
+    private static <T extends Activity> T waitForResumedActivity(
+            Instrumentation instrumentation, final Class<T> activityClass,
+            final Activity previousActivity) {
+        final Activity[] result = new Activity[1];
+        long deadline = SystemClock.uptimeMillis() + 5_000;
+        while (result[0] == null && SystemClock.uptimeMillis() < deadline) {
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    Collection<Activity> resumed = ActivityLifecycleMonitorRegistry
+                            .getInstance().getActivitiesInStage(Stage.RESUMED);
+                    for (Activity candidate : resumed) {
+                        if (activityClass.isInstance(candidate)
+                                && candidate != previousActivity
+                                && !candidate.isFinishing()
+                                && !candidate.isDestroyed()) {
+                            result[0] = candidate;
+                            break;
+                        }
+                    }
+                }
+            });
+            if (result[0] == null) {
+                SystemClock.sleep(50);
+            }
+        }
+        assertNotNull(activityClass.getSimpleName() + " was not resumed after recreation",
+                result[0]);
+        return activityClass.cast(result[0]);
+    }
+
+    private static void dragSeekBar(
+            Instrumentation instrumentation,
+            final SeekBarPreferenceDialogFragmentCompat dialog,
+            final int progress) {
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                SeekBar seekBar = (SeekBar) dialog.requireDialog()
+                        .findViewById(R.id.seekBarPref);
+                assertNotNull(seekBar);
+                assertTrue("Seek bar must be laid out", seekBar.getWidth() > 0);
+                float usableWidth = seekBar.getWidth()
+                        - seekBar.getPaddingLeft() - seekBar.getPaddingRight();
+                float x = seekBar.getPaddingLeft() + usableWidth * progress / 100.0f;
+                float y = seekBar.getHeight() / 2.0f;
+                long downTime = SystemClock.uptimeMillis();
+                MotionEvent down = MotionEvent.obtain(
+                        downTime, downTime, MotionEvent.ACTION_DOWN, x, y, 0);
+                MotionEvent up = MotionEvent.obtain(
+                        downTime, downTime + 16, MotionEvent.ACTION_UP, x, y, 0);
+                seekBar.dispatchTouchEvent(down);
+                seekBar.dispatchTouchEvent(up);
+                down.recycle();
+                up.recycle();
+            }
+        });
+        instrumentation.waitForIdleSync();
+    }
+
+    private static void assertDialogValue(
+            SeekBarPreferenceDialogFragmentCompat dialog, String expectedValue) {
+        TextView value = (TextView) dialog.requireDialog().findViewById(R.id.seekVal);
+        assertNotNull(value);
+        assertEquals(expectedValue, value.getText().toString());
+    }
+
+    private static void clickDialogButton(
+            Instrumentation instrumentation,
+            final SeekBarPreferenceDialogFragmentCompat dialog,
+            final int button) {
+        final FragmentManager fragmentManager = dialog.getParentFragmentManager();
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = (AlertDialog) dialog.requireDialog();
+                assertNotNull(alertDialog.getButton(button));
+                alertDialog.getButton(button).performClick();
+            }
+        });
+        instrumentation.waitForIdleSync();
+        instrumentation.runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                fragmentManager.executePendingTransactions();
+            }
+        });
     }
 
     private static void assertImeIsRegistered(Context context) {
