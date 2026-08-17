@@ -8,6 +8,7 @@ package com.baodeep.hackerskeyboard;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
@@ -29,7 +30,9 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -39,7 +42,10 @@ import androidx.test.runner.lifecycle.Stage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @RunWith(AndroidJUnit4.class)
 public class ApplicationSmokeTest {
@@ -294,6 +300,109 @@ public class ApplicationSmokeTest {
         }
     }
 
+    @Test
+    public void languageSettingsPreserveConsolidatedStringsAndLegacyFallback() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context context = instrumentation.getTargetContext();
+        SharedPreferences preferences = context.getSharedPreferences(
+                DEFAULT_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String selectedKey = "selected_languages";
+        String inputKey = "input_language";
+        boolean hadOriginalSelected = preferences.contains(selectedKey);
+        boolean hadOriginalInput = preferences.contains(inputKey);
+        String originalSelected = preferences.getString(selectedKey, null);
+        String originalInput = preferences.getString(inputKey, null);
+        preferences.edit()
+                .putString(selectedKey, "en_US,ru_PH,")
+                .putString(inputKey, "ru_PH")
+                .apply();
+
+        InputLanguageSelection activity = null;
+        InputLanguageSelection recreated = null;
+        try {
+            Intent intent = new Intent(
+                    EXPECTED_APPLICATION_ID + ".INPUT_LANGUAGE_SELECTION");
+            intent.setPackage(EXPECTED_APPLICATION_ID);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Activity launched = instrumentation.startActivitySync(intent);
+            instrumentation.waitForIdleSync();
+            assertEquals(InputLanguageSelection.class, launched.getClass());
+            activity = (InputLanguageSelection) launched;
+
+            InputLanguageSelection.LanguagePreferenceFragment fragment =
+                    assertLanguagePreferences(instrumentation, activity, false);
+            assertEquals("en_US,ru_PH,", preferences.getString(selectedKey, null));
+            assertEquals("ru_PH", preferences.getString(inputKey, null));
+
+            final CheckBoxPreference german = findLanguagePreference(fragment, "de");
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    german.setChecked(true);
+                }
+            });
+
+            final InputLanguageSelection activityToRecreate = activity;
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    activityToRecreate.recreate();
+                }
+            });
+            recreated = waitForResumedActivity(
+                    instrumentation, InputLanguageSelection.class, activityToRecreate);
+
+            final InputLanguageSelection.LanguagePreferenceFragment recreatedFragment =
+                    assertLanguagePreferences(instrumentation, recreated, true);
+            String canonicalSelection = preferences.getString(selectedKey, null);
+            assertNotNull(canonicalSelection);
+            assertTrue(canonicalSelection.endsWith(","));
+            Set<String> selectedLanguages = new HashSet<String>(
+                    Arrays.asList(canonicalSelection.split(",")));
+            assertTrue(selectedLanguages.contains("en"));
+            assertTrue(selectedLanguages.contains("ru_PH"));
+            assertTrue(selectedLanguages.contains("de"));
+            assertFalse(selectedLanguages.contains("en_US"));
+            assertEquals("ru_PH", preferences.getString(inputKey, null));
+
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    for (int index = 0;
+                            index < recreatedFragment.getPreferenceScreen()
+                                    .getPreferenceCount(); index++) {
+                        CheckBoxPreference preference = (CheckBoxPreference)
+                                recreatedFragment.getPreferenceScreen().getPreference(index);
+                        preference.setChecked(false);
+                    }
+                }
+            });
+            finishActivity(instrumentation, recreated);
+            recreated = null;
+            activity = null;
+            assertFalse(preferences.contains(selectedKey));
+            assertEquals("ru_PH", preferences.getString(inputKey, null));
+        } finally {
+            if (recreated != null) {
+                finishActivity(instrumentation, recreated);
+            } else if (activity != null) {
+                finishActivity(instrumentation, activity);
+            }
+            SharedPreferences.Editor editor = preferences.edit();
+            if (hadOriginalSelected) {
+                editor.putString(selectedKey, originalSelected);
+            } else {
+                editor.remove(selectedKey);
+            }
+            if (hadOriginalInput) {
+                editor.putString(inputKey, originalInput);
+            } else {
+                editor.remove(inputKey);
+            }
+            editor.apply();
+        }
+    }
+
     private static ListPreference assertActionsPreferences(
             PrefScreenActions activity, boolean requireVisibleList) {
         assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
@@ -374,6 +483,61 @@ public class ApplicationSmokeTest {
             assertTrue(renderMode.isEnabled());
             assertEquals(renderMode.getEntry(), renderMode.getSummary());
         }
+    }
+
+    private static InputLanguageSelection.LanguagePreferenceFragment
+            assertLanguagePreferences(
+                    Instrumentation instrumentation,
+                    InputLanguageSelection activity,
+                    boolean expectGerman) {
+        InputLanguageSelection.LanguagePreferenceFragment fragment =
+                waitForPreferenceFragment(
+                        instrumentation,
+                        activity,
+                        InputLanguageSelection.FRAGMENT_TAG,
+                        InputLanguageSelection.LanguagePreferenceFragment.class,
+                        "language");
+        assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
+        assertNotNull(fragment.getPreferenceScreen());
+        assertTrue(fragment.getPreferenceScreen().getPreferenceCount() > 30);
+
+        for (int index = 0;
+                index < fragment.getPreferenceScreen().getPreferenceCount(); index++) {
+            Preference preference = fragment.getPreferenceScreen().getPreference(index);
+            assertTrue(preference instanceof CheckBoxPreference);
+            assertFalse(preference.isPersistent());
+            assertNull(preference.getKey());
+        }
+
+        CheckBoxPreference english = findLanguagePreference(fragment, "en");
+        CheckBoxPreference phoneticRussian = findLanguagePreference(fragment, "ru_PH");
+        CheckBoxPreference german = findLanguagePreference(fragment, "de");
+        assertTrue(english.isChecked());
+        assertTrue(phoneticRussian.isChecked());
+        if (expectGerman) {
+            assertTrue(german.isChecked());
+        } else {
+            assertFalse(german.isChecked());
+        }
+        assertNotNull(english.getSummary());
+        assertTrue(english.getSummary().toString().contains("5-row"));
+        assertTrue(english.getSummary().toString().contains("4-row"));
+        return fragment;
+    }
+
+    private static CheckBoxPreference findLanguagePreference(
+            InputLanguageSelection.LanguagePreferenceFragment fragment,
+            String localeCode) {
+        String titleSuffix = " [" + localeCode + "]";
+        for (int index = 0;
+                index < fragment.getPreferenceScreen().getPreferenceCount(); index++) {
+            Preference preference = fragment.getPreferenceScreen().getPreference(index);
+            if (preference.getTitle() != null
+                    && preference.getTitle().toString().endsWith(titleSuffix)) {
+                return (CheckBoxPreference) preference;
+            }
+        }
+        throw new AssertionError("Missing dynamic language preference " + localeCode);
     }
 
     private static SeekBarPreferenceDialogFragmentCompat openSeekBarDialog(

@@ -87,3 +87,13 @@ list value и slider string с legacy-суффиксом, затем доказ�
 eager rewrite и сохранение одного восстановленного Fragment после recreation.
 Prefix-independent XML snapshot при этом получает 61-й файл с `app:` namespace
 и ровно три новых semantic attributes `useSimpleSummaryProvider`.
+
+S2.03e / #70 переводит пустой `language_prefs.xml` container и динамические
+checkboxes на AndroidX. XML по-прежнему не добавляет keyed nodes, а runtime
+checkboxes имеют `persistent=false` и не создают отдельных boolean values.
+Контракт сохраняет два programmatic string keys: экран читает и пишет только
+`selected_languages`, а `input_language` остаётся за `LanguageSwitcher`.
+Legacy five-code fallback, trailing-comma serialization и empty/null behavior
+сохраняются. XML snapshot получает 78-й resource namespace file, 62-й `app:`
+prefix и один semantic title attribute; 66 keyed XML entries, 48 persisted XML
+keys и два programmatic keys не меняются.

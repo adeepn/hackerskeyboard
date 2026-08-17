@@ -176,3 +176,12 @@ default SharedPreferences записываются существующие `pre
 summaries, отсутствие eager rewrite, актуальное render-mode state и ровно один
 восстановленный preference Fragment после `Activity.recreate()`. Static guard
 отдельно сохраняет ветку unavailable summary для устройств без renderer API.
+
+S2.03e запускает `${applicationId}.INPUT_LANGUAGE_SELECTION` с legacy строкой
+`en_US,ru_PH,` и отдельным текущим `input_language`. На API 24 и API 37 тест
+доказывает fallback `en_US` → checkbox `en` без eager rewrite, отсутствие keys
+и individual persistence у всех динамических checkbox, сохранение добавленного
+языка только через consolidated trailing-comma string при recreation и
+неизменность `input_language`. Затем снятие всех checkbox проверяет прежнее
+удаление/null behavior для пустого выбора. После recreation должен существовать
+ровно один восстановленный language preference Fragment.
