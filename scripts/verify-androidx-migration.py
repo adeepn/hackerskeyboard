@@ -127,6 +127,71 @@ def main() -> int:
     if "AutoSummaryListPreference" in actions_xml_text:
         errors.append("prefs_actions.xml: legacy custom ListPreference remains")
 
+    feedback_activity = (
+        app
+        / "src"
+        / "main"
+        / "java"
+        / "com"
+        / "baodeep"
+        / "hackerskeyboard"
+        / "PrefScreenFeedback.java"
+    ).read_text(encoding="utf-8")
+    for token in (
+        "extends FragmentActivity",
+        "extends SeekBarPreferenceFragmentCompat",
+        "if (icicle == null)",
+        ".commitNow()",
+        "registerOnSharedPreferenceChangeListener(this)",
+        "unregisterOnSharedPreferenceChangeListener(this)",
+        "new BackupManager(requireContext())",
+    ):
+        if token not in feedback_activity:
+            errors.append(f"PrefScreenFeedback.java: missing migration guard {token}")
+    for token in ("android.preference.", "PreferenceActivity", "setTargetFragment("):
+        if token in feedback_activity:
+            errors.append(f"PrefScreenFeedback.java: forbidden migration token {token}")
+
+    feedback_xml_text = (
+        app / "src" / "main" / "res" / "xml" / "prefs_feedback.xml"
+    ).read_text(encoding="utf-8")
+    for token in (
+        'xmlns:app="http://schemas.android.com/apk/res-auto"',
+        "<com.baodeep.hackerskeyboard.VibratePreferenceCompat",
+        "<com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat",
+        "<ListPreference",
+        'app:useSimpleSummaryProvider="true"',
+    ):
+        if token not in feedback_xml_text:
+            errors.append(f"prefs_feedback.xml: missing AndroidX token {token}")
+    for token in (
+        "AutoSummaryListPreference",
+        "com.baodeep.hackerskeyboard.VibratePreference\n",
+        "com.baodeep.hackerskeyboard.SeekBarPreferenceString\n",
+    ):
+        if token in feedback_xml_text:
+            errors.append(f"prefs_feedback.xml: legacy widget remains: {token.strip()}")
+
+    seek_dialog = (
+        app
+        / "src"
+        / "main"
+        / "java"
+        / "com"
+        / "baodeep"
+        / "hackerskeyboard"
+        / "SeekBarPreferenceDialogFragmentCompat.java"
+    ).read_text(encoding="utf-8")
+    for token in ("setTargetFragment(", "putParcelable(", "putSerializable("):
+        if token in seek_dialog:
+            errors.append(
+                f"SeekBarPreferenceDialogFragmentCompat.java: forbidden state token {token}"
+            )
+    if 'arguments.putString(ARG_KEY, key)' not in seek_dialog:
+        errors.append(
+            "SeekBarPreferenceDialogFragmentCompat.java: stable preference key argument missing"
+        )
+
     manifest = (app / "src" / "main" / "AndroidManifest.xml").read_text(
         encoding="utf-8"
     )
@@ -138,6 +203,14 @@ def main() -> int:
         actions_manifest.group("attributes") if actions_manifest else ""
     ):
         errors.append("AndroidManifest.xml: PrefScreenActions SettingsTheme is missing")
+    feedback_manifest = re.search(
+        r'<activity\s+android:name="PrefScreenFeedback"(?P<attributes>[^>]*)>',
+        manifest,
+    )
+    if feedback_manifest is None or 'android:theme="@style/SettingsTheme"' not in (
+        feedback_manifest.group("attributes") if feedback_manifest else ""
+    ):
+        errors.append("AndroidManifest.xml: PrefScreenFeedback SettingsTheme is missing")
 
     styles = (app / "src" / "main" / "res" / "values" / "styles.xml").read_text(
         encoding="utf-8"

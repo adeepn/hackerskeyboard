@@ -15,58 +15,58 @@
      limitations under the License.
 -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    	xmlns:hk="http://schemas.android.com/apk/res-auto"
-        android:title="@string/pref_screen_feedback_title"
-        android:key="feedback_settings">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:title="@string/pref_screen_feedback_title"
+        app:key="feedback_settings">
 
     <CheckBoxPreference
-            android:key="vibrate_on"
-            android:title="@string/vibrate_on_keypress"
-            android:persistent="true"
+            app:key="vibrate_on"
+            app:title="@string/vibrate_on_keypress"
+            app:persistent="true"
             />
 
-    <com.baodeep.hackerskeyboard.VibratePreference
-            android:defaultValue="40"
-            hk:minValue="5"
-            hk:maxValue="200"
-            hk:logScale="true"
-            hk:displayFormat="%.0f ms"
-            android:key="vibrate_len"
-            android:title="@string/title_vibrate_len"
-            android:persistent="true"
-            />
-
-    <CheckBoxPreference
-            android:key="sound_on"
-            android:title="@string/sound_on_keypress"
-            android:persistent="true" 
-            />
-
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_click_method"
-            android:title="@string/title_click_method"
-            android:entryValues="@array/click_method_values"
-            android:entries="@array/click_method_entries"
-            android:defaultValue="@string/default_click_method"
-            android:persistent="true"
-            />
-    
-    <com.baodeep.hackerskeyboard.SeekBarPreferenceString
-            android:defaultValue="@string/default_click_volume"
-            hk:minValue="0"
-            hk:maxValue="1"
-            hk:asPercent="true"
-            android:key="pref_click_volume"
-            android:title="@string/title_click_volume"
-            android:persistent="true"
+    <com.baodeep.hackerskeyboard.VibratePreferenceCompat
+            app:defaultValue="40"
+            app:minValue="5"
+            app:maxValue="200"
+            app:logScale="true"
+            app:displayFormat="%.0f ms"
+            app:key="vibrate_len"
+            app:title="@string/title_vibrate_len"
+            app:persistent="true"
             />
 
     <CheckBoxPreference
-            android:key="popup_on"
-            android:title="@string/popup_on_keypress"
-            android:persistent="true"
-            android:defaultValue="@bool/default_popup_preview"
+            app:key="sound_on"
+            app:title="@string/sound_on_keypress"
+            app:persistent="true"
+            />
+
+    <ListPreference
+            app:key="pref_click_method"
+            app:title="@string/title_click_method"
+            app:entryValues="@array/click_method_values"
+            app:entries="@array/click_method_entries"
+            app:defaultValue="@string/default_click_method"
+            app:persistent="true"
+            app:useSimpleSummaryProvider="true"
+            />
+
+    <com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat
+            app:defaultValue="@string/default_click_volume"
+            app:minValue="0"
+            app:maxValue="1"
+            app:asPercent="true"
+            app:key="pref_click_volume"
+            app:title="@string/title_click_volume"
+            app:persistent="true"
+            />
+
+    <CheckBoxPreference
+            app:key="popup_on"
+            app:title="@string/popup_on_keypress"
+            app:persistent="true"
+            app:defaultValue="@bool/default_popup_preview"
             />
 
 </PreferenceScreen>

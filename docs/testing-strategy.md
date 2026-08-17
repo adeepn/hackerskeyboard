@@ -156,3 +156,11 @@ screen. Тест записывает существующее string value на
 `Theme.Material.NoActionBar`: Material/DeviceDefault с системным ActionBar
 аварийно завершают inflate Toolbar до `Activity.onCreate()` на этой версии
 Android.
+
+S2.03c добавляет JVM characterization tests для legacy string parsing,
+линейного step, logarithmic rounding и display formats. Device smoke запускает
+`${applicationId}.PREFS_FEEDBACK` с ранее сохранённой строкой с суффиксом,
+проверяет summary, Cancel без записи, pending slider value через
+`Activity.recreate()` и запись чистой строки только после OK. Parent preference
+Fragment и его дочерний dialog Fragment должны восстановиться по одному
+экземпляру без `setTargetFragment` и без live objects в arguments.

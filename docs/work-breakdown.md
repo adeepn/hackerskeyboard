@@ -72,7 +72,9 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   ([#59](https://github.com/adeepn/hackerskeyboard/issues/59)) фиксирует keys,
   storage types, defaults и navigation до production migration; S2.03b
   ([#61](https://github.com/adeepn/hackerskeyboard/issues/61)) добавляет
-  Preference 1.2.1 и мигрирует actions screen с recreation test;
+  Preference 1.2.1 и мигрирует actions screen с recreation test; S2.03c
+  ([#63](https://github.com/adeepn/hackerskeyboard/issues/63)) добавляет
+  lifecycle-safe AndroidX seek-bar dialogs и мигрирует feedback screen;
 - S2.04 — manifest components и минимальные `android:exported`;
 - S2.05 — explicit intents и PendingIntent mutability;
 - S2.06 — runtime receiver export policy;

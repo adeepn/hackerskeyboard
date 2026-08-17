@@ -20,33 +20,48 @@ package com.baodeep.hackerskeyboard;
 import android.app.backup.BackupManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.PreferenceActivity;
 
-public class PrefScreenFeedback extends PreferenceActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+import androidx.fragment.app.FragmentActivity;
+
+public class PrefScreenFeedback extends FragmentActivity {
+    static final String FRAGMENT_TAG = "feedback_preferences";
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        addPreferencesFromResource(R.xml.prefs_feedback);
-        SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-        prefs.registerOnSharedPreferenceChangeListener(this);
+        if (icicle == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content, new FeedbackPreferenceFragment(), FRAGMENT_TAG)
+                    .commitNow();
+        }
     }
 
-    @Override
-    protected void onDestroy() {
-        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
-                this);
-        super.onDestroy();
-    }
+    public static class FeedbackPreferenceFragment extends SeekBarPreferenceFragmentCompat
+            implements SharedPreferences.OnSharedPreferenceChangeListener {
+        private SharedPreferences mPreferences;
 
-    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        (new BackupManager(this)).dataChanged();
-    }
-    
-    @Override
-    protected void onResume() {
-        super.onResume();
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.prefs_feedback, rootKey);
+            mPreferences = getPreferenceManager().getSharedPreferences();
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            mPreferences.registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onStop() {
+            mPreferences.unregisterOnSharedPreferenceChangeListener(this);
+            super.onStop();
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            (new BackupManager(requireContext())).dataChanged();
+        }
     }
 }
