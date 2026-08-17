@@ -13,6 +13,14 @@
 значения из собранного APK. Для следующего выпуска нельзя дублировать номер или
 имя версии в workflow.
 
+После S2.03d следующий кандидат, отслеживаемый в
+[#67](https://github.com/adeepn/hackerskeyboard/issues/67), имеет
+`versionCode 2000003` и `versionName 2.0.0-alpha03`. Он предназначен для
+проверки накопленных AndroidX settings migrations как обновление поверх
+owner-signed alpha02. Это описание кандидата не считается фактом выпуска:
+release evidence появляется только после зелёного `Signed v2 release` на
+точном merge commit ветки `v2`.
+
 Старый Hacker's Keyboard `org.pocketworkstation.pckeyboard` остаётся отдельным
 приложением и может быть установлен одновременно. Ранее скачанные из CI debug
 APK нового пакета подписывались эфемерными debug keys. Перед первой установкой
