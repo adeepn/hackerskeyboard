@@ -6,6 +6,7 @@
 package com.baodeep.hackerskeyboard;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -26,6 +27,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -226,6 +228,72 @@ public class ApplicationSmokeTest {
         }
     }
 
+    @Test
+    public void viewSettingsReadExistingStringsAndSurviveRecreation() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context context = instrumentation.getTargetContext();
+        SharedPreferences preferences = context.getSharedPreferences(
+                DEFAULT_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String hintKey = "pref_hint_mode";
+        String scaleKey = "pref_top_row_scale";
+        boolean hadOriginalHint = preferences.contains(hintKey);
+        boolean hadOriginalScale = preferences.contains(scaleKey);
+        String originalHint = preferences.getString(hintKey, null);
+        String originalScale = preferences.getString(scaleKey, null);
+        preferences.edit()
+                .putString(hintKey, "2")
+                .putString(scaleKey, "0.75%")
+                .apply();
+
+        PrefScreenView activity = null;
+        PrefScreenView recreated = null;
+        try {
+            Intent intent = new Intent(EXPECTED_APPLICATION_ID + ".PREFS_VIEW");
+            intent.setPackage(EXPECTED_APPLICATION_ID);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Activity launched = instrumentation.startActivitySync(intent);
+            instrumentation.waitForIdleSync();
+            assertEquals(PrefScreenView.class, launched.getClass());
+            activity = (PrefScreenView) launched;
+
+            assertViewPreferences(instrumentation, activity);
+            assertEquals("2", preferences.getString(hintKey, null));
+            assertEquals("0.75%", preferences.getString(scaleKey, null));
+
+            final PrefScreenView activityToRecreate = activity;
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    activityToRecreate.recreate();
+                }
+            });
+            recreated = waitForResumedActivity(
+                    instrumentation, PrefScreenView.class, activityToRecreate);
+
+            assertViewPreferences(instrumentation, recreated);
+            assertEquals("2", preferences.getString(hintKey, null));
+            assertEquals("0.75%", preferences.getString(scaleKey, null));
+        } finally {
+            if (recreated != null) {
+                finishActivity(instrumentation, recreated);
+            } else if (activity != null) {
+                finishActivity(instrumentation, activity);
+            }
+            SharedPreferences.Editor editor = preferences.edit();
+            if (hadOriginalHint) {
+                editor.putString(hintKey, originalHint);
+            } else {
+                editor.remove(hintKey);
+            }
+            if (hadOriginalScale) {
+                editor.putString(scaleKey, originalScale);
+            } else {
+                editor.remove(scaleKey);
+            }
+            editor.apply();
+        }
+    }
+
     private static ListPreference assertActionsPreferences(
             PrefScreenActions activity, boolean requireVisibleList) {
         assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
@@ -265,6 +333,49 @@ public class ApplicationSmokeTest {
         return clickVolume;
     }
 
+    private static void assertViewPreferences(
+            Instrumentation instrumentation, PrefScreenView activity) {
+        PrefScreenView.ViewPreferenceFragment fragment = waitForPreferenceFragment(
+                instrumentation,
+                activity,
+                PrefScreenView.FRAGMENT_TAG,
+                PrefScreenView.ViewPreferenceFragment.class,
+                "view");
+        assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
+        assertNotNull(fragment.getPreferenceScreen());
+        assertEquals("prefs_view", fragment.getPreferenceScreen().getKey());
+
+        ListPreference hintMode = fragment.findPreference("pref_hint_mode");
+        assertNotNull(hintMode);
+        assertEquals("2", hintMode.getValue());
+        assertEquals(hintMode.getEntry(), hintMode.getSummary());
+
+        SeekBarPreferenceStringCompat labelScale =
+                fragment.findPreference("pref_label_scale_v2");
+        SeekBarPreferenceStringCompat candidateScale =
+                fragment.findPreference("pref_candidate_scale");
+        SeekBarPreferenceStringCompat topRowScale =
+                fragment.findPreference("pref_top_row_scale");
+        assertNotNull(labelScale);
+        assertNotNull(candidateScale);
+        assertNotNull(topRowScale);
+        assertEquals("75%", topRowScale.getSummary());
+
+        ListPreference keyboardLayout = fragment.findPreference("pref_keyboard_layout");
+        ListPreference renderMode = fragment.findPreference("pref_render_mode");
+        assertNotNull(keyboardLayout);
+        assertNotNull(renderMode);
+        assertEquals(keyboardLayout.getEntry(), keyboardLayout.getSummary());
+        if (LatinKeyboardBaseView.sSetRenderMode == null) {
+            assertFalse(renderMode.isEnabled());
+            assertEquals(activity.getString(R.string.render_mode_unavailable),
+                    renderMode.getSummary());
+        } else {
+            assertTrue(renderMode.isEnabled());
+            assertEquals(renderMode.getEntry(), renderMode.getSummary());
+        }
+    }
+
     private static SeekBarPreferenceDialogFragmentCompat openSeekBarDialog(
             Instrumentation instrumentation, PrefScreenFeedback activity,
             final SeekBarPreferenceStringCompat preference) {
@@ -293,8 +404,21 @@ public class ApplicationSmokeTest {
 
     private static PrefScreenFeedback.FeedbackPreferenceFragment waitForFeedbackFragment(
             Instrumentation instrumentation, final PrefScreenFeedback activity) {
-        final PrefScreenFeedback.FeedbackPreferenceFragment[] result =
-                new PrefScreenFeedback.FeedbackPreferenceFragment[1];
+        return waitForPreferenceFragment(
+                instrumentation,
+                activity,
+                PrefScreenFeedback.FRAGMENT_TAG,
+                PrefScreenFeedback.FeedbackPreferenceFragment.class,
+                "feedback");
+    }
+
+    private static <T extends Fragment> T waitForPreferenceFragment(
+            Instrumentation instrumentation,
+            final FragmentActivity activity,
+            final String tag,
+            final Class<T> fragmentClass,
+            final String description) {
+        final Fragment[] result = new Fragment[1];
         long deadline = SystemClock.uptimeMillis() + 5_000;
         while (result[0] == null && SystemClock.uptimeMillis() < deadline) {
             instrumentation.runOnMainSync(new Runnable() {
@@ -303,12 +427,9 @@ public class ApplicationSmokeTest {
                     FragmentManager manager = activity.getSupportFragmentManager();
                     if (!manager.isDestroyed()) {
                         manager.executePendingTransactions();
-                        Fragment candidate = manager.findFragmentByTag(
-                                PrefScreenFeedback.FRAGMENT_TAG);
-                        if (candidate instanceof PrefScreenFeedback.FeedbackPreferenceFragment
-                                && candidate.isAdded()) {
-                            result[0] =
-                                    (PrefScreenFeedback.FeedbackPreferenceFragment) candidate;
+                        Fragment candidate = manager.findFragmentByTag(tag);
+                        if (fragmentClass.isInstance(candidate) && candidate.isAdded()) {
+                            result[0] = candidate;
                         }
                     }
                 }
@@ -317,8 +438,9 @@ public class ApplicationSmokeTest {
                 SystemClock.sleep(50);
             }
         }
-        assertNotNull("Attached feedback preference fragment is missing", result[0]);
-        return result[0];
+        assertNotNull("Attached " + description + " preference fragment is missing",
+                result[0]);
+        return fragmentClass.cast(result[0]);
     }
 
     private static SeekBarPreferenceDialogFragmentCompat waitForSeekBarDialog(

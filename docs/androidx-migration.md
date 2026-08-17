@@ -8,7 +8,8 @@
 первый изолированный actions screen в
 [#61](https://github.com/adeepn/hackerskeyboard/issues/61), S2.03c мигрирует
 feedback screen и custom seek-bar dialogs в
-[#63](https://github.com/adeepn/hackerskeyboard/issues/63).
+[#63](https://github.com/adeepn/hackerskeyboard/issues/63), S2.03d мигрирует
+view screen в [#65](https://github.com/adeepn/hackerskeyboard/issues/65).
 
 ## Решение
 
@@ -165,6 +166,14 @@ preference key и после recreation повторно находит widget �
 не удерживает live `Preference` object. `PrefScreenFeedback` служит первым
 production consumer; `vibrate_len` и `pref_click_volume` остаются string-backed.
 
+S2.03d повторно использует этот dialog boundary без новых custom API и переносит
+`PrefScreenView`. Activity только размещает один Fragment при первом создании;
+listener и render-mode fallback принадлежат lifecycle Fragment. Три list
+preferences получают штатный simple summary provider, а три slider preferences
+сохраняют исходные string defaults, ranges, logarithmic/step и percent display.
+Экран получает уже проверенный на API 24 `SettingsTheme`; keyboard rendering и
+сам render-mode preference contract не изменяются.
+
 XML можно переводить по одному экрану, но нельзя одновременно переименовывать
 ключи, менять defaults, реструктурировать весь settings UX или внедрять Compose.
 
@@ -188,7 +197,7 @@ scope examples.
 1. Закрыть S2.01 документационным PR.
 2. Завести и выполнить S2.02 с dependency/import migration и полной CI matrix.
 3. Выполнить декомпозированный S2.03: #59 фиксирует characterization contract,
-   #61 переносит actions, #63 — feedback/custom dialogs; затем отдельно view,
-   dynamic languages, main settings и финальное удаление platform API.
+   #61 переносит actions, #63 — feedback/custom dialogs, #65 — view; затем
+   отдельно dynamic languages, main settings и финальное удаление platform API.
 4. После зелёных S2.02/S2.03 перейти к platform/API issues S2.04–S2.12.
 5. Повышать `targetSdk` только отдельными checkpoints S2.13–S2.18.

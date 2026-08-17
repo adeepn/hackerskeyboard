@@ -909,7 +909,7 @@
         "entry_values": "@array/hint_modes_values",
         "key": "pref_hint_mode",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "1.0",
@@ -918,7 +918,7 @@
         "entry_values": null,
         "key": "pref_label_scale_v2",
         "type": "string",
-        "widget": "SeekBarPreferenceString"
+        "widget": "SeekBarPreferenceStringCompat"
       },
       {
         "default": "1.0",
@@ -927,7 +927,7 @@
         "entry_values": null,
         "key": "pref_candidate_scale",
         "type": "string",
-        "widget": "SeekBarPreferenceString"
+        "widget": "SeekBarPreferenceStringCompat"
       },
       {
         "default": "1.0",
@@ -936,7 +936,7 @@
         "entry_values": null,
         "key": "pref_top_row_scale",
         "type": "string",
-        "widget": "SeekBarPreferenceString"
+        "widget": "SeekBarPreferenceStringCompat"
       },
       {
         "default": "0",
@@ -945,7 +945,7 @@
         "entry_values": "@array/keyboard_layout_modes_values",
         "key": "pref_keyboard_layout",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_render_mode",
@@ -954,7 +954,7 @@
         "entry_values": "@array/render_mode_values",
         "key": "pref_render_mode",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       }
     ]
   },
