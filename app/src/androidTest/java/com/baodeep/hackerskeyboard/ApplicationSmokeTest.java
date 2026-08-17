@@ -31,9 +31,13 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Collection;
 
 @RunWith(AndroidJUnit4.class)
 public class ApplicationSmokeTest {
@@ -157,7 +161,6 @@ public class ApplicationSmokeTest {
 
         PrefScreenFeedback activity = null;
         PrefScreenFeedback recreated = null;
-        Instrumentation.ActivityMonitor monitor = null;
         try {
             Intent intent = new Intent(EXPECTED_APPLICATION_ID + ".PREFS_FEEDBACK");
             intent.setPackage(EXPECTED_APPLICATION_ID);
@@ -186,8 +189,6 @@ public class ApplicationSmokeTest {
             assertDialogValue(pendingDialog, "75%");
             assertEquals("0.25%", preferences.getString(key, null));
 
-            monitor = instrumentation.addMonitor(
-                    PrefScreenFeedback.class.getName(), null, false);
             final PrefScreenFeedback activityToRecreate = activity;
             instrumentation.runOnMainSync(new Runnable() {
                 @Override
@@ -195,10 +196,8 @@ public class ApplicationSmokeTest {
                     activityToRecreate.recreate();
                 }
             });
-            Activity recreatedActivity = monitor.waitForActivityWithTimeout(5_000);
-            assertNotNull("PrefScreenFeedback was not recreated", recreatedActivity);
-            instrumentation.waitForIdleSync();
-            recreated = (PrefScreenFeedback) recreatedActivity;
+            recreated = waitForResumedActivity(
+                    instrumentation, PrefScreenFeedback.class, activityToRecreate);
 
             SeekBarPreferenceStringCompat restoredPreference =
                     assertFeedbackPreferences(instrumentation, recreated, "25%");
@@ -212,9 +211,6 @@ public class ApplicationSmokeTest {
             assertEquals("0.75", preferences.getString(key, null));
             assertEquals("75%", restoredPreference.getSummary());
         } finally {
-            if (monitor != null) {
-                instrumentation.removeMonitor(monitor);
-            }
             if (recreated != null) {
                 finishActivity(instrumentation, recreated);
             } else if (activity != null) {
@@ -305,13 +301,15 @@ public class ApplicationSmokeTest {
                 @Override
                 public void run() {
                     FragmentManager manager = activity.getSupportFragmentManager();
-                    manager.executePendingTransactions();
-                    Fragment candidate = manager.findFragmentByTag(
-                            PrefScreenFeedback.FRAGMENT_TAG);
-                    if (candidate instanceof PrefScreenFeedback.FeedbackPreferenceFragment
-                            && candidate.isAdded()) {
-                        result[0] =
-                                (PrefScreenFeedback.FeedbackPreferenceFragment) candidate;
+                    if (!manager.isDestroyed()) {
+                        manager.executePendingTransactions();
+                        Fragment candidate = manager.findFragmentByTag(
+                                PrefScreenFeedback.FRAGMENT_TAG);
+                        if (candidate instanceof PrefScreenFeedback.FeedbackPreferenceFragment
+                                && candidate.isAdded()) {
+                            result[0] =
+                                    (PrefScreenFeedback.FeedbackPreferenceFragment) candidate;
+                        }
                     }
                 }
             });
@@ -335,14 +333,16 @@ public class ApplicationSmokeTest {
                 @Override
                 public void run() {
                     FragmentManager manager = parent.getChildFragmentManager();
-                    manager.executePendingTransactions();
-                    Fragment candidate = manager.findFragmentByTag(
-                            SeekBarPreferenceFragmentCompat.DIALOG_TAG);
-                    if (candidate instanceof SeekBarPreferenceDialogFragmentCompat
-                            && candidate.isAdded()
-                            && ((SeekBarPreferenceDialogFragmentCompat) candidate).getDialog()
-                                    != null) {
-                        result[0] = (SeekBarPreferenceDialogFragmentCompat) candidate;
+                    if (!manager.isDestroyed()) {
+                        manager.executePendingTransactions();
+                        Fragment candidate = manager.findFragmentByTag(
+                                SeekBarPreferenceFragmentCompat.DIALOG_TAG);
+                        if (candidate instanceof SeekBarPreferenceDialogFragmentCompat
+                                && candidate.isAdded()
+                                && ((SeekBarPreferenceDialogFragmentCompat) candidate).getDialog()
+                                        != null) {
+                            result[0] = (SeekBarPreferenceDialogFragmentCompat) candidate;
+                        }
                     }
                 }
             });
@@ -352,6 +352,37 @@ public class ApplicationSmokeTest {
         }
         assertNotNull("Attached seek-bar dialog fragment is missing", result[0]);
         return result[0];
+    }
+
+    private static <T extends Activity> T waitForResumedActivity(
+            Instrumentation instrumentation, final Class<T> activityClass,
+            final Activity previousActivity) {
+        final Activity[] result = new Activity[1];
+        long deadline = SystemClock.uptimeMillis() + 5_000;
+        while (result[0] == null && SystemClock.uptimeMillis() < deadline) {
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    Collection<Activity> resumed = ActivityLifecycleMonitorRegistry
+                            .getInstance().getActivitiesInStage(Stage.RESUMED);
+                    for (Activity candidate : resumed) {
+                        if (activityClass.isInstance(candidate)
+                                && candidate != previousActivity
+                                && !candidate.isFinishing()
+                                && !candidate.isDestroyed()) {
+                            result[0] = candidate;
+                            break;
+                        }
+                    }
+                }
+            });
+            if (result[0] == null) {
+                SystemClock.sleep(50);
+            }
+        }
+        assertNotNull(activityClass.getSimpleName() + " was not resumed after recreation",
+                result[0]);
+        return activityClass.cast(result[0]);
     }
 
     private static void dragSeekBar(
