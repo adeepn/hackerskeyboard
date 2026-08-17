@@ -77,3 +77,13 @@ S2.03c / #63 переводит `prefs_feedback.xml` и `PrefScreenFeedback` н�
 существующую строку. Prefix-independent XML digest обновляется в том же PR:
 `prefs_feedback.xml` становится шестидесятым resource-файлом с `app:` namespace
 и добавляет единственный новый semantic attribute `useSimpleSummaryProvider`.
+
+S2.03d / #65 тем же способом переводит `prefs_view.xml` и `PrefScreenView`.
+Три list entries используют AndroidX `ListPreference`, три ползунка —
+`SeekBarPreferenceStringCompat`. Fixture меняет только эти шесть widget names:
+ключи, defaults, ranges, step, logarithmic/percent attributes, entry values и
+тип хранения `string` остаются прежними. Instrumentation test заранее записывает
+list value и slider string с legacy-суффиксом, затем доказывает отсутствие
+eager rewrite и сохранение одного восстановленного Fragment после recreation.
+Prefix-independent XML snapshot при этом получает 61-й файл с `app:` namespace
+и ровно три новых semantic attributes `useSimpleSummaryProvider`.

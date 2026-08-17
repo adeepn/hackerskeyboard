@@ -172,6 +172,53 @@ def main() -> int:
         if token in feedback_xml_text:
             errors.append(f"prefs_feedback.xml: legacy widget remains: {token.strip()}")
 
+    view_activity = (
+        app
+        / "src"
+        / "main"
+        / "java"
+        / "com"
+        / "baodeep"
+        / "hackerskeyboard"
+        / "PrefScreenView.java"
+    ).read_text(encoding="utf-8")
+    for token in (
+        "extends FragmentActivity",
+        "extends SeekBarPreferenceFragmentCompat",
+        "if (icicle == null)",
+        ".commitNow()",
+        "registerOnSharedPreferenceChangeListener(this)",
+        "unregisterOnSharedPreferenceChangeListener(this)",
+        "new BackupManager(requireContext())",
+        "LatinKeyboardBaseView.sSetRenderMode == null",
+        "R.string.render_mode_unavailable",
+    ):
+        if token not in view_activity:
+            errors.append(f"PrefScreenView.java: missing migration guard {token}")
+    for token in ("android.preference.", "PreferenceActivity", "setTargetFragment("):
+        if token in view_activity:
+            errors.append(f"PrefScreenView.java: forbidden migration token {token}")
+
+    view_xml_text = (
+        app / "src" / "main" / "res" / "xml" / "prefs_view.xml"
+    ).read_text(encoding="utf-8")
+    if 'xmlns:app="http://schemas.android.com/apk/res-auto"' not in view_xml_text:
+        errors.append("prefs_view.xml: AndroidX app namespace is missing")
+    if view_xml_text.count("<ListPreference") != 3:
+        errors.append("prefs_view.xml: expected three AndroidX ListPreference nodes")
+    if view_xml_text.count('app:useSimpleSummaryProvider="true"') != 3:
+        errors.append("prefs_view.xml: every list preference must retain a summary")
+    if view_xml_text.count(
+        "<com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat"
+    ) != 3:
+        errors.append("prefs_view.xml: expected three AndroidX string seek bars")
+    for token in (
+        "AutoSummaryListPreference",
+        "com.baodeep.hackerskeyboard.SeekBarPreferenceString\n",
+    ):
+        if token in view_xml_text:
+            errors.append(f"prefs_view.xml: legacy widget remains: {token.strip()}")
+
     seek_dialog = (
         app
         / "src"
@@ -211,6 +258,14 @@ def main() -> int:
         feedback_manifest.group("attributes") if feedback_manifest else ""
     ):
         errors.append("AndroidManifest.xml: PrefScreenFeedback SettingsTheme is missing")
+    view_manifest = re.search(
+        r'<activity\s+android:name="PrefScreenView"(?P<attributes>[^>]*)>',
+        manifest,
+    )
+    if view_manifest is None or 'android:theme="@style/SettingsTheme"' not in (
+        view_manifest.group("attributes") if view_manifest else ""
+    ):
+        errors.append("AndroidManifest.xml: PrefScreenView SettingsTheme is missing")
 
     styles = (app / "src" / "main" / "res" / "values" / "styles.xml").read_text(
         encoding="utf-8"

@@ -14,68 +14,70 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:hk="http://schemas.android.com/apk/res-auto"
-    android:key="prefs_view"
-    android:title="@string/pref_screen_view_title" >
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="prefs_view"
+    app:title="@string/pref_screen_view_title" >
 
     <PreferenceCategory
-        android:key="graphics_settings"
-        android:title="@string/pref_screen_view_title" >
+        app:key="graphics_settings"
+        app:title="@string/pref_screen_view_title" >
 
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="@string/default_hint_mode"
-            android:entries="@array/hint_modes"
-            android:entryValues="@array/hint_modes_values"
-            android:key="pref_hint_mode"
-            android:persistent="true"
-            android:title="@string/title_hint_mode" />
+        <ListPreference
+            app:defaultValue="@string/default_hint_mode"
+            app:entries="@array/hint_modes"
+            app:entryValues="@array/hint_modes_values"
+            app:key="pref_hint_mode"
+            app:persistent="true"
+            app:title="@string/title_hint_mode"
+            app:useSimpleSummaryProvider="true" />
 
-        <com.baodeep.hackerskeyboard.SeekBarPreferenceString
-            android:defaultValue="1.0"
-            hk:minValue="0.5"
-            hk:maxValue="2.0"
-            hk:logScale="true"
-            hk:asPercent="true"
-            android:key="pref_label_scale_v2"
-            android:persistent="true"
-            android:title="@string/title_label_scale" />
+        <com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat
+            app:defaultValue="1.0"
+            app:minValue="0.5"
+            app:maxValue="2.0"
+            app:logScale="true"
+            app:asPercent="true"
+            app:key="pref_label_scale_v2"
+            app:persistent="true"
+            app:title="@string/title_label_scale" />
 
-        <com.baodeep.hackerskeyboard.SeekBarPreferenceString
-            android:defaultValue="1.0"
-            hk:minValue="0.5"
-            hk:maxValue="8.0"
-            hk:logScale="true"
-            hk:asPercent="true"
-            android:key="pref_candidate_scale"
-            android:persistent="true"
-            android:title="@string/title_candidate_scale" />
+        <com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat
+            app:defaultValue="1.0"
+            app:minValue="0.5"
+            app:maxValue="8.0"
+            app:logScale="true"
+            app:asPercent="true"
+            app:key="pref_candidate_scale"
+            app:persistent="true"
+            app:title="@string/title_candidate_scale" />
 
-        <com.baodeep.hackerskeyboard.SeekBarPreferenceString
-            android:defaultValue="1.0"
-            hk:minValue="0.5"
-            hk:maxValue="1.0"
-            hk:step="0.05"
-            hk:asPercent="true"
-            android:key="pref_top_row_scale"
-            android:persistent="true"
-            android:title="@string/title_top_row_scale" />
+        <com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat
+            app:defaultValue="1.0"
+            app:minValue="0.5"
+            app:maxValue="1.0"
+            app:step="0.05"
+            app:asPercent="true"
+            app:key="pref_top_row_scale"
+            app:persistent="true"
+            app:title="@string/title_top_row_scale" />
         
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="0"
-            android:entries="@array/keyboard_layout_modes"
-            android:entryValues="@array/keyboard_layout_modes_values"
-            android:key="pref_keyboard_layout"
-            android:persistent="true"
-            android:title="@string/keyboard_layout" />
+        <ListPreference
+            app:defaultValue="0"
+            app:entries="@array/keyboard_layout_modes"
+            app:entryValues="@array/keyboard_layout_modes_values"
+            app:key="pref_keyboard_layout"
+            app:persistent="true"
+            app:title="@string/keyboard_layout"
+            app:useSimpleSummaryProvider="true" />
         
-        <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:defaultValue="@string/default_render_mode"
-            android:entries="@array/render_mode_entries"
-            android:entryValues="@array/render_mode_values"
-            android:key="pref_render_mode"
-            android:persistent="true"
-            android:title="@string/title_render_mode" />
+        <ListPreference
+            app:defaultValue="@string/default_render_mode"
+            app:entries="@array/render_mode_entries"
+            app:entryValues="@array/render_mode_values"
+            app:key="pref_render_mode"
+            app:persistent="true"
+            app:title="@string/title_render_mode"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>

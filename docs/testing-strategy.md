@@ -164,3 +164,11 @@ S2.03c добавляет JVM characterization tests для legacy string parsin
 `Activity.recreate()` и запись чистой строки только после OK. Parent preference
 Fragment и его дочерний dialog Fragment должны восстановиться по одному
 экземпляру без `setTargetFragment` и без live objects в arguments.
+
+S2.03d добавляет device smoke для `${applicationId}.PREFS_VIEW`. До запуска в
+default SharedPreferences записываются существующие `pref_hint_mode` и
+`pref_top_row_scale`, причём slider содержит принятый старым parser суффикс.
+На API 24 и API 37 тест проверяет все шесть AndroidX widgets, list/slider
+summaries, отсутствие eager rewrite, актуальное render-mode state и ровно один
+восстановленный preference Fragment после `Activity.recreate()`. Static guard
+отдельно сохраняет ветку unavailable summary для устройств без renderer API.
