@@ -208,6 +208,14 @@ API 37, сохраняя более низкий `minSdk` и добавляя т
 - старые tags в основном отражают общую историю Hacker's Keyboard и уже входят
   в ancestry нашей базы, поэтому дополнительной модернизации не дают.
 
+## Повторная проверка перед S2.03f
+
+18 августа 2026 года после `git fetch --all --prune` проверены default tips:
+`max-pulya/master` `981313f`, `crab182/master` `e4d7422` и
+`hongkongphoooey/master` `9f1d768`. Во всех трёх `LatinIMESettings` по-прежнему
+наследует platform `PreferenceActivity`; `PreferenceFragmentCompat` и готовая
+миграция главного экрана отсутствуют. Код из форков в #72 не импортируется.
+
 ## Очередь исследования и портирования
 
 1. На этапе 2 адаптировать из `hongkongphoooey` manifest/package visibility,

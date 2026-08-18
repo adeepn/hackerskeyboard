@@ -5,9 +5,9 @@
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
-  
+
           http://www.apache.org/licenses/LICENSE-2.0
-  
+
      Unless required by applicable law or agreed to in writing, software
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,328 +16,336 @@
 -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    	xmlns:hk="http://schemas.android.com/apk/res-auto"
-        android:title="@string/english_ime_settings"
-        android:key="english_ime_settings">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:title="@string/english_ime_settings"
+        app:key="english_ime_settings">
 
     <PreferenceCategory
-            android:title="@string/title_keyboard_view_settings"
-            android:key="graphics_settings">
+            app:title="@string/title_keyboard_view_settings"
+            app:key="graphics_settings">
 
-    <com.baodeep.hackerskeyboard.SeekBarPreferenceString
-            android:defaultValue="@string/default_height_portrait"
-            hk:minValue="15"
-            hk:maxValue="75"
-            hk:step="1"
-            hk:displayFormat="%.0f%%"
-            android:key="settings_height_portrait"
-            android:title="@string/title_keyboard_height_portrait"
-            android:persistent="true"
+    <com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat
+            app:defaultValue="@string/default_height_portrait"
+            app:minValue="15"
+            app:maxValue="75"
+            app:step="1"
+            app:displayFormat="%.0f%%"
+            app:key="settings_height_portrait"
+            app:title="@string/title_keyboard_height_portrait"
+            app:persistent="true"
             />
 
-    <com.baodeep.hackerskeyboard.SeekBarPreferenceString
-            android:defaultValue="@string/default_height_landscape"
-            hk:minValue="15"
-            hk:maxValue="75"
-            hk:step="1"
-            hk:displayFormat="%.0f%%"
-            android:key="settings_height_landscape"
-            android:title="@string/title_keyboard_height_landscape"
-            android:persistent="true"
+    <com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat
+            app:defaultValue="@string/default_height_landscape"
+            app:minValue="15"
+            app:maxValue="75"
+            app:step="1"
+            app:displayFormat="%.0f%%"
+            app:key="settings_height_landscape"
+            app:title="@string/title_keyboard_height_landscape"
+            app:persistent="true"
             />
 
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_keyboard_mode_portrait"
-            android:title="@string/title_keyboard_mode_portrait"
-            android:entryValues="@array/keyboard_mode_values"
-            android:entries="@array/keyboard_mode_entries"
-            android:defaultValue="@string/default_keyboard_mode_portrait"
-            android:persistent="true"
+    <ListPreference
+            app:key="pref_keyboard_mode_portrait"
+            app:title="@string/title_keyboard_mode_portrait"
+            app:entryValues="@array/keyboard_mode_values"
+            app:entries="@array/keyboard_mode_entries"
+            app:defaultValue="@string/default_keyboard_mode_portrait"
+            app:persistent="true"
+            app:useSimpleSummaryProvider="true"
             />
 
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_keyboard_mode_landscape"
-            android:title="@string/title_keyboard_mode_landscape"
-            android:entryValues="@array/keyboard_mode_values"
-            android:entries="@array/keyboard_mode_entries"
-            android:defaultValue="@string/default_keyboard_mode_landscape"
-            android:persistent="true"
+    <ListPreference
+            app:key="pref_keyboard_mode_landscape"
+            app:title="@string/title_keyboard_mode_landscape"
+            app:entryValues="@array/keyboard_mode_values"
+            app:entries="@array/keyboard_mode_entries"
+            app:defaultValue="@string/default_keyboard_mode_landscape"
+            app:persistent="true"
+            app:useSimpleSummaryProvider="true"
             />
 
     <CheckBoxPreference
-            android:key="suggestions_in_landscape"
-            android:title="@string/title_suggestions_in_landscape"
-            android:persistent="true" 
-            android:defaultValue="@bool/default_suggestions_in_landscape"
-            android:summaryOn="@string/summary_suggestions_in_landscape_true"
-            android:summaryOff="@string/summary_suggestions_in_landscape_false"
+            app:key="suggestions_in_landscape"
+            app:title="@string/title_suggestions_in_landscape"
+            app:persistent="true"
+            app:defaultValue="@bool/default_suggestions_in_landscape"
+            app:summaryOn="@string/summary_suggestions_in_landscape_true"
+            app:summaryOff="@string/summary_suggestions_in_landscape_false"
             />
 
     <PreferenceScreen
-            android:title="@string/pref_screen_view_title"
-            android:summary="@string/pref_screen_view_title_summary">
+            app:title="@string/pref_screen_view_title"
+            app:summary="@string/pref_screen_view_title_summary">
         <intent android:action="com.baodeep.hackerskeyboard.PREFS_VIEW"/>
     </PreferenceScreen>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-            android:title="@string/title_key_layout_options"
-            android:key="layout_settings">
+            app:title="@string/title_key_layout_options"
+            app:key="layout_settings">
 
     <ListPreference
-            android:key="settings_key"
-            android:title="@string/prefs_settings_key"
-            android:persistent="true"
-            android:entryValues="@array/settings_key_modes_values"
-            android:entries="@array/settings_key_modes"
-            android:defaultValue="@string/settings_key_mode_auto"
+            app:key="settings_key"
+            app:title="@string/prefs_settings_key"
+            app:persistent="true"
+            app:entryValues="@array/settings_key_modes_values"
+            app:entries="@array/settings_key_modes"
+            app:defaultValue="@string/settings_key_mode_auto"
             />
 
     <ListPreference
-            android:key="voice_mode"
-            android:title="@string/voice_input"
-            android:persistent="true"
-            android:entryValues="@array/voice_input_modes_values"
-            android:entries="@array/voice_input_modes"
-            android:defaultValue="@string/voice_mode_symbols"
+            app:key="voice_mode"
+            app:title="@string/voice_input"
+            app:persistent="true"
+            app:entryValues="@array/voice_input_modes_values"
+            app:entries="@array/voice_input_modes"
+            app:defaultValue="@string/voice_mode_symbols"
             />
 
     <PreferenceScreen
-            android:title="@string/language_selection_title"
-            android:summary="@string/language_selection_summary">
+            app:title="@string/language_selection_title"
+            app:summary="@string/language_selection_summary">
         <intent
                 android:action="com.baodeep.hackerskeyboard.INPUT_LANGUAGE_SELECTION"/>
     </PreferenceScreen>
     </PreferenceCategory>
 
     <PreferenceCategory
-            android:title="@string/title_key_behavior_settings"
-            android:key="key_settings">
+            app:title="@string/title_key_behavior_settings"
+            app:key="key_settings">
 
     <CheckBoxPreference
-            android:key="auto_cap"
-            android:title="@string/auto_cap"
-            android:persistent="true"
-            android:defaultValue="@bool/default_auto_cap"
+            app:key="auto_cap"
+            app:title="@string/auto_cap"
+            app:persistent="true"
+            app:defaultValue="@bool/default_auto_cap"
             />
 
     <CheckBoxPreference
-            android:key="pref_caps_lock"
-            android:title="@string/title_caps_lock"
-            android:persistent="true"
-            android:defaultValue="@bool/default_caps_lock"
-            android:summaryOn="@string/summary_caps_lock_true"
-            android:summaryOff="@string/summary_caps_lock_false"
+            app:key="pref_caps_lock"
+            app:title="@string/title_caps_lock"
+            app:persistent="true"
+            app:defaultValue="@bool/default_caps_lock"
+            app:summaryOn="@string/summary_caps_lock_true"
+            app:summaryOff="@string/summary_caps_lock_false"
             />
-    
+
     <CheckBoxPreference
-            android:key="pref_shift_lock_modifiers"
-            android:title="@string/title_shift_lock_modifiers"
-            android:persistent="true"
-            android:defaultValue="@bool/default_shift_lock_modifiers"
-            android:summaryOn="@string/summary_shift_lock_modifiers_true"
-            android:summaryOff="@string/summary_shift_lock_modifiers_false"
+            app:key="pref_shift_lock_modifiers"
+            app:title="@string/title_shift_lock_modifiers"
+            app:persistent="true"
+            app:defaultValue="@bool/default_shift_lock_modifiers"
+            app:summaryOn="@string/summary_shift_lock_modifiers_true"
+            app:summaryOff="@string/summary_shift_lock_modifiers_false"
             />
-    
+
     <PreferenceScreen
-            android:title="@string/pref_screen_feedback_title"
-            android:summary="@string/pref_screen_feedback_title_summary">
+            app:title="@string/pref_screen_feedback_title"
+            app:summary="@string/pref_screen_feedback_title_summary">
         <intent
                 android:action="com.baodeep.hackerskeyboard.PREFS_FEEDBACK"/>
     </PreferenceScreen>
 
     <PreferenceScreen
-            android:title="@string/pref_screen_actions_title"
-            android:summary="@string/pref_screen_actions_title_summary">
+            app:title="@string/pref_screen_actions_title"
+            app:summary="@string/pref_screen_actions_title_summary">
         <intent android:action="com.baodeep.hackerskeyboard.PREFS_ACTIONS"/>
     </PreferenceScreen>
 
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_ctrl_a_override"
-            android:title="@string/title_ctrl_a_override"
-            android:persistent="true"
-            android:entries="@array/ctrl_a_override_entries"
-            android:entryValues="@array/ctrl_a_override_values"
-            android:defaultValue="@string/default_ctrl_a_override"
+    <ListPreference
+            app:key="pref_ctrl_a_override"
+            app:title="@string/title_ctrl_a_override"
+            app:persistent="true"
+            app:entries="@array/ctrl_a_override_entries"
+            app:entryValues="@array/ctrl_a_override_values"
+            app:defaultValue="@string/default_ctrl_a_override"
+            app:useSimpleSummaryProvider="true"
             />
 
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_chording_ctrl_key"
-            android:title="@string/title_chording_ctrl_key"
-            android:persistent="true"
-            android:entries="@array/chording_ctrl_key_entries"
-            android:entryValues="@array/chording_ctrl_key_values"
-            android:defaultValue="@string/default_chording_ctrl_key"
+    <ListPreference
+            app:key="pref_chording_ctrl_key"
+            app:title="@string/title_chording_ctrl_key"
+            app:persistent="true"
+            app:entries="@array/chording_ctrl_key_entries"
+            app:entryValues="@array/chording_ctrl_key_values"
+            app:defaultValue="@string/default_chording_ctrl_key"
+            app:useSimpleSummaryProvider="true"
             />
 
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_chording_alt_key"
-            android:title="@string/title_chording_alt_key"
-            android:persistent="true"
-            android:entries="@array/chording_alt_key_entries"
-            android:entryValues="@array/chording_alt_key_values"
-            android:defaultValue="@string/default_chording_alt_key"
+    <ListPreference
+            app:key="pref_chording_alt_key"
+            app:title="@string/title_chording_alt_key"
+            app:persistent="true"
+            app:entries="@array/chording_alt_key_entries"
+            app:entryValues="@array/chording_alt_key_values"
+            app:defaultValue="@string/default_chording_alt_key"
+            app:useSimpleSummaryProvider="true"
             />
 
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_chording_meta_key"
-            android:title="@string/title_chording_meta_key"
-            android:persistent="true"
-            android:entries="@array/chording_meta_key_entries"
-            android:entryValues="@array/chording_meta_key_values"
-            android:defaultValue="@string/default_chording_meta_key"
+    <ListPreference
+            app:key="pref_chording_meta_key"
+            app:title="@string/title_chording_meta_key"
+            app:persistent="true"
+            app:entries="@array/chording_meta_key_entries"
+            app:entryValues="@array/chording_meta_key_values"
+            app:defaultValue="@string/default_chording_meta_key"
+            app:useSimpleSummaryProvider="true"
             />
 
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_slide_keys_int"
-            android:title="@string/title_slide_keys"
-            android:persistent="true" 
-            android:entries="@array/slide_keys_entries"
-            android:entryValues="@array/slide_keys_values"
-            android:defaultValue="0"
+    <ListPreference
+            app:key="pref_slide_keys_int"
+            app:title="@string/title_slide_keys"
+            app:persistent="true"
+            app:entries="@array/slide_keys_entries"
+            app:entryValues="@array/slide_keys_values"
+            app:defaultValue="0"
+            app:useSimpleSummaryProvider="true"
             />
     </PreferenceCategory>
 
     <PreferenceCategory
-            android:title="@string/title_long_press_alternate_keys"
-            android:key="altchar_settings">
+            app:title="@string/title_long_press_alternate_keys"
+            app:key="altchar_settings">
 
-    <com.baodeep.hackerskeyboard.AutoSummaryListPreference
-            android:key="pref_popup_content"
-            android:title="@string/title_popup_content"
-            android:persistent="true"
-            android:entryValues="@array/popup_content_values"
-            android:entries="@array/popup_content_entries"
-            android:defaultValue="@string/default_popup_content"
+    <ListPreference
+            app:key="pref_popup_content"
+            app:title="@string/title_popup_content"
+            app:persistent="true"
+            app:entryValues="@array/popup_content_values"
+            app:entries="@array/popup_content_entries"
+            app:defaultValue="@string/default_popup_content"
+            app:useSimpleSummaryProvider="true"
             />
 
-    <com.baodeep.hackerskeyboard.SeekBarPreferenceString
-            android:defaultValue="@string/default_long_press_duration"
-            hk:minValue="100"
-            hk:maxValue="2000"
-            hk:logScale="true"
-            hk:displayFormat="%.0f ms"
-            android:key="pref_long_press_duration"
-            android:title="@string/title_long_press_duration"
-            android:persistent="true"
+    <com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat
+            app:defaultValue="@string/default_long_press_duration"
+            app:minValue="100"
+            app:maxValue="2000"
+            app:logScale="true"
+            app:displayFormat="%.0f ms"
+            app:key="pref_long_press_duration"
+            app:title="@string/title_long_press_duration"
+            app:persistent="true"
             />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-            android:title="@string/prediction_category"
-            android:key="prediction_settings">
+            app:title="@string/prediction_category"
+            app:key="prediction_settings">
 
         <CheckBoxPreference
-            android:key="quick_fixes"
-            android:title="@string/quick_fixes"
-            android:summary="@string/quick_fixes_summary"
-            android:persistent="true"
-            android:defaultValue="@bool/default_quick_fixes"
-            />
-
-        <CheckBoxPreference
-            android:key="show_suggestions"
-            android:title="@string/show_suggestions"
-            android:summary="@string/show_suggestions_summary"
-            android:persistent="true"
-            android:defaultValue="@bool/default_suggestions"
+            app:key="quick_fixes"
+            app:title="@string/quick_fixes"
+            app:summary="@string/quick_fixes_summary"
+            app:persistent="true"
+            app:defaultValue="@bool/default_quick_fixes"
             />
 
         <CheckBoxPreference
-            android:key="auto_complete"
-            android:title="@string/auto_complete"
-            android:summary="@string/auto_complete_summary"
-            android:persistent="true" 
-            android:defaultValue="@bool/enable_autocorrect"
-            android:dependency="show_suggestions"
+            app:key="show_suggestions"
+            app:title="@string/show_suggestions"
+            app:summary="@string/show_suggestions_summary"
+            app:persistent="true"
+            app:defaultValue="@bool/default_suggestions"
             />
-
-        <com.baodeep.hackerskeyboard.AutoSummaryEditTextPreference
-            android:key="pref_suggested_punctuation"
-            android:title="@string/title_suggested_punctuation"
-            android:defaultValue="@string/suggested_punctuations"
-            />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-            android:title="@string/title_input_mode_settings"
-            android:key="graphics_settings">
-
-    <CheckBoxPreference
-            android:key="recorrection_enabled"
-            android:title="@string/prefs_enable_recorrection"
-            android:summary="@string/prefs_enable_recorrection_summary"
-            android:persistent="true"
-            android:defaultValue="@bool/default_recorrection_enabled"
-            />
-
-    <CheckBoxPreference
-            android:key="fullscreen_override"
-            android:title="@string/title_fullscreen_override"
-            android:persistent="true" 
-            android:defaultValue="@bool/default_fullscreen_override"
-            android:summaryOn="@string/summary_fullscreen_override_true"
-            android:summaryOff="@string/summary_fullscreen_override_false"
-            />
-
-    <CheckBoxPreference
-            android:key="force_keyboard_on"
-            android:title="@string/title_force_keyboard_on"
-            android:persistent="true" 
-            android:defaultValue="@bool/default_force_keyboard_on"
-            android:summaryOn="@string/summary_force_keyboard_on_true"
-            android:summaryOff="@string/summary_force_keyboard_on_false"
-            />
-
-    <CheckBoxPreference
-            android:key="keyboard_notification"
-            android:title="@string/title_keyboard_notification"
-            android:persistent="true" 
-            android:defaultValue="@bool/default_keyboard_notification"
-            android:summaryOn="@string/summary_keyboard_notification_true"
-            android:summaryOff="@string/summary_keyboard_notification_false"
-            />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-            android:title="@string/title_application_category"
-            android:key="application_settings">
 
         <CheckBoxPreference
-            android:key="connectbot_tab_hack"
-            android:title="@string/title_connectbot_tab_hack"
-            android:persistent="true" 
-            android:defaultValue="true"
-            android:summaryOn="@string/summary_connectbot_tab_hack_true"
-            android:summaryOff="@string/summary_connectbot_tab_hack_false"
+            app:key="auto_complete"
+            app:title="@string/auto_complete"
+            app:summary="@string/auto_complete_summary"
+            app:persistent="true"
+            app:defaultValue="@bool/enable_autocorrect"
+            app:dependency="show_suggestions"
+            />
+
+        <EditTextPreference
+            app:key="pref_suggested_punctuation"
+            app:title="@string/title_suggested_punctuation"
+            app:defaultValue="@string/suggested_punctuations"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            app:title="@string/title_input_mode_settings"
+            app:key="graphics_settings">
+
+    <CheckBoxPreference
+            app:key="recorrection_enabled"
+            app:title="@string/prefs_enable_recorrection"
+            app:summary="@string/prefs_enable_recorrection_summary"
+            app:persistent="true"
+            app:defaultValue="@bool/default_recorrection_enabled"
+            />
+
+    <CheckBoxPreference
+            app:key="fullscreen_override"
+            app:title="@string/title_fullscreen_override"
+            app:persistent="true"
+            app:defaultValue="@bool/default_fullscreen_override"
+            app:summaryOn="@string/summary_fullscreen_override_true"
+            app:summaryOff="@string/summary_fullscreen_override_false"
+            />
+
+    <CheckBoxPreference
+            app:key="force_keyboard_on"
+            app:title="@string/title_force_keyboard_on"
+            app:persistent="true"
+            app:defaultValue="@bool/default_force_keyboard_on"
+            app:summaryOn="@string/summary_force_keyboard_on_true"
+            app:summaryOff="@string/summary_force_keyboard_on_false"
+            />
+
+    <CheckBoxPreference
+            app:key="keyboard_notification"
+            app:title="@string/title_keyboard_notification"
+            app:persistent="true"
+            app:defaultValue="@bool/default_keyboard_notification"
+            app:summaryOn="@string/summary_keyboard_notification_true"
+            app:summaryOff="@string/summary_keyboard_notification_false"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            app:title="@string/title_application_category"
+            app:key="application_settings">
+
+        <CheckBoxPreference
+            app:key="connectbot_tab_hack"
+            app:title="@string/title_connectbot_tab_hack"
+            app:persistent="true"
+            app:defaultValue="true"
+            app:summaryOn="@string/summary_connectbot_tab_hack_true"
+            app:summaryOff="@string/summary_connectbot_tab_hack_false"
             />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-            android:title="@string/title_debugging"
-            android:key="debugging">
+            app:title="@string/title_debugging"
+            app:key="debugging">
 
     <CheckBoxPreference
-            android:key="pref_touch_pos"
-            android:title="@string/title_touch_pos"
-            android:persistent="true" 
-            android:defaultValue="false"
-            android:summaryOn="@string/summary_touch_pos_true"
-            android:summaryOff="@string/summary_touch_pos_false"
+            app:key="pref_touch_pos"
+            app:title="@string/title_touch_pos"
+            app:persistent="true"
+            app:defaultValue="false"
+            app:summaryOn="@string/summary_touch_pos_true"
+            app:summaryOff="@string/summary_touch_pos_false"
             />
 
     <Preference
-            android:key="input_connection_info"
-            android:title="@string/title_input_connection_details"
+            app:key="input_connection_info"
+            app:title="@string/title_input_connection_details"
             />
 
     <Preference
-            android:key="label_version"
-            android:title="@string/title_version"
-            android:summary="@string/auto_version"
+            app:key="label_version"
+            app:title="@string/title_version"
+            app:summary="@string/auto_version"
             />
     </PreferenceCategory>
 

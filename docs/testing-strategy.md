@@ -185,3 +185,10 @@ S2.03e запускает `${applicationId}.INPUT_LANGUAGE_SELECTION` с legacy 
 неизменность `input_language`. Затем снятие всех checkbox проверяет прежнее
 удаление/null behavior для пустого выбора. После recreation должен существовать
 ровно один восстановленный language preference Fragment.
+
+S2.03f запускает `${applicationId}.SETTINGS` с заранее сохранёнными main-screen
+строками. На API 24 и API 37 тест проверяет один Fragment, root key, list/edit
+summaries, string-backed seek-bar value с legacy-суффиксом, отсутствие eager
+rewrite и разрешение всех четырёх nested actions в ожидаемые Activity. Затем он
+меняет list/edit values, проверяет listener-driven summary/storage update и
+доказывает сохранение одного Fragment и значений после `Activity.recreate()`.

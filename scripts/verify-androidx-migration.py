@@ -251,6 +251,71 @@ def main() -> int:
         if token in view_xml_text:
             errors.append(f"prefs_view.xml: legacy widget remains: {token.strip()}")
 
+    main_activity = (
+        app
+        / "src"
+        / "main"
+        / "java"
+        / "com"
+        / "baodeep"
+        / "hackerskeyboard"
+        / "LatinIMESettings.java"
+    ).read_text(encoding="utf-8")
+    for token in (
+        "extends FragmentActivity",
+        "extends SeekBarPreferenceFragmentCompat",
+        "if (icicle == null)",
+        ".commitNow()",
+        "setPreferencesFromResource(R.xml.prefs, rootKey)",
+        "registerOnSharedPreferenceChangeListener(this)",
+        "unregisterOnSharedPreferenceChangeListener(this)",
+        "new BackupManager(requireContext())",
+        "new Preference.SummaryProvider<EditTextPreference>()",
+    ):
+        if token not in main_activity:
+            errors.append(f"LatinIMESettings.java: missing migration guard {token}")
+    for token in ("android.preference.", "PreferenceActivity", "setTargetFragment("):
+        if token in main_activity:
+            errors.append(f"LatinIMESettings.java: forbidden migration token {token}")
+
+    main_xml_text = (app / "src" / "main" / "res" / "xml" / "prefs.xml").read_text(
+        encoding="utf-8"
+    )
+    if 'xmlns:app="http://schemas.android.com/apk/res-auto"' not in main_xml_text:
+        errors.append("prefs.xml: AndroidX app namespace is missing")
+    if main_xml_text.count("<ListPreference") != 10:
+        errors.append("prefs.xml: expected ten AndroidX ListPreference nodes")
+    if main_xml_text.count('app:useSimpleSummaryProvider="true"') != 8:
+        errors.append("prefs.xml: expected eight automatic list summaries")
+    if main_xml_text.count(
+        "<com.baodeep.hackerskeyboard.SeekBarPreferenceStringCompat"
+    ) != 3:
+        errors.append("prefs.xml: expected three AndroidX string seek bars")
+    if main_xml_text.count("<EditTextPreference") != 1:
+        errors.append("prefs.xml: expected one AndroidX EditTextPreference")
+    for token in (
+        "AutoSummaryListPreference",
+        "AutoSummaryEditTextPreference",
+        "com.baodeep.hackerskeyboard.SeekBarPreferenceString\n",
+    ):
+        if token in main_xml_text:
+            errors.append(f"prefs.xml: legacy widget remains: {token.strip()}")
+
+    latin_ime = (
+        app
+        / "src"
+        / "main"
+        / "java"
+        / "com"
+        / "baodeep"
+        / "hackerskeyboard"
+        / "LatinIME.java"
+    ).read_text(encoding="utf-8")
+    if "Class<? extends Activity> settingsClass" not in latin_ime:
+        errors.append("LatinIME.java: settings launcher must accept Activity subclasses")
+    if "PreferenceActivity" in latin_ime:
+        errors.append("LatinIME.java: settings launcher still depends on PreferenceActivity")
+
     seek_dialog = (
         app
         / "src"
@@ -306,6 +371,14 @@ def main() -> int:
         view_manifest.group("attributes") if view_manifest else ""
     ):
         errors.append("AndroidManifest.xml: PrefScreenView SettingsTheme is missing")
+    main_manifest = re.search(
+        r'<activity\s+android:name="LatinIMESettings"(?P<attributes>[^>]*)>',
+        manifest,
+    )
+    if main_manifest is None or 'android:theme="@style/SettingsTheme"' not in (
+        main_manifest.group("attributes") if main_manifest else ""
+    ):
+        errors.append("AndroidManifest.xml: LatinIMESettings SettingsTheme is missing")
 
     styles = (app / "src" / "main" / "res" / "values" / "styles.xml").read_text(
         encoding="utf-8"

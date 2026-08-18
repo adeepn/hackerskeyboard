@@ -32,7 +32,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="LatinIMESettings" android:label="@string/english_ime_settings">
+        <activity android:name="LatinIMESettings"
+                android:label="@string/english_ime_settings"
+                android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="${applicationId}.SETTINGS"/>

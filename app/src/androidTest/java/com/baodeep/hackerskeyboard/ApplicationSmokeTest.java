@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Instrumentation;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
@@ -31,9 +32,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.CheckBoxPreference;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
@@ -82,9 +85,96 @@ public class ApplicationSmokeTest {
         LatinIMESettings settings = launchActivity(
                 instrumentation, context, LatinIMESettings.class);
         try {
-            assertVisible(settings, android.R.id.list);
+            LatinIMESettings.MainPreferenceFragment fragment =
+                    waitForMainPreferenceFragment(instrumentation, settings);
+            assertNotNull(fragment.getListView());
+            assertEquals(View.VISIBLE, fragment.getListView().getVisibility());
         } finally {
             finishActivity(instrumentation, settings);
+        }
+    }
+
+    @Test
+    public void mainSettingsPreserveValuesNavigationAndRecreation() {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context context = instrumentation.getTargetContext();
+        SharedPreferences preferences = context.getSharedPreferences(
+                DEFAULT_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        String settingsKey = "settings_key";
+        String portraitKey = "pref_keyboard_mode_portrait";
+        String heightKey = "settings_height_portrait";
+        String punctuationKey = "pref_suggested_punctuation";
+        boolean hadSettingsKey = preferences.contains(settingsKey);
+        boolean hadPortrait = preferences.contains(portraitKey);
+        boolean hadHeight = preferences.contains(heightKey);
+        boolean hadPunctuation = preferences.contains(punctuationKey);
+        String originalSettingsKey = preferences.getString(settingsKey, null);
+        String originalPortrait = preferences.getString(portraitKey, null);
+        String originalHeight = preferences.getString(heightKey, null);
+        String originalPunctuation = preferences.getString(punctuationKey, null);
+        preferences.edit()
+                .putString(settingsKey, "2")
+                .putString(portraitKey, "2")
+                .putString(heightKey, "42%")
+                .putString(punctuationKey, "?!")
+                .apply();
+
+        LatinIMESettings activity = null;
+        LatinIMESettings recreated = null;
+        try {
+            Intent intent = new Intent(EXPECTED_APPLICATION_ID + ".SETTINGS");
+            intent.setPackage(EXPECTED_APPLICATION_ID);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Activity launched = instrumentation.startActivitySync(intent);
+            instrumentation.waitForIdleSync();
+            assertEquals(LatinIMESettings.class, launched.getClass());
+            activity = (LatinIMESettings) launched;
+
+            LatinIMESettings.MainPreferenceFragment fragment =
+                    assertMainPreferences(instrumentation, context, activity, "2", "?!");
+            assertEquals("42%", preferences.getString(heightKey, null));
+            assertEquals("2", preferences.getString(portraitKey, null));
+
+            final ListPreference settingsKeyPreference =
+                    fragment.findPreference(settingsKey);
+            final EditTextPreference punctuation = fragment.findPreference(punctuationKey);
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    settingsKeyPreference.setValue("1");
+                    punctuation.setText("!?_");
+                }
+            });
+            instrumentation.waitForIdleSync();
+            assertEquals("1", preferences.getString(settingsKey, null));
+            assertEquals("!?_", preferences.getString(punctuationKey, null));
+            assertEquals(activity.getResources().getStringArray(R.array.settings_key_modes)[1],
+                    settingsKeyPreference.getSummary());
+            assertEquals("!?_", punctuation.getSummary());
+
+            final LatinIMESettings activityToRecreate = activity;
+            instrumentation.runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    activityToRecreate.recreate();
+                }
+            });
+            recreated = waitForResumedActivity(
+                    instrumentation, LatinIMESettings.class, activityToRecreate);
+            assertMainPreferences(instrumentation, context, recreated, "1", "!?_");
+            assertEquals("42%", preferences.getString(heightKey, null));
+        } finally {
+            if (recreated != null) {
+                finishActivity(instrumentation, recreated);
+            } else if (activity != null) {
+                finishActivity(instrumentation, activity);
+            }
+            SharedPreferences.Editor editor = preferences.edit();
+            restoreString(editor, settingsKey, hadSettingsKey, originalSettingsKey);
+            restoreString(editor, portraitKey, hadPortrait, originalPortrait);
+            restoreString(editor, heightKey, hadHeight, originalHeight);
+            restoreString(editor, punctuationKey, hadPunctuation, originalPunctuation);
+            editor.apply();
         }
     }
 
@@ -400,6 +490,124 @@ public class ApplicationSmokeTest {
                 editor.remove(inputKey);
             }
             editor.apply();
+        }
+    }
+
+    private static LatinIMESettings.MainPreferenceFragment assertMainPreferences(
+            Instrumentation instrumentation,
+            Context context,
+            LatinIMESettings activity,
+            String expectedSettingsKey,
+            String expectedPunctuation) {
+        LatinIMESettings.MainPreferenceFragment fragment =
+                waitForMainPreferenceFragment(instrumentation, activity);
+        assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
+        assertNotNull(fragment.getPreferenceScreen());
+        assertEquals("english_ime_settings", fragment.getPreferenceScreen().getKey());
+
+        ListPreference settingsKey = fragment.findPreference("settings_key");
+        ListPreference portraitMode =
+                fragment.findPreference("pref_keyboard_mode_portrait");
+        SeekBarPreferenceStringCompat portraitHeight =
+                fragment.findPreference("settings_height_portrait");
+        EditTextPreference punctuation =
+                fragment.findPreference("pref_suggested_punctuation");
+        Preference version = fragment.findPreference("label_version");
+        Preference inputConnection = fragment.findPreference("input_connection_info");
+        assertNotNull(settingsKey);
+        assertNotNull(portraitMode);
+        assertNotNull(portraitHeight);
+        assertNotNull(punctuation);
+        assertNotNull(version);
+        assertNotNull(inputConnection);
+        assertEquals(expectedSettingsKey, settingsKey.getValue());
+        assertEquals(activity.getResources().getStringArray(R.array.settings_key_modes)
+                        [Integer.parseInt(expectedSettingsKey)],
+                settingsKey.getSummary());
+        assertEquals("2", portraitMode.getValue());
+        assertEquals(portraitMode.getEntry(), portraitMode.getSummary());
+        assertEquals("42%", portraitHeight.getSummary());
+        assertEquals(expectedPunctuation, punctuation.getText());
+        assertEquals(expectedPunctuation, punctuation.getSummary());
+        assertNotNull(version.getSummary());
+        assertNotNull(inputConnection.getSummary());
+
+        assertNestedSettingsAction(
+                context,
+                fragment.getPreferenceScreen(),
+                EXPECTED_APPLICATION_ID + ".PREFS_VIEW",
+                PrefScreenView.class);
+        assertNestedSettingsAction(
+                context,
+                fragment.getPreferenceScreen(),
+                EXPECTED_APPLICATION_ID + ".INPUT_LANGUAGE_SELECTION",
+                InputLanguageSelection.class);
+        assertNestedSettingsAction(
+                context,
+                fragment.getPreferenceScreen(),
+                EXPECTED_APPLICATION_ID + ".PREFS_FEEDBACK",
+                PrefScreenFeedback.class);
+        assertNestedSettingsAction(
+                context,
+                fragment.getPreferenceScreen(),
+                EXPECTED_APPLICATION_ID + ".PREFS_ACTIONS",
+                PrefScreenActions.class);
+        return fragment;
+    }
+
+    private static LatinIMESettings.MainPreferenceFragment waitForMainPreferenceFragment(
+            Instrumentation instrumentation, LatinIMESettings activity) {
+        return waitForPreferenceFragment(
+                instrumentation,
+                activity,
+                LatinIMESettings.FRAGMENT_TAG,
+                LatinIMESettings.MainPreferenceFragment.class,
+                "main");
+    }
+
+    private static void assertNestedSettingsAction(
+            Context context,
+            PreferenceGroup root,
+            String action,
+            Class<? extends Activity> expectedActivity) {
+        Preference preference = findPreferenceWithAction(root, action);
+        assertNotNull("Missing nested settings action " + action, preference);
+        assertNotNull(preference.getIntent());
+        assertEquals(action, preference.getIntent().getAction());
+        ComponentName resolved = preference.getIntent().resolveActivity(
+                context.getPackageManager());
+        assertNotNull("Nested settings action does not resolve: " + action, resolved);
+        assertEquals(expectedActivity.getName(), resolved.getClassName());
+    }
+
+    private static Preference findPreferenceWithAction(
+            PreferenceGroup group, String action) {
+        for (int index = 0; index < group.getPreferenceCount(); index++) {
+            Preference preference = group.getPreference(index);
+            if (preference.getIntent() != null
+                    && action.equals(preference.getIntent().getAction())) {
+                return preference;
+            }
+            if (preference instanceof PreferenceGroup) {
+                Preference nested = findPreferenceWithAction(
+                        (PreferenceGroup) preference, action);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static void restoreString(
+            SharedPreferences.Editor editor,
+            String key,
+            boolean hadValue,
+            String originalValue) {
+        if (hadValue) {
+            editor.putString(key, originalValue);
+        } else {
+            editor.remove(key);
         }
     }
 

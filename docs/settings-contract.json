@@ -379,7 +379,7 @@
         "entry_values": null,
         "key": "settings_height_portrait",
         "type": "string",
-        "widget": "SeekBarPreferenceString"
+        "widget": "SeekBarPreferenceStringCompat"
       },
       {
         "default": "@string/default_height_landscape",
@@ -388,7 +388,7 @@
         "entry_values": null,
         "key": "settings_height_landscape",
         "type": "string",
-        "widget": "SeekBarPreferenceString"
+        "widget": "SeekBarPreferenceStringCompat"
       },
       {
         "default": "@string/default_keyboard_mode_portrait",
@@ -397,7 +397,7 @@
         "entry_values": "@array/keyboard_mode_values",
         "key": "pref_keyboard_mode_portrait",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_keyboard_mode_landscape",
@@ -406,7 +406,7 @@
         "entry_values": "@array/keyboard_mode_values",
         "key": "pref_keyboard_mode_landscape",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@bool/default_suggestions_in_landscape",
@@ -487,7 +487,7 @@
         "entry_values": "@array/ctrl_a_override_values",
         "key": "pref_ctrl_a_override",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_chording_ctrl_key",
@@ -496,7 +496,7 @@
         "entry_values": "@array/chording_ctrl_key_values",
         "key": "pref_chording_ctrl_key",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_chording_alt_key",
@@ -505,7 +505,7 @@
         "entry_values": "@array/chording_alt_key_values",
         "key": "pref_chording_alt_key",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_chording_meta_key",
@@ -514,7 +514,7 @@
         "entry_values": "@array/chording_meta_key_values",
         "key": "pref_chording_meta_key",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "0",
@@ -523,7 +523,7 @@
         "entry_values": "@array/slide_keys_values",
         "key": "pref_slide_keys_int",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": null,
@@ -541,7 +541,7 @@
         "entry_values": "@array/popup_content_values",
         "key": "pref_popup_content",
         "type": "string",
-        "widget": "AutoSummaryListPreference"
+        "widget": "ListPreference"
       },
       {
         "default": "@string/default_long_press_duration",
@@ -550,7 +550,7 @@
         "entry_values": null,
         "key": "pref_long_press_duration",
         "type": "string",
-        "widget": "SeekBarPreferenceString"
+        "widget": "SeekBarPreferenceStringCompat"
       },
       {
         "default": null,
@@ -595,7 +595,7 @@
         "entry_values": null,
         "key": "pref_suggested_punctuation",
         "type": "string",
-        "widget": "AutoSummaryEditTextPreference"
+        "widget": "EditTextPreference"
       },
       {
         "default": null,

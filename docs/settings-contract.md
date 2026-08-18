@@ -97,3 +97,14 @@ Legacy five-code fallback, trailing-comma serialization и empty/null behavior
 сохраняются. XML snapshot получает 78-й resource namespace file, 62-й `app:`
 prefix и один semantic title attribute; 66 keyed XML entries, 48 persisted XML
 keys и два programmatic keys не меняются.
+
+S2.03f / #72 переводит главный `prefs.xml`. Три legacy
+`SeekBarPreferenceString` становятся `SeekBarPreferenceStringCompat`, восемь
+`AutoSummaryListPreference` — стандартными `ListPreference`, а один
+`AutoSummaryEditTextPreference` — стандартным `EditTextPreference` с прежним
+text summary. Это reviewed implementation-only изменение fixture: keys,
+boolean/string types, defaults, dependencies, entry values и четыре nested
+intent action идентичны baseline. XML snapshot получает 63-й `app:` prefix и
+восемь явно зафиксированных simple-summary attributes; итог остаётся 66 keyed
+nodes, 48 persisted XML keys (18 boolean и 30 string) плюс два programmatic
+string keys.

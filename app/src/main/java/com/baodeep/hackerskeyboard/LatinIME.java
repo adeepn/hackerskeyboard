@@ -24,6 +24,7 @@ import com.google.android.voiceime.VoiceRecognitionTrigger;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -45,7 +46,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.SystemClock;
 import android.os.Vibrator;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -3374,7 +3374,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     protected void launchSettings(
-            Class<? extends PreferenceActivity> settingsClass) {
+            Class<? extends Activity> settingsClass) {
         handleClose();
         Intent intent = new Intent();
         intent.setClass(LatinIME.this, settingsClass);
