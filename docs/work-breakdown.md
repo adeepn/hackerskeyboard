@@ -79,7 +79,10 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   screen на ту же основу, сохраняя string-backed sliders и render-mode fallback;
   S2.03e ([#70](https://github.com/adeepn/hackerskeyboard/issues/70)) переносит
   динамический выбор языков, сохраняя consolidated string storage и legacy
-  locale fallback;
+  locale fallback; S2.03f
+  ([#72](https://github.com/adeepn/hackerskeyboard/issues/72)) переносит главный
+  settings screen, его summaries, listeners, nested navigation и IME launch
+  type boundary;
 - S2.04 — manifest components и минимальные `android:exported`;
 - S2.05 — explicit intents и PendingIntent mutability;
 - S2.06 — runtime receiver export policy;

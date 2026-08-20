@@ -11,7 +11,9 @@ feedback screen и custom seek-bar dialogs в
 [#63](https://github.com/adeepn/hackerskeyboard/issues/63), S2.03d мигрирует
 view screen в [#65](https://github.com/adeepn/hackerskeyboard/issues/65),
 S2.03e мигрирует dynamic language selection в
-[#70](https://github.com/adeepn/hackerskeyboard/issues/70).
+[#70](https://github.com/adeepn/hackerskeyboard/issues/70), S2.03f мигрирует
+главный settings screen в
+[#72](https://github.com/adeepn/hackerskeyboard/issues/72).
 
 ## Решение
 
@@ -185,6 +187,17 @@ empty/null behavior. Старый fallback отсутствующего полн
 dictionary probing не меняются. FragmentManager восстанавливает один Fragment
 после recreation, а экран использует тот же API 24-compatible `SettingsTheme`.
 
+S2.03f переносит `LatinIMESettings` и главный `prefs.xml`. Activity остаётся
+только host одного `SeekBarPreferenceFragmentCompat`, а listener, динамические
+summaries, AutoText-зависимое скрытие quick fixes, compact-mode filtering и
+version/input-connection info принадлежат Fragment lifecycle. Восемь legacy
+auto-summary list widgets заменены стандартными `ListPreference` с simple
+summary provider, edit widget получает summary из сохранённого текста, а три
+string-backed seek bar используют уже протестированный compat dialog boundary.
+Четыре nested intent action, 66/48 settings contract и отсутствие eager rewrite
+сохраняются. `LatinIME` принимает общий `Activity` subtype для запуска settings,
+не меняя явный target class или launch flags.
+
 XML можно переводить по одному экрану, но нельзя одновременно переименовывать
 ключи, менять defaults, реструктурировать весь settings UX или внедрять Compose.
 
@@ -209,7 +222,7 @@ scope examples.
 2. Завести и выполнить S2.02 с dependency/import migration и полной CI matrix.
 3. Выполнить декомпозированный S2.03: #59 фиксирует characterization contract,
    #61 переносит actions, #63 — feedback/custom dialogs, #65 — view, #70 —
-   dynamic languages; затем отдельно main settings и финальное удаление
-   platform API.
+   dynamic languages, #72 — main settings; затем отдельно выполнить финальное
+   удаление platform API.
 4. После зелёных S2.02/S2.03 перейти к platform/API issues S2.04–S2.12.
 5. Повышать `targetSdk` только отдельными checkpoints S2.13–S2.18.
