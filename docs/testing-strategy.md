@@ -201,3 +201,13 @@ source, lint baseline и bundled JAR: `android.preference`, `PreferenceActivity`
 gate повторно подтверждает те же 66 XML entries, 48 persisted XML keys и два
 programmatic string keys; API 24/API 37 application smoke повторно проходит все
 пять AndroidX settings flows и существующие значения.
+
+S2.04 добавляет manifest-component gate с mutation tests. Он фиксирует семь
+filtered components, разрешает `exported=true` только защищённому
+`BIND_INPUT_METHOD` сервису `LatinIME` и launcher activity `Main`, а пять
+settings activities требует оставить внутренними. Gate также проверяет IME
+action/meta data, launcher category и `settingsActivity`. API 24/API 37 smoke
+читает `ServiceInfo`/`ActivityInfo` установленного APK, подтверждает permission
+и exported flags, а через `InputMethodInfo` — регистрацию IME и settings class.
+Уже существующие same-app launch/recreation tests всех settings screens должны
+оставаться зелёными.

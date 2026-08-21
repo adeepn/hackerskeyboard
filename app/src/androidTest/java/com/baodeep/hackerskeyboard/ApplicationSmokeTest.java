@@ -19,6 +19,9 @@ import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
@@ -92,6 +95,24 @@ public class ApplicationSmokeTest {
         } finally {
             finishActivity(instrumentation, settings);
         }
+    }
+
+    @Test
+    public void installedManifestUsesLeastPrivilegedComponentExports() throws Exception {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        PackageManager packageManager = context.getPackageManager();
+
+        ServiceInfo ime = packageManager.getServiceInfo(
+                new ComponentName(context, LatinIME.class), 0);
+        assertTrue(ime.exported);
+        assertEquals(android.Manifest.permission.BIND_INPUT_METHOD, ime.permission);
+
+        assertActivityExported(packageManager, context, Main.class, true);
+        assertActivityExported(packageManager, context, LatinIMESettings.class, false);
+        assertActivityExported(packageManager, context, InputLanguageSelection.class, false);
+        assertActivityExported(packageManager, context, PrefScreenActions.class, false);
+        assertActivityExported(packageManager, context, PrefScreenView.class, false);
+        assertActivityExported(packageManager, context, PrefScreenFeedback.class, false);
     }
 
     @Test
@@ -950,11 +971,24 @@ public class ApplicationSmokeTest {
                     && expectedService.equals(inputMethod.getServiceInfo().name)) {
                 assertEquals(EXPECTED_DISPLAY_NAME,
                         inputMethod.loadLabel(context.getPackageManager()).toString());
+                assertEquals(LatinIMESettings.class.getName(),
+                        inputMethod.getSettingsActivity());
                 found = true;
                 break;
             }
         }
         assertTrue("LatinIME is not registered as an input method", found);
+    }
+
+    private static void assertActivityExported(
+            PackageManager packageManager,
+            Context context,
+            Class<? extends Activity> activityClass,
+            boolean expectedExported) throws PackageManager.NameNotFoundException {
+        ActivityInfo activity = packageManager.getActivityInfo(
+                new ComponentName(context, activityClass), 0);
+        assertEquals(activityClass.getName(), activity.name);
+        assertEquals(expectedExported, activity.exported);
     }
 
     private static <T extends Activity> T launchActivity(

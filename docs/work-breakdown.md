@@ -87,7 +87,10 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   оставшиеся runtime readers на AndroidX `PreferenceManager`, удаляет пять
   неиспользуемых platform preference widgets и закрывает возврат legacy API
   статическим gate;
-- S2.04 — manifest components и минимальные `android:exported`;
+- S2.04 ([#76](https://github.com/adeepn/hackerskeyboard/issues/76)) — явная
+  минимальная политика `android:exported`: доступны извне только защищённый
+  `BIND_INPUT_METHOD` IME service и launcher; manifest gate и device smoke
+  фиксируют весь component contract;
 - S2.05 — explicit intents и PendingIntent mutability;
 - S2.06 — runtime receiver export policy;
 - S2.07 — узкие `<queries>` для dictionary packs;

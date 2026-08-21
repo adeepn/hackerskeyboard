@@ -175,6 +175,17 @@ meaningful Java/build diff без whitespace составляет порядка
 | `454a375` | Default strings проверить выборочно; global Kotlin resolution strategy не брать |
 | `9f1d768` | Не брать целиком: mass formatting и resource moves. Namespace-prefix fix подтверждён как полезный сигнал и независимо реализован в #37 с semantic snapshot |
 
+### Решение для S2.04
+
+21 августа 2026 года manifest трёх обязательных форков повторно проверены перед
+issue [#76](https://github.com/adeepn/hackerskeyboard/issues/76). В
+`max-pulya` и `crab182` готовой политики `android:exported` нет. В
+`hongkongphoooey` все components с intent filters экспортированы, включая
+внутренние settings screens. Такой diff не переносится: v2 экспортирует только
+защищённый `BIND_INPUT_METHOD` service и launcher, а пять settings activities
+оставляет internal. Форки служат negative comparison, production-код из них в
+этом slice не используется.
+
 ### Итог
 
 Fork подтверждает, что legacy Java можно адаптировать без полного rewrite, но не

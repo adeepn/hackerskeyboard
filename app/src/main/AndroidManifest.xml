@@ -18,6 +18,7 @@
 
         <service android:name="LatinIME"
                 android:label="@string/english_ime_name"
+                android:exported="true"
                 android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
@@ -25,7 +26,8 @@
             <meta-data android:name="android.view.im" android:resource="@xml/method" />
         </service>
 
-        <activity android:name="Main">
+        <activity android:name="Main"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -34,6 +36,7 @@
 
         <activity android:name="LatinIMESettings"
                 android:label="@string/english_ime_settings"
+                android:exported="false"
                 android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -44,6 +47,7 @@
 
         <activity android:name="InputLanguageSelection"
                 android:label="@string/language_selection_title"
+                android:exported="false"
                 android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -54,6 +58,7 @@
 
         <activity android:name="PrefScreenActions"
                 android:label="@string/pref_screen_actions_title"
+                android:exported="false"
                 android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -64,6 +69,7 @@
             
         <activity android:name="PrefScreenView"
                 android:label="@string/pref_screen_actions_title"
+                android:exported="false"
                 android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -74,6 +80,7 @@
 
         <activity android:name="PrefScreenFeedback"
                 android:label="@string/pref_screen_feedback_title"
+                android:exported="false"
                 android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -23,6 +23,8 @@ repo = "local"
 hooks = [
   { id = "application-identity", name = "Application identity", entry = "python3 scripts/verify-application-identity.py", language = "system", pass_filenames = false, always_run = true },
   { id = "androidx-migration", name = "AndroidX migration", entry = "python3 scripts/verify-androidx-migration.py", language = "system", pass_filenames = false, always_run = true },
+  { id = "manifest-component-tests", name = "Manifest component tests", entry = "python3 scripts/test-manifest-components.py", language = "system", pass_filenames = false, always_run = true },
+  { id = "manifest-components", name = "Manifest components", entry = "python3 scripts/verify-manifest-components.py", language = "system", pass_filenames = false, always_run = true },
   { id = "settings-contract-tests", name = "Settings contract tests", entry = "python3 scripts/test-settings-contract.py", language = "system", pass_filenames = false, always_run = true },
   { id = "settings-contract", name = "Settings contract", entry = "python3 scripts/verify-settings-contract.py", language = "system", pass_filenames = false, always_run = true },
   { id = "release-configuration", name = "Release configuration", entry = "python3 scripts/verify-release-configuration.py", language = "system", pass_filenames = false, always_run = true },

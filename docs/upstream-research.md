@@ -228,6 +228,24 @@ feedback/custom-dialog slice #63, затем маленькие screen-specific 
 Новых candidate patches после предыдущего среза нет; #939 остаётся evidence, а
 #986 — untrusted attachment, который не загружался.
 
+### S2.04 manifest component check
+
+21 августа 2026 года manifest canonical tip и PR #978/#989 сравнены с текущим
+v2 component inventory. Canonical `master` всё ещё полагается на неявные
+значения `android:exported`. PR #978 нельзя переносить: он задаёт
+`exported=false` для `LatinIME`, из-за чего обычный системный Input Method
+Manager не может bind к service, но одновременно открывает часть внутренних
+settings activities. PR #989 выбирает корректное направление — экспортирует
+IME и launcher, закрывает settings screens — и используется только как
+независимое подтверждение решения.
+
+Реализация S2.04 выполняется отдельно в issue
+[#76](https://github.com/adeepn/hackerskeyboard/issues/76). Системная точка
+входа `LatinIME` остаётся защищена signature permission
+`android.permission.BIND_INPUT_METHOD`; `Main` доступен launcher, остальные
+пять activities закрыты. Статический gate и instrumentation проверяют не только
+атрибуты, но также IME action, metadata, permission и settings activity.
+
 Перед каждым milestone planning и минимум перед alpha/beta/release:
 
 1. обновить `upstream` remote;
