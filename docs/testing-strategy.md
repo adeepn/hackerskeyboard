@@ -192,3 +192,12 @@ summaries, string-backed seek-bar value с legacy-суффиксом, отсут
 rewrite и разрешение всех четырёх nested actions в ожидаемые Activity. Затем он
 меняет list/edit values, проверяет listener-driven summary/storage update и
 доказывает сохранение одного Fragment и значений после `Activity.recreate()`.
+
+S2.03g переводит три runtime preference readers на AndroidX без изменения
+вызовов или имени `${applicationId}_preferences` и удаляет пять больше не
+используемых platform widgets. Расширенный AndroidX gate сканирует production
+source, lint baseline и bundled JAR: `android.preference`, `PreferenceActivity`
+и удалённые legacy source files больше не могут вернуться. Settings-contract
+gate повторно подтверждает те же 66 XML entries, 48 persisted XML keys и два
+programmatic string keys; API 24/API 37 application smoke повторно проходит все
+пять AndroidX settings flows и существующие значения.

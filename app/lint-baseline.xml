@@ -3039,61 +3039,6 @@
     </issue>
 
     <issue
-        id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass com.baodeep.hackerskeyboard.LatinIMESettings should not be exported"
-        errorLine1="        &lt;activity android:name=&quot;LatinIMESettings&quot; android:label=&quot;@string/english_ime_settings&quot;>"
-        errorLine2="        ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="35"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass com.baodeep.hackerskeyboard.InputLanguageSelection should not be exported"
-        errorLine1="        &lt;activity android:name=&quot;InputLanguageSelection&quot;"
-        errorLine2="        ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="43"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass com.baodeep.hackerskeyboard.PrefScreenActions should not be exported"
-        errorLine1="        &lt;activity android:name=&quot;PrefScreenActions&quot;"
-        errorLine2="        ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="52"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass com.baodeep.hackerskeyboard.PrefScreenView should not be exported"
-        errorLine1="        &lt;activity android:name=&quot;PrefScreenView&quot;"
-        errorLine2="        ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="61"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ExportedPreferenceActivity"
-        message="`PreferenceActivity` subclass com.baodeep.hackerskeyboard.PrefScreenFeedback should not be exported"
-        errorLine1="        &lt;activity android:name=&quot;PrefScreenFeedback&quot;"
-        errorLine2="        ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="70"
-            column="9"/>
-    </issue>
-
-    <issue
         id="IntentFilterExportedReceiver"
         message="As of Android 12, `android:exported` must be set; use `true` to make the activity available to other apps, and `false` otherwise."
         errorLine1="        &lt;service android:name=&quot;LatinIME&quot;"

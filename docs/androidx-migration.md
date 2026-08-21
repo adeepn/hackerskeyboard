@@ -13,7 +13,9 @@ view screen в [#65](https://github.com/adeepn/hackerskeyboard/issues/65),
 S2.03e мигрирует dynamic language selection в
 [#70](https://github.com/adeepn/hackerskeyboard/issues/70), S2.03f мигрирует
 главный settings screen в
-[#72](https://github.com/adeepn/hackerskeyboard/issues/72).
+[#72](https://github.com/adeepn/hackerskeyboard/issues/72), S2.03g удаляет
+последнюю platform preference surface в
+[#74](https://github.com/adeepn/hackerskeyboard/issues/74).
 
 ## Решение
 
@@ -198,6 +200,18 @@ string-backed seek bar используют уже протестированн�
 сохраняются. `LatinIME` принимает общий `Activity` subtype для запуска settings,
 не меняя явный target class или launch flags.
 
+S2.03g завершает миграцию без изменения settings behavior. `LatinIME`,
+`KeyboardSwitcher` и `LanguageSwitcher` используют AndroidX
+`PreferenceManager`, который сохраняет прежнее имя default SharedPreferences
+`${applicationId}_preferences`. Пять недостижимых platform widget classes
+удаляются после переноса всех XML consumers: `AutoSummaryEditTextPreference`,
+`AutoSummaryListPreference`, `SeekBarPreference`, `SeekBarPreferenceString` и
+`VibratePreference`. Быстрый AndroidX gate запрещает `android.preference`,
+`PreferenceActivity`, возврат удалённых source files и отсутствие AndroidX
+import у runtime readers. Пять устаревших `ExportedPreferenceActivity` entries
+удаляются из lint baseline; оставшиеся manifest/exported изменения по-прежнему
+относятся к S2.04.
+
 XML можно переводить по одному экрану, но нельзя одновременно переименовывать
 ключи, менять defaults, реструктурировать весь settings UX или внедрять Compose.
 
@@ -222,7 +236,7 @@ scope examples.
 2. Завести и выполнить S2.02 с dependency/import migration и полной CI matrix.
 3. Выполнить декомпозированный S2.03: #59 фиксирует characterization contract,
    #61 переносит actions, #63 — feedback/custom dialogs, #65 — view, #70 —
-   dynamic languages, #72 — main settings; затем отдельно выполнить финальное
+   dynamic languages, #72 — main settings, #74 — runtime readers и финальное
    удаление platform API.
 4. После зелёных S2.02/S2.03 перейти к platform/API issues S2.04–S2.12.
 5. Повышать `targetSdk` только отдельными checkpoints S2.13–S2.18.
