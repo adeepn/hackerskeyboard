@@ -18,6 +18,8 @@
   AGP и проверка разрешения plugin.
 - [Android lint](android-lint.md) — обязательный локальный/CI gate, legacy
   baseline и классификация накопленного долга.
+- [Manifest components](manifest-components.md) — минимальная политика
+  `android:exported`, IME permission и автоматические regression checks.
 - [Миграция на AndroidX](androidx-migration.md) — инвентаризация Support
   Library, границы S2.02/S2.03 и обязательные regression checks.
 - [Контракт хранения настроек](settings-contract.md) — зафиксированные keys,
