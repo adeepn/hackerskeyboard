@@ -208,9 +208,12 @@ S2.03g завершает миграцию без изменения settings be
 `AutoSummaryListPreference`, `SeekBarPreference`, `SeekBarPreferenceString` и
 `VibratePreference`. Быстрый AndroidX gate запрещает `android.preference`,
 `PreferenceActivity`, возврат удалённых source files и отсутствие AndroidX
-import у runtime readers. Пять устаревших `ExportedPreferenceActivity` entries
-удаляются из lint baseline; оставшиеся manifest/exported изменения по-прежнему
-относятся к S2.04.
+import у runtime readers. Пять устаревших `ExportedPreferenceActivity` и две
+относящиеся к удалённому seek-bar записи удаляются из lint baseline; оставшиеся
+manifest/exported изменения по-прежнему относятся к S2.04. Выпущенный во время
+работы Gradle 9.7.1 не смешивается с этим runtime-neutral slice: существующее
+точечное исключение обновляется, а wrapper/toolchain migration выполняется
+отдельно.
 
 XML можно переводить по одному экрану, но нельзя одновременно переименовывать
 ключи, менять defaults, реструктурировать весь settings UX или внедрять Compose.

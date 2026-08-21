@@ -92,17 +92,6 @@
 
     <issue
         id="DefaultLocale"
-        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
-        errorLine1="            return String.format(&quot;%d%%&quot;, (int) (val * 100));"
-        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/baodeep/hackerskeyboard/SeekBarPreference.java"
-            line="66"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="DefaultLocale"
         message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
         errorLine1="            mLowerOriginalWord = mOriginalWordString.toLowerCase();"
         errorLine2="                                                     ~~~~~~~~~~~">
@@ -279,7 +268,7 @@
 
     <issue
         id="AndroidGradlePluginVersion"
-        message="A newer version of Gradle than 9.6.1 is available: 9.7.0"
+        message="A newer version of Gradle than 9.6.1 is available: 9.7.1"
         errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-9.6.1-bin.zip"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -3167,17 +3156,6 @@
         <location
             file="src/main/java/com/baodeep/hackerskeyboard/LatinKeyboardView.java"
             line="130"
-            column="32"/>
-    </issue>
-
-    <issue
-        id="Recycle"
-        message="This `TypedArray` should be recycled after use with `#recycle()`"
-        errorLine1="        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SeekBarPreference);"
-        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/baodeep/hackerskeyboard/SeekBarPreference.java"
-            line="39"
             column="32"/>
     </issue>
 

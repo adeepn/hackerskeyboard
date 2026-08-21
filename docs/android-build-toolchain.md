@@ -13,9 +13,12 @@
 | compile SDK | 37 | поднят в S2.02 для AndroidX Core 1.19.0 |
 
 AGP 9.3.1 требует Gradle 9.5.0 или новее, минимум JDK 17 и поддерживает API 37.
-Выбран последний стабильный Gradle 9.6.1; lint-подсказка о 9.7.0 относится к
-release candidate и остаётся в существующей точечной baseline-категории до
-стабильного релиза. Проект фиксирует JDK 21 LTS: lint из AGP 9.3.1 использует
+Проект пока фиксирует проверенный Gradle 9.6.1. Стабильный
+[Gradle 9.7.1](https://docs.gradle.org/9.7.1/release-notes.html) выпущен
+19 августа 2026 года; его обновление выполняется отдельным toolchain PR после
+проверки wrapper checksum и полной AGP/SDK/NDK matrix. До этого lint-подсказка
+остаётся в существующей точечной baseline-категории. Проект фиксирует JDK 21
+LTS: lint из AGP 9.3.1 использует
 `List.removeLast()` в `BidirectionalTextDetector`, из-за чего анализ падает на
 JDK 17 до создания отчёта. JDK 21 позволяет оставить security detector
 `BidiSpoofing` включённым. Эта матрица
