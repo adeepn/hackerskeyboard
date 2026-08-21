@@ -20,9 +20,10 @@ package com.baodeep.hackerskeyboard;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.InflateException;
+
+import androidx.preference.PreferenceManager;
 
 import java.lang.ref.SoftReference;
 import java.util.Arrays;

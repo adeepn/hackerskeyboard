@@ -28,6 +28,9 @@ EXPECTED_SDK_LEVELS = {
     "targetSdk": "26",
 }
 FORBIDDEN_TOKENS = (
+    "android.preference.",
+    "android/preference/",
+    "PreferenceActivity",
     "android.support.",
     "android/support/",
     "com.android.support",
@@ -35,6 +38,13 @@ FORBIDDEN_TOKENS = (
     "androidx.appcompat:",
     "androidx.test.espresso.",
     "androidx.test.espresso:",
+)
+REMOVED_PLATFORM_PREFERENCE_SOURCES = (
+    "AutoSummaryEditTextPreference.java",
+    "AutoSummaryListPreference.java",
+    "SeekBarPreference.java",
+    "SeekBarPreferenceString.java",
+    "VibratePreference.java",
 )
 DEPENDENCY_PATTERN = re.compile(
     r"(?m)^\s*(implementation|androidTestImplementation)\s+['\"]([^'\"]+)['\"]"
@@ -90,6 +100,30 @@ def main() -> int:
         for token in FORBIDDEN_TOKENS:
             if token in text:
                 errors.append(f"{path.relative_to(repository)}: forbidden token {token}")
+
+    production_java = app / "src" / "main" / "java"
+    for source_name in REMOVED_PLATFORM_PREFERENCE_SOURCES:
+        matches = sorted(production_java.rglob(source_name))
+        if matches:
+            errors.append(
+                f"{matches[0].relative_to(repository)}: removed platform preference "
+                "source must not return"
+            )
+
+    for source_name in ("LatinIME.java", "KeyboardSwitcher.java", "LanguageSwitcher.java"):
+        matches = sorted(production_java.rglob(source_name))
+        if len(matches) != 1:
+            errors.append(
+                f"{source_name}: expected exactly one runtime preference reader, "
+                f"found {len(matches)}"
+            )
+            continue
+        text = matches[0].read_text(encoding="utf-8")
+        if "import androidx.preference.PreferenceManager;" not in text:
+            errors.append(
+                f"{matches[0].relative_to(repository)}: AndroidX PreferenceManager "
+                "import missing"
+            )
 
     language_activity = (
         app
@@ -402,6 +436,11 @@ def main() -> int:
                         errors.append(
                             f"{path.relative_to(repository)}:{name}: "
                             "Support Library bytecode reference requires review"
+                        )
+                    if b"android/preference/" in data:
+                        errors.append(
+                            f"{path.relative_to(repository)}:{name}: "
+                            "platform Preference bytecode reference requires review"
                         )
         except zipfile.BadZipFile:
             errors.append(f"{path.relative_to(repository)}: invalid JAR archive")

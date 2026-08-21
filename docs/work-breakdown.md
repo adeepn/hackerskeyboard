@@ -82,7 +82,11 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   locale fallback; S2.03f
   ([#72](https://github.com/adeepn/hackerskeyboard/issues/72)) переносит главный
   settings screen, его summaries, listeners, nested navigation и IME launch
-  type boundary;
+  type boundary; S2.03g
+  ([#74](https://github.com/adeepn/hackerskeyboard/issues/74)) переключает
+  оставшиеся runtime readers на AndroidX `PreferenceManager`, удаляет пять
+  неиспользуемых platform preference widgets и закрывает возврат legacy API
+  статическим gate;
 - S2.04 — manifest components и минимальные `android:exported`;
 - S2.05 — explicit intents и PendingIntent mutability;
 - S2.06 — runtime receiver export policy;
