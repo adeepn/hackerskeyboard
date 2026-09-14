@@ -221,3 +221,10 @@ debuggable release, неожиданный SDK, отсутствующие/ли�
 как unsigned CI artifact. Установка APK splits, Play acceptance и 16 KB
 runtime compatibility пока этим gate не проверяются; первый Play update test
 описан в [google-play-delivery.md](google-play-delivery.md).
+
+S2.22b добавляет manual gate `bundle-signing-tests` на JDK 21 (также в CI).
+Временный тестовый PKCS12 проверяет реальный signing block workflow:
+подпись/evidence/payload, неверный сертификат, отсутствующий пароль,
+недопустимые версии, tampering, unsigned entries и неправильный signer alias.
+Ни один тест не использует production secrets. Проверка Play acceptance и
+обновления с сохранением настроек остаётся отдельной задачей владельца в #81.

@@ -13,11 +13,11 @@
 значения из собранного APK. Для следующего выпуска нельзя дублировать номер или
 имя версии в workflow.
 
-После S2.03d следующий кандидат, отслеживаемый в
-[#67](https://github.com/adeepn/hackerskeyboard/issues/67), имеет
-`versionCode 2000003` и `versionName 2.0.0-alpha03`. Он предназначен для
-проверки накопленных AndroidX settings migrations как обновление поверх
-owner-signed alpha02. Это описание кандидата не считается фактом выпуска:
+Кандидат S2.22b, отслеживаемый в
+[#81](https://github.com/adeepn/hackerskeyboard/issues/81), имеет
+`versionCode 2000004` и `versionName 2.0.0-alpha04`. Он предназначен для
+первой загрузки AAB в Play Console и обновления поверх owner-signed alpha03.
+Это описание кандидата не считается фактом выпуска:
 release evidence появляется только после зелёного `Signed v2 release` на
 точном merge commit ветки `v2`.
 
@@ -49,14 +49,20 @@ Environment разрешает только exact branch `v2`. По явному
 а на минимальном scope и изоляции jobs:
 
 1. `build-release` checkout’ит `v2`, запускает Gradle без secrets, проверяет
-   identity, ABI и size budget, затем отдаёт unsigned APK;
+   identity, ABI и size budget, затем отдаёт unsigned APK и проверенный AAB;
 2. `sign-release` получает Environment secrets, но не checkout’ит Git и не
    запускает Gradle или repository code;
 3. keystore декодируется только в `$RUNNER_TEMP`, имеет mode `0600` и удаляется
    через `trap`;
 4. `apksigner` подписывает подготовленный APK, сверяет публичный certificate
    SHA-256, package, обе версии и `debuggable=false`;
-5. наружу выгружаются только signed APK и публичный `release-evidence.txt`.
+5. `jarsigner` подписывает AAB тем же ключом и выполняет strict verification
+   с явно доверенным keystore/alias; SHA-256 сертификата проверяется до подписи;
+6. payload AAB сравнивается побайтно с проверенным unsigned bundle; допустимы
+   только JAR signature metadata, дубликаты ZIP entries запрещены;
+7. наружу выгружаются только signed APK/AAB и публичные
+   `release-evidence.txt` / `bundle-evidence.txt` с версиями, commit, hash файлов
+   и сертификата. Ни keystore, ни пароли в artifact не входят.
 
 Обычные `pull_request` и `push` jobs никогда не получают signing secrets.
 Workflow и third-party actions для signing path закреплены полными commit SHA.
@@ -87,10 +93,10 @@ Minified release дополнительно обязан собраться, п�
 
 ## Выпуск
 
-Этот раздел описывает существующий ручной APK path. Доставка prerelease через
-Google Play вынесена вперёд отдельными S2.22a–c (#80–#82), см.
-[Google Play delivery](google-play-delivery.md). В S2.22a CI проверяет unsigned
-AAB; подпись AAB, первая загрузка и автопубликация ещё не реализованы.
+Этот раздел описывает ручной APK+AAB path. Доставка prerelease через Google
+Play вынесена вперёд отдельными S2.22a–c (#80–#82), см.
+[Google Play delivery](google-play-delivery.md). S2.22b добавляет подпись AAB;
+первый принятый Console upload и автопубликация пока не подтверждены.
 
 1. Merge release change в `v2` только после зелёного CI, Codex review и approval
    владельца.
@@ -98,8 +104,9 @@ AAB; подпись AAB, первая загрузка и автопублика
    `v2`.
 3. Убедиться, что оба jobs зелёные. Скачать artifact
    `hackers-keyboard-v2-<version>-<commit>`.
-4. Сверить `release-evidence.txt` с commit в `v2`; при внешней публикации
-   опубликовать SHA-256 APK и сертификата рядом с файлом.
+4. Сверить оба evidence files с commit в `v2`; при внешней публикации
+   опубликовать SHA-256 APK/AAB и сертификата рядом с файлами. APK предназначен
+   для прямой установки, AAB — для Play Console, на телефон его не установить.
 5. Проверить свежую установку на поддерживаемой версии Android. Затем собрать
    тестовый APK с большим `versionCode` тем же workflow и проверить update без
    удаления данных/IME settings.
@@ -112,6 +119,24 @@ AAB; подпись AAB, первая загрузка и автопублика
 Не следует публиковать обычный debug APK как v2 release: его сертификат не
 стабилен между GitHub runners. Нельзя вручную переподписывать опубликованный
 APK другим ключом или повторно использовать уменьшенный `versionCode`.
+
+## Тесты подписи AAB
+
+На проектном JDK 21 без Android SDK и без release secrets:
+
+```sh
+prek run --all-files --hook-stage manual bundle-signing-tests
+```
+
+Тесты извлекают фактический shell block подписи из workflow, создают временный
+PKCS12 и проверяют успешную подпись/evidence, удаление временного keystore,
+отказ на неверный сертификат, отсутствующий пароль и недопустимую версию.
+Дополнительно strict verification должна отвергнуть изменение payload,
+добавление неподписанного entry и неверный alias. Тот же prek gate запускается
+в `Quality gates` на JDK 21; настоящий owner key используется только после
+merge в отдельном `release` job.
+
+[JDK 21 jarsigner: подпись и strict verification](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jarsigner.html).
 
 ## Backup и восстановление
 

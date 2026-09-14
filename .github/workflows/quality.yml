@@ -50,6 +50,11 @@ jobs:
       - name: Bootstrap Gradle
         run: ./gradlew --version --no-daemon
 
+      - name: Test AAB signing with disposable keys through prek
+        uses: j178/prek-action@v2
+        with:
+          extra-args: --hook-stage manual bundle-signing-tests
+
       - name: Resolve target Android Gradle Plugin
         run: ./gradlew -p verification/agp-resolution resolveAgp --no-daemon
 
