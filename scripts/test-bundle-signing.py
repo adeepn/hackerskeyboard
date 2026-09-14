@@ -77,11 +77,12 @@ class BundleSigningTests(unittest.TestCase):
         return result
 
     def verify(self, alias="test-upload"):
+        # Exercise the workflow's verification command, not a test-only copy.
+        command = "jarsigner -verify" + self.script.split("\njarsigner -verify", 1)[1].split("\n\n", 1)[0]
         return subprocess.run(
-            ["jarsigner", "-verify", "-strict", "-keystore", str(self.keystore),
-             "-storetype", "PKCS12", "-storepass:env", "TEST_STORE_PASSWORD",
-             str(self.signed), alias],
-            env=self.key_env, capture_output=True,
+            ["bash", "-eu", "-o", "pipefail", "-c", command],
+            env=dict(self.env, keystore=str(self.keystore), signed_aab=str(self.signed),
+                     KEY_ALIAS=alias), capture_output=True,
         )
 
     def test_signed_payload_and_evidence(self):
