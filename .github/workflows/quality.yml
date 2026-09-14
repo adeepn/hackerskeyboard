@@ -113,6 +113,20 @@ jobs:
           retention-days: 7
           compression-level: 0
 
+      - name: Build and validate unsigned release AAB through prek
+        uses: j178/prek-action@v2
+        with:
+          extra-args: --hook-stage manual release-bundle
+
+      - name: Upload unsigned release AAB
+        uses: actions/upload-artifact@v7
+        with:
+          name: hackers-keyboard-unsigned-aab-${{ github.sha }}
+          path: app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+
   android-lint:
     name: Android lint
     runs-on: ubuntu-latest

@@ -258,6 +258,13 @@ IME и launcher, закрывает settings screens — и использует
 
 ## Очередь ближайшего анализа
 
+14 сентября 2026 перед S2.22a повторён поиск canonical issues по Google Play и
+PR по AAB. [#958](https://github.com/klausw/hackerskeyboard/issues/958) —
+evidence проблемы распространения со старым target, а не candidate publishing
+patch. Подходящих AAB PR не найдено. Приоритетный путь доставки #79–#82
+реализуется самостоятельно по официальным Android/Play API, без импортов
+upstream snippets или attachments.
+
 1. Сравнить wrapper/build/CMake из #978 и #989 с целевыми
    AGP 9.3.1/Gradle 9.6.1.
 2. Разобрать 52 commits #978, отделив build-only от runtime behavior.
