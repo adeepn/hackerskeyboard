@@ -105,6 +105,14 @@ issues. Каждый нижележащий шаг является отдель
     extract/fullscreen mode, portrait/landscape и multi-window.
 14. Собрать Android App Bundle и выполнить Play pre-launch проверки.
 
+С 14 сентября 2026 S2.22 выполняется приоритетно после S2.04, параллельно по
+плану с оставшимися compatibility tasks: #80 — проверяемый AAB в CI, #81 —
+первый Internal testing release и Console validation, #82 — автоматическая
+доставка после зелёного CI. Tracking issue #79 и подробный порядок находятся в
+[google-play-delivery.md](google-play-delivery.md). Начало этой работы не ждёт
+target 37; фактические требования Play могут заблокировать первый выпуск до
+завершения необходимых target/platform migration checks.
+
 ### Критерии завершения
 
 - `compileSdk 37`, `targetSdk 37`, выбранный `minSdk` обоснован данными;
@@ -203,7 +211,8 @@ issues. Каждый нижележащий шаг является отдель
 ## Порядок релизов
 
 - `v2-dev`: завершён этап 1, внутренние APK.
-- `v2-alpha`: target 37 и AndroidX, основная функциональность работает.
+- `v2-alpha`: промежуточные проверяемые migration builds; после Play bootstrap
+  распространяются через Internal testing, target каждой сборки указан явно.
 - `v2-beta`: завершена критическая матрица этапа 3, тестирование пользователями.
 - `v2.0`: Play-ready release без известных блокирующих регрессий.
 - `v2.x`: архитектурный этап 4 и отобранные новые функции.

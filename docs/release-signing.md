@@ -87,6 +87,11 @@ Minified release дополнительно обязан собраться, п�
 
 ## Выпуск
 
+Этот раздел описывает существующий ручной APK path. Доставка prerelease через
+Google Play вынесена вперёд отдельными S2.22a–c (#80–#82), см.
+[Google Play delivery](google-play-delivery.md). В S2.22a CI проверяет unsigned
+AAB; подпись AAB, первая загрузка и автопубликация ещё не реализованы.
+
 1. Merge release change в `v2` только после зелёного CI, Codex review и approval
    владельца.
 2. В GitHub Actions открыть `Signed v2 release`, выбрать `Run workflow`, branch

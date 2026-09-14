@@ -108,7 +108,14 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
 - S2.19 — target SDK 37 и compatibility report;
 - S2.20 — popup/candidates/window insets fixes;
 - S2.21 — 16 KB native compatibility;
-- S2.22 — release AAB и Play readiness checklist.
+- S2.22 ([#79](https://github.com/adeepn/hackerskeyboard/issues/79)) —
+  **вынесен вперёд после S2.04**: доставка alpha через Google Play Internal
+  testing; S2.22a ([#80](https://github.com/adeepn/hackerskeyboard/issues/80)) —
+  AAB и validation в CI; S2.22b
+  ([#81](https://github.com/adeepn/hackerskeyboard/issues/81)) — подпись,
+  Console bootstrap и update test; S2.22c
+  ([#82](https://github.com/adeepn/hackerskeyboard/issues/82)) — автопубликация
+  после зелёного CI. Полный Play readiness остаётся критерием релиза;
 - S2.23 — regression tests для navigation bar/insets и самопроизвольного показа
   IME, обнаруженных в обсуждении upstream PR #978.
 

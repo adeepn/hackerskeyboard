@@ -39,8 +39,8 @@ app identifier в Android inputs, новый JNI class path, сохранени�
 `org.pocketworkstation.DICT` и неизменность 66 legacy preference keys. Device
 smoke дополнительно утверждает новый package name на API 24 и API 37. APK
 manifest identity проверяется после сборки в CI.
-Когда Stage 2 добавит release AAB job, тот же gate должен проверять identity в
-bundle до публикации. Будущий settings export/import обязан иметь round-trip
+S2.22a добавляет проверку identity release AAB до отдельной подписи и публикации.
+Будущий settings export/import обязан иметь round-trip
 tests для всех зафиксированных ключей, неизвестных/повреждённых значений и явно
 доказывать, что он не пытается читать private storage пакета v1 напрямую.
 
@@ -211,3 +211,13 @@ action/meta data, launcher category и `settingsActivity`. API 24/API 37 smoke
 и exported flags, а через `InputMethodInfo` — регистрацию IME и settings class.
 Уже существующие same-app launch/recreation tests всех settings screens должны
 оставаться зелёными.
+
+S2.22a выносит сборку AAB вперёд после S2.04. Offline tests
+`scripts/test-release-bundle.py` проверяют отказ на неверный package/version,
+debuggable release, неожиданный SDK, отсутствующие/лишние JNI ABI, не-ELF
+библиотеку, APK вместо AAB и неверный checksum bundletool. Manual prek gate
+`release-bundle` локально и в CI выполняет `bundleRelease`, официальный
+`bundletool validate` и проверку decoded manifest/ZIP. AAB публикуется только
+как unsigned CI artifact. Установка APK splits, Play acceptance и 16 KB
+runtime compatibility пока этим gate не проверяются; первый Play update test
+описан в [google-play-delivery.md](google-play-delivery.md).

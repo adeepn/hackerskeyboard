@@ -26,6 +26,8 @@
   типы, defaults и автоматический guard миграции settings UI.
 - [Подпись и выпуск v2](release-signing.md) — стабильная update chain,
   изоляция ключа, ручной workflow и проверка готового APK.
+- [Доставка через Google Play](google-play-delivery.md) — приоритетный путь
+  AAB → Internal testing → автоматические обновления после зелёного CI.
 - [Настройка окружения](developer-setup.md) — JDK 21, `JAVA_HOME` и локальные
   проверки.
 - [Исследование форков](fork-research.md) — сравнение трёх форков и перечень
