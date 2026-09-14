@@ -97,7 +97,13 @@ JAR через `--bundletool`; SHA-256 проверяется и для него
 
 AAB подписывается `jarsigner`, а не `apksigner`. Подпись остаётся отдельной
 стадией после сборки: signing/API credentials не попадают в Gradle или PR jobs.
-Существующий APK workflow не изменяется в S2.22a.
+S2.22b расширяет `Signed v2 release`: один запуск из `v2` создаёт APK и AAB
+с одинаковой версией; первый кандидат — alpha04 / `2000004`. Артефакт
+`hackers-keyboard-v2-<version>-<commit>` содержит оба файла и evidence подписи.
+Bundle проходит проверку до подписи, strict signature verification и сравнение
+payload после неё. Запуск workflow не публикует ничего в Play автоматически.
+Для первой загрузки нужно распаковать artifact ZIP и выбрать `.aab`, не APK и
+не ZIP. После загрузки сохранить фактические Console errors/acceptance в #81.
 [Bundletool и подпись AAB](https://developer.android.com/tools/bundletool),
 [начальная настройка API](https://developers.google.com/android-publisher/getting_started),
 [границы Edits API](https://developers.google.com/android-publisher/edits).
