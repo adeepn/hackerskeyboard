@@ -60,5 +60,8 @@ for apk in "$@"; do
     exit 1
   fi
 
+  apkanalyzer manifest print "${apk}" \
+    | python3 "$(dirname "$0")/verify_package_visibility.py" --stdin
+
   echo "Verified ${expected_application_id} ${expected_version_name} (${expected_version_code}) in ${apk}"
 done

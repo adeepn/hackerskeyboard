@@ -17,6 +17,8 @@ import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
 
+from verify_package_visibility import verify_queries
+
 ROOT = Path(__file__).resolve().parents[1]
 # Official google/bundletool release asset and GitHub asset digest, 2026-09-14.
 BUNDLETOOL_VERSION = "1.18.3"
@@ -81,6 +83,7 @@ def verify_manifest(xml: str, expected: dict[str, str]) -> None:
     manifest = ET.fromstring(xml)
     if manifest.tag != "manifest" or manifest.get("package") != expected["package"]:
         raise ValueError("Unexpected bundle application ID")
+    verify_queries(manifest)
     for field in ("versionCode", "versionName"):
         if manifest.get(ANDROID + field) != expected[field]:
             raise ValueError(f"Bundle {field} differs from gradle.properties")

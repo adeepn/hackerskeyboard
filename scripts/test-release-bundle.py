@@ -27,6 +27,10 @@ class ReleaseBundleTest(unittest.TestCase):
         package="com.baodeep.hackerskeyboard" android:versionCode="2000004"
         android:versionName="2.0.0-alpha04">
         <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="26"/>
+        <queries>
+            <intent><action android:name="org.pocketworkstation.DICT"/></intent>
+            <intent><action android:name="com.menny.android.anysoftkeyboard.DICTIONARY"/></intent>
+        </queries>
         <application android:debuggable="false"/>
     </manifest>'''
 
@@ -46,6 +50,13 @@ class ReleaseBundleTest(unittest.TestCase):
         for original, replacement in mutations:
             with self.subTest(original=original), self.assertRaises(ValueError):
                 MODULE.verify_manifest(self.manifest.replace(original, replacement), self.expected)
+
+    def test_wrong_dictionary_visibility_rejected(self):
+        with self.assertRaisesRegex(ValueError, "Dictionary queries"):
+            MODULE.verify_manifest(self.manifest.replace("org.pocketworkstation.DICT", "wrong.DICT"), self.expected)
+        broad_permission = '<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>'
+        with self.assertRaisesRegex(ValueError, "QUERY_ALL_PACKAGES"):
+            MODULE.verify_manifest(self.manifest.replace("</manifest>", broad_permission + "</manifest>"), self.expected)
 
     def make_bundle(self, path, missing=None, corrupt_elf=False, extra_abi=False):
         with zipfile.ZipFile(path, "w") as bundle:
