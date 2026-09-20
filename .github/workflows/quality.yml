@@ -88,6 +88,11 @@ jobs:
       - name: Verify resolved AndroidX dependencies
         run: scripts/verify-resolved-androidx.sh
 
+      - name: Run JVM unit tests through prek
+        uses: j178/prek-action@v2
+        with:
+          extra-args: --hook-stage manual android-unit
+
       - name: Assemble debug and unsigned release APKs
         run: ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon --stacktrace
 

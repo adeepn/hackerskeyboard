@@ -5,7 +5,7 @@
 | Компонент | Версия | Состояние |
 | --- | --- | --- |
 | JDK | 21 | зафиксирован в `.java-version` |
-| Gradle | 9.6.1 | зафиксирован wrapper и SHA-256 |
+| Gradle | 9.7.1 | зафиксирован wrapper и SHA-256 |
 | Android Gradle Plugin | 9.3.1 | зафиксирован в `gradle.properties` |
 | Android NDK | 29.0.14206865 (r29) | зафиксирован в `gradle.properties` |
 | CMake | 3.22.1 | зафиксирован в `gradle.properties` |
@@ -13,11 +13,13 @@
 | compile SDK | 37 | поднят в S2.02 для AndroidX Core 1.19.0 |
 
 AGP 9.3.1 требует Gradle 9.5.0 или новее, минимум JDK 17 и поддерживает API 37.
-Проект пока фиксирует проверенный Gradle 9.6.1. Стабильный
+Проект фиксирует
 [Gradle 9.7.1](https://docs.gradle.org/9.7.1/release-notes.html) выпущен
-19 августа 2026 года; его обновление выполняется отдельным toolchain PR после
-проверки wrapper checksum и полной AGP/SDK/NDK matrix. До этого lint-подсказка
-остаётся в существующей точечной baseline-категории. Проект фиксирует JDK 21
+19 августа 2026 года. Обновление с 9.6.1 выполняется в PR #52 вместе с JUnit
+4.13.2; checksums wrapper JAR и дистрибутива сверены с официальными.
+JVM tests теперь явно запускаются через одинаковый manual prek gate локально
+и в Android build CI: `prek run --all-files --hook-stage manual android-unit`.
+Нужны проектный JDK и Android SDK. Проект фиксирует JDK 21
 LTS: lint из AGP 9.3.1 использует
 `List.removeLast()` в `BidirectionalTextDetector`, из-за чего анализ падает на
 JDK 17 до создания отчёта. JDK 21 позволяет оставить security detector
