@@ -7,10 +7,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import android.app.Instrumentation;
+import android.Manifest;
 import android.content.Context;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.SystemClock;
 
 import androidx.core.content.ContextCompat;
@@ -36,8 +39,18 @@ public class NotificationLifecycleTest {
     }
 
     private static class TestIme extends LatinIME {
+        boolean permissionDenied;
+
         TestIme(Context context) {
             attachBaseContext(context);
+        }
+
+        @Override
+        public int checkPermission(String permission, int pid, int uid) {
+            if (permissionDenied && Manifest.permission.POST_NOTIFICATIONS.equals(permission)) {
+                return PackageManager.PERMISSION_DENIED;
+            }
+            return super.checkPermission(permission, pid, uid);
         }
     }
 
@@ -82,7 +95,7 @@ public class NotificationLifecycleTest {
     }
 
     @Test
-    public void androidBlockRemovesReceiverAndGrantAllowsEnableAgain() throws Exception {
+    public void notificationBlockRemovesReceiverAndAccessRecoveryAllowsEnableAgain() throws Exception {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         Method setNotification = LatinIME.class.getDeclaredMethod("setNotification", boolean.class);
         setNotification.setAccessible(true);
@@ -92,14 +105,24 @@ public class NotificationLifecycleTest {
         instrumentation.runOnMainSync(() -> ime[0] = new TestIme(instrumentation.getTargetContext()));
         try {
             invokeAndCheck(instrumentation, setNotification, receiver, ime[0], true, true);
-            NotificationTestSupport.setAppAllowed(false);
+            setAccess(instrumentation, ime[0], false);
             invokeAndCheck(instrumentation, setNotification, receiver, ime[0], true, false);
             invokeAndCheck(instrumentation, setNotification, receiver, ime[0], true, false);
-            NotificationTestSupport.setAppAllowed(true);
+            setAccess(instrumentation, ime[0], true);
             invokeAndCheck(instrumentation, setNotification, receiver, ime[0], true, true);
         } finally {
             invokeAndCheck(instrumentation, setNotification, receiver, ime[0], false, false);
-            NotificationTestSupport.setAppAllowed(true);
+            setAccess(instrumentation, ime[0], true);
+        }
+    }
+
+    private static void setAccess(Instrumentation instrumentation, TestIme ime, boolean allowed) throws Exception {
+        if (Build.VERSION.SDK_INT >= 33) {
+            // Real revoke kills the instrumented app. Inject only the permission
+            // check result; registration/post/cancel still use the real service path.
+            instrumentation.runOnMainSync(() -> ime.permissionDenied = !allowed);
+        } else {
+            NotificationTestSupport.setLegacyAppAllowed(allowed);
         }
     }
 

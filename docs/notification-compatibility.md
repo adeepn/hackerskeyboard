@@ -134,17 +134,24 @@ Manifest объявляет `POST_NOTIFICATIONS` только ради опци�
 
 `NotificationPermissionPolicyTest` — JVM matrix device/target API, permission,
 app-wide и channel block. Device tests на API 24/37 проверяют manifest и settings
-intent, synthetic runtime denial через ContextWrapper, реальный app-op deny →
-allow, отсутствие SHOW receiver при запрете, повторное enable после разрешения,
-blocked summary и сохранение checkbox при `Activity.recreate()`, восстановление
-одного rationale DialogFragment и доставку REFRESH, игнорирующую extras.
+intent, synthetic runtime denial через ContextWrapper/переопределённую проверку
+service, отсутствие SHOW receiver при запрете, повторное enable после разрешения,
+сохранение checkbox при `Activity.recreate()`, восстановление одного rationale
+DialogFragment и доставку REFRESH, игнорирующую extras. На API 24 дополнительно
+используется реальный app-op deny → allow и проверяется blocked summary. На
+API 37 UI/recreation проверяется с реальным grant; настоящий blocked UI после
+revoke остаётся manual/external-process acceptance. На этом API старый app-op
+POST_NOTIFICATION не меняет `areNotificationsEnabled()` — это подтверждено CI;
+нельзя выдавать его изменение за runtime denial. Revoke убивает instrumented
+process, поэтому in-process service harness подменяет только permission check,
+но выполняет настоящие register/post/cancel, а не mock всего уведомления.
 Rationale показывается тестом напрямую: настоящий OS runtime permission dialog
 и выбор ветки rationale под target >=33 проверяются на target 33 checkpoint
 отдельно, текущий APK всё ещё target 26.
 
 Instrumentation выполняется **только на disposable test installation**: fixture
-выдаёт POST_NOTIFICATIONS test target на API 33+ и временно меняет его app-op
-POST_NOTIFICATION. В finally app-op возвращается в allow, preference восстанавливается;
+выдаёт POST_NOTIFICATIONS test target на API 33+ и временно меняет app-op
+POST_NOTIFICATION только на API <33. В finally app-op возвращается в allow, preference восстанавливается;
 сам runtime grant сохраняется до удаления тестового APK. Это не revoke/grant
 реального пользовательского приложения и не доказательство прохождения OS dialog.
 Полный InputConnection typing test при denial и SystemUI taps остаётся ручным.

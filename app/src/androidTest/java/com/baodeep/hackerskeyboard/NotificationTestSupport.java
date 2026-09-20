@@ -14,7 +14,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import java.io.IOException;
 
-/** Only for disposable test installations: changes this test target's notification app-op. */
+/** Disposable test installs only. Modern permission and legacy app-op are distinct. */
 final class NotificationTestSupport {
     private NotificationTestSupport() { }
 
@@ -23,11 +23,17 @@ final class NotificationTestSupport {
         if (Build.VERSION.SDK_INT >= 33) {
             instrumentation.getUiAutomation().grantRuntimePermission(
                     instrumentation.getTargetContext().getPackageName(), Manifest.permission.POST_NOTIFICATIONS);
+            assertEquals(true, NotificationManagerCompat.from(instrumentation.getTargetContext())
+                    .areNotificationsEnabled());
+            return;
         }
-        setAppAllowed(true);
+        setLegacyAppAllowed(true);
     }
 
-    static void setAppAllowed(boolean allowed) throws IOException {
+    static void setLegacyAppAllowed(boolean allowed) throws IOException {
+        if (Build.VERSION.SDK_INT >= 33) {
+            throw new IllegalStateException("Legacy app-op is not a modern permission denial fixture");
+        }
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         String packageName = instrumentation.getTargetContext().getPackageName();
         assertEquals("com.baodeep.hackerskeyboard", packageName);

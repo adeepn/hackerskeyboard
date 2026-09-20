@@ -59,15 +59,19 @@ public class NotificationAccessTest {
     }
 
     @Test
-    public void blockedPreferenceSurvivesRecreationAndNeverAutoOpensSettings() throws Exception {
+    public void notificationPreferenceAndRationaleSurviveRecreationWithoutAutoOpeningSettings() throws Exception {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         Context context = instrumentation.getTargetContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String key = LatinIME.PREF_KEYBOARD_NOTIFICATION;
         boolean existed = prefs.contains(key);
         boolean previous = prefs.getBoolean(key, false);
+        boolean legacyBlock = Build.VERSION.SDK_INT < 33;
         NotificationTestSupport.allow();
-        NotificationTestSupport.setAppAllowed(false);
+        // API33+ areNotificationsEnabled follows runtime permission, not this
+        // legacy app-op. Modern UI runs with a real grant; denial is covered at
+        // the Context permission boundary, not misrepresented as a real revoke.
+        if (legacyBlock) NotificationTestSupport.setLegacyAppAllowed(false);
         prefs.edit().putBoolean(key, true).commit();
         LatinIMESettings[] activity = new LatinIMESettings[1];
         Instrumentation.ActivityMonitor unexpectedSettings = instrumentation.addMonitor(
@@ -78,7 +82,7 @@ public class NotificationAccessTest {
                     // skips action comparison for null-action explicit intents.
                     new Intent(context, LatinIMESettings.class).setAction(Intent.ACTION_MAIN)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            assertUi(instrumentation, activity[0], true);
+            assertUi(instrumentation, activity[0], legacyBlock);
             // Exercise our rationale restoration without faking the platform's
             // target>=33 prompt/rationale decision on this legacy-target APK.
             instrumentation.runOnMainSync(() -> {
@@ -91,7 +95,7 @@ public class NotificationAccessTest {
             instrumentation.runOnMainSync(previousActivity::recreate);
             activity[0] = ApplicationSmokeTest.waitForResumedActivity(
                     instrumentation, LatinIMESettings.class, previousActivity);
-            assertUi(instrumentation, activity[0], true);
+            assertUi(instrumentation, activity[0], legacyBlock);
             instrumentation.runOnMainSync(() -> {
                 androidx.fragment.app.Fragment fragment = activity[0].getSupportFragmentManager()
                         .findFragmentByTag(LatinIMESettings.FRAGMENT_TAG);
@@ -106,7 +110,7 @@ public class NotificationAccessTest {
             assertTrue(prefs.getBoolean(key, false));
             assertEquals(0, unexpectedSettings.getHits());
 
-            NotificationTestSupport.setAppAllowed(true);
+            if (legacyBlock) NotificationTestSupport.setLegacyAppAllowed(true);
             // The same refresh used after the permission callback and onResume.
             instrumentation.runOnMainSync(() -> {
                 try {
@@ -124,7 +128,7 @@ public class NotificationAccessTest {
         } finally {
             instrumentation.runOnMainSync(() -> { if (activity[0] != null) activity[0].finish(); });
             instrumentation.removeMonitor(unexpectedSettings);
-            NotificationTestSupport.setAppAllowed(true);
+            if (legacyBlock) NotificationTestSupport.setLegacyAppAllowed(true);
             SharedPreferences.Editor editor = prefs.edit();
             if (existed) editor.putBoolean(key, previous);
             else editor.remove(key);
