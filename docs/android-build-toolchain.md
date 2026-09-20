@@ -14,7 +14,7 @@
 
 AGP 9.3.1 требует Gradle 9.5.0 или новее, минимум JDK 17 и поддерживает API 37.
 Проект фиксирует
-[Gradle 9.7.1](https://docs.gradle.org/9.7.1/release-notes.html) выпущен
+[Gradle 9.7.1](https://docs.gradle.org/9.7.1/release-notes.html), выпущенный
 19 августа 2026 года. Обновление с 9.6.1 выполняется в PR #52 вместе с JUnit
 4.13.2; checksums wrapper JAR и дистрибутива сверены с официальными.
 JVM tests теперь явно запускаются через одинаковый manual prek gate локально
