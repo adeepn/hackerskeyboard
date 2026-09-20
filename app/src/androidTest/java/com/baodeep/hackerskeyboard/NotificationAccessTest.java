@@ -87,15 +87,10 @@ public class NotificationAccessTest {
                 new LatinIMESettings.NotificationRationaleFragment().showNow(
                         fragment.getChildFragmentManager(), "notification_rationale");
             });
-            Instrumentation.ActivityMonitor recreation = instrumentation.addMonitor(
-                    LatinIMESettings.class.getName(), null, false);
-            try {
-                instrumentation.runOnMainSync(() -> activity[0].recreate());
-                activity[0] = (LatinIMESettings) recreation.waitForActivityWithTimeout(5000);
-                assertNotNull(activity[0]);
-            } finally {
-                instrumentation.removeMonitor(recreation);
-            }
+            LatinIMESettings previousActivity = activity[0];
+            instrumentation.runOnMainSync(previousActivity::recreate);
+            activity[0] = ApplicationSmokeTest.waitForResumedActivity(
+                    instrumentation, LatinIMESettings.class, previousActivity);
             assertUi(instrumentation, activity[0], true);
             instrumentation.runOnMainSync(() -> {
                 androidx.fragment.app.Fragment fragment = activity[0].getSupportFragmentManager()
@@ -139,9 +134,9 @@ public class NotificationAccessTest {
 
     private static void assertUi(Instrumentation instrumentation, LatinIMESettings activity, boolean blocked) {
         instrumentation.waitForIdleSync();
+        LatinIMESettings.MainPreferenceFragment fragment =
+                ApplicationSmokeTest.waitForMainPreferenceFragment(instrumentation, activity);
         instrumentation.runOnMainSync(() -> {
-            LatinIMESettings.MainPreferenceFragment fragment = (LatinIMESettings.MainPreferenceFragment)
-                    activity.getSupportFragmentManager().findFragmentByTag(LatinIMESettings.FRAGMENT_TAG);
             CheckBoxPreference notification = fragment.findPreference(LatinIME.PREF_KEYBOARD_NOTIFICATION);
             assertTrue(notification.isChecked());
             assertEquals(activity.getString(blocked ? R.string.notification_blocked

@@ -576,7 +576,7 @@ public class ApplicationSmokeTest {
         return fragment;
     }
 
-    private static LatinIMESettings.MainPreferenceFragment waitForMainPreferenceFragment(
+    static LatinIMESettings.MainPreferenceFragment waitForMainPreferenceFragment(
             Instrumentation instrumentation, LatinIMESettings activity) {
         return waitForPreferenceFragment(
                 instrumentation,
@@ -869,7 +869,7 @@ public class ApplicationSmokeTest {
         return result[0];
     }
 
-    private static <T extends Activity> T waitForResumedActivity(
+    static <T extends Activity> T waitForResumedActivity(
             Instrumentation instrumentation, final Class<T> activityClass,
             final Activity previousActivity) {
         final Activity[] result = new Activity[1];
