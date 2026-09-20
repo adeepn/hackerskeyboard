@@ -69,6 +69,7 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import java.io.FileDescriptor;
@@ -415,7 +416,9 @@ public class LatinIME extends InputMethodService implements
         pFilter.addAction("android.intent.action.PACKAGE_ADDED");
         pFilter.addAction("android.intent.action.PACKAGE_REPLACED");
         pFilter.addAction("android.intent.action.PACKAGE_REMOVED");
-        registerReceiver(mPluginManager, pFilter);
+        // These protected package broadcasts originate from the system UID.
+        ContextCompat.registerReceiver(this, mPluginManager, pFilter,
+                ContextCompat.RECEIVER_NOT_EXPORTED);
 
         LatinIMEUtil.GCUtils.getInstance().reset();
         boolean tryGC = true;
@@ -434,7 +437,8 @@ public class LatinIME extends InputMethodService implements
         // register to receive ringer mode changes for silent mode
         IntentFilter filter = new IntentFilter(
                 AudioManager.RINGER_MODE_CHANGED_ACTION);
-        registerReceiver(mReceiver, filter);
+        ContextCompat.registerReceiver(this, mReceiver, filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED);
         prefs.registerOnSharedPreferenceChangeListener(this);
         setNotification(mKeyboardNotification);
     }
@@ -478,9 +482,8 @@ public class LatinIME extends InputMethodService implements
         }
     }
 
-    // S2.05/S2.08 replace the legacy broadcast flow and add notification
-    // permission UX. Keep this migration behavior-neutral until those tests exist.
-    @SuppressLint({"LaunchActivityFromNotification", "MissingPermission"})
+    // S2.08 adds notification permission UX before the targetSdk 33 checkpoint.
+    @SuppressLint("MissingPermission")
     private void setNotification(boolean visible) {
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
@@ -493,17 +496,10 @@ public class LatinIME extends InputMethodService implements
 
             // TODO: clean this up?
             mNotificationReceiver = new NotificationReceiver(this);
-            final IntentFilter pFilter = new IntentFilter(NotificationReceiver.ACTION_SHOW);
-            pFilter.addAction(NotificationReceiver.ACTION_SETTINGS);
-            registerReceiver(mNotificationReceiver, pFilter);
-            
-            Intent notificationIntent = new Intent(NotificationReceiver.ACTION_SHOW);
-            PendingIntent contentIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, notificationIntent, 0);
-            //PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+            NotificationActions.registerShowReceiver(this, mNotificationReceiver);
 
-            Intent configIntent = new Intent(NotificationReceiver.ACTION_SETTINGS);
-            PendingIntent configPendingIntent =
-                    PendingIntent.getBroadcast(getApplicationContext(), 2, configIntent, 0);
+            PendingIntent contentIntent = NotificationActions.showKeyboard(this);
+            PendingIntent configPendingIntent = NotificationActions.openSettings(this);
 
             String title = "Show Hacker's Keyboard v2";
             String body = "Select this to open the keyboard. Disable in settings.";

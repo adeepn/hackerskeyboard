@@ -20,6 +20,8 @@
   baseline и классификация накопленного долга.
 - [Manifest components](manifest-components.md) — минимальная политика
   `android:exported`, IME permission и автоматические regression checks.
+- [Notification compatibility](notification-compatibility.md) — immutable
+  intents, прямое открытие настроек и private runtime receivers.
 - [Миграция на AndroidX](androidx-migration.md) — инвентаризация Support
   Library, границы S2.02/S2.03 и обязательные regression checks.
 - [Контракт хранения настроек](settings-contract.md) — зафиксированные keys,

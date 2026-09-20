@@ -256,17 +256,6 @@
     </issue>
 
     <issue
-        id="UnspecifiedRegisterReceiverFlag"
-        message="`mNotificationReceiver` is missing `RECEIVER_EXPORTED` or `RECEIVER_NOT_EXPORTED` flag for unprotected broadcasts registered for com.baodeep.hackerskeyboard.SHOW, com.baodeep.hackerskeyboard.SETTINGS"
-        errorLine1="            registerReceiver(mNotificationReceiver, pFilter);"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/baodeep/hackerskeyboard/LatinIME.java"
-            line="492"
-            column="13"/>
-    </issue>
-
-    <issue
         id="AndroidGradlePluginVersion"
         message="A newer version of Gradle than 9.6.1 is available: 9.7.1"
         errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-9.6.1-bin.zip"
@@ -3025,28 +3014,6 @@
             file="src/main/res/values-ru/strings.xml"
             line="319"
             column="42"/>
-    </issue>
-
-    <issue
-        id="UnspecifiedImmutableFlag"
-        message="Missing `PendingIntent` mutability flag"
-        errorLine1="            PendingIntent contentIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, notificationIntent, 0);"
-        errorLine2="                                                                                                                     ~">
-        <location
-            file="src/main/java/com/baodeep/hackerskeyboard/LatinIME.java"
-            line="495"
-            column="118"/>
-    </issue>
-
-    <issue
-        id="UnspecifiedImmutableFlag"
-        message="Missing `PendingIntent` mutability flag"
-        errorLine1="                    PendingIntent.getBroadcast(getApplicationContext(), 2, configIntent, 0);"
-        errorLine2="                                                                                         ~">
-        <location
-            file="src/main/java/com/baodeep/hackerskeyboard/LatinIME.java"
-            line="500"
-            column="90"/>
     </issue>
 
     <issue

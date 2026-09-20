@@ -91,8 +91,9 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   минимальная политика `android:exported`: доступны извне только защищённый
   `BIND_INPUT_METHOD` IME service и launcher; manifest gate и device smoke
   фиксируют весь component contract;
-- S2.05 — explicit intents и PendingIntent mutability;
-- S2.06 — runtime receiver export policy;
+- S2.05 / S2.06 ([#85](https://github.com/adeepn/hackerskeyboard/issues/85)) —
+  notification intents и runtime receiver export policy: immutable PendingIntent,
+  прямое открытие settings, package-scoped private SHOW и системные listeners;
 - S2.07 — узкие `<queries>` для dictionary packs;
 - S2.08 — notification permission и notification UX;
 - S2.09 — заменить legacy voice JAR;
@@ -121,6 +122,12 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
 
 Target SDK steps выполняются последовательно. Независимые API migrations можно
 распараллеливать при непересекающихся файлах.
+
+20 сентября Play подтвердил blocker #81: target 26 не допускается, требуется
+36+. Приоритет — #85, затем queries/notification permission и остальные
+необходимые compatibility fixes, checkpoints S2.13–S2.18, проверка 16 KB, новый
+signed AAB с увеличенным versionCode и повторная Console validation. S2.22c
+не считается готовой доставкой до первого принятого выпуска.
 
 ## Milestone: V2 / Stage 3 — Regression Safety
 
