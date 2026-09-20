@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 
 /** Notification entry points; no activity launch through a broadcast trampoline. */
 final class NotificationActions {
+    static final String ACTION_REFRESH = "com.baodeep.hackerskeyboard.REFRESH_NOTIFICATION";
     private NotificationActions() {
     }
 
@@ -22,6 +23,15 @@ final class NotificationActions {
 
     static Intent settingsIntent(Context context) {
         return new Intent(context, LatinIMESettings.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    static Intent refreshIntent(Context context) {
+        return new Intent(ACTION_REFRESH).setPackage(context.getPackageName());
+    }
+
+    static void refresh(Context context) {
+        // No desired-state extras: the private receiver reads the persisted preference.
+        context.sendBroadcast(refreshIntent(context));
     }
 
     static PendingIntent showKeyboard(Context context) {

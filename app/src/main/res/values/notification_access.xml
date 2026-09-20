@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="notification_access_title">Notification access</string>
+    <string name="notification_access_explanation">Notifications let you open the keyboard and its settings from the notification shade. Typing works without this permission. You can allow notifications in Android settings.</string>
+    <string name="notification_blocked">Enabled here, but blocked by Android. Use Notification access below to allow it. Typing is unaffected.</string>
+    <string name="notification_permission_allow">Allow notifications</string>
+    <string name="notification_system_settings">Android settings</string>
+    <string name="notification_settings_unavailable">Open this app in Android settings to allow notifications.</string>
+</resources>

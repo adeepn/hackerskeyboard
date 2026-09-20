@@ -8,12 +8,15 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "app/src/main/java/com/baodeep/hackerskeyboard"
-FILES = ("LatinIME.java", "NotificationReceiver.java", "NotificationActions.java")
+FILES = ("LatinIME.java", "NotificationReceiver.java", "NotificationActions.java",
+         "NotificationAccess.java", "LatinIMESettings.java")
 
 
 def read_sources():
-    return {name: (SOURCE / name).read_text() if (SOURCE / name).exists() else ""
-            for name in FILES}
+    sources = {name: (SOURCE / name).read_text() if (SOURCE / name).exists() else ""
+               for name in FILES}
+    sources["AndroidManifest.xml"] = (ROOT / "app/src/main/AndroidManifest.xml").read_text()
+    return sources
 
 
 def verify(sources):
@@ -22,6 +25,8 @@ def verify(sources):
     ime = sources["LatinIME.java"]
     receiver = sources["NotificationReceiver.java"]
     actions = sources["NotificationActions.java"]
+    access = sources["NotificationAccess.java"]
+    settings = sources["LatinIMESettings.java"]
     errors = []
 
     def require(pattern, text, label):
@@ -47,6 +52,24 @@ def verify(sources):
             "idempotent disable and unconditional stale notification cancellation")
     require(r"void onDestroy\(\)\s*\{\s*setNotification\(false\);", ime,
             "cancel notification before IME teardown")
+    require(r'uses-permission android:name="android.permission.POST_NOTIFICATIONS"',
+            sources["AndroidManifest.xml"], "declared notification permission")
+    require(r"visible = visible && NotificationAccess.canPost\(this\);", ime, "guard notification posting")
+    require(r"catch \(SecurityException permissionRevoked\)\s*\{\s*setNotification\(false\);",
+            ime, "cleanup after permission revocation race")
+    require(r"ContextCompat.checkSelfPermission\(context,\s*Manifest.permission.POST_NOTIFICATIONS\)",
+            access, "check runtime notification permission")
+    require(r"areNotificationsEnabled\(\)", access, "check app notification block")
+    require(r"channel.getImportance\(\) != NotificationManager.IMPORTANCE_NONE", access, "check channel block")
+    require(r"new Intent\(ACTION_REFRESH\).setPackage\(context.getPackageName\(\)\)",
+            actions, "package-scoped notification refresh")
+    require(r"filter.addAction\(NotificationActions.ACTION_REFRESH\)", ime, "live private refresh receiver")
+    require(r"Build.VERSION.SDK_INT >= 33 && requireContext\(\).getApplicationInfo\(\).targetSdkVersion >= 33",
+            settings, "runtime prompt gated by device and target SDK")
+    require(r"registerForActivityResult\(new ActivityResultContracts.RequestPermission\(\),\s*"
+            r"granted -> refreshNotificationState\(\)\)", settings, "permission result refreshes state only")
+    if "requestPermissions(" in ime or ".launch(Manifest.permission.POST_NOTIFICATIONS)" in ime:
+        errors.append("permission prompt from IME service")
     for receiver_name, filter_name in (("mPluginManager", "pFilter"), ("mReceiver", "filter")):
         require(rf"ContextCompat.registerReceiver\(this, {receiver_name}, {filter_name},\s*"
                 r"ContextCompat.RECEIVER_NOT_EXPORTED\)", ime, f"system receiver {receiver_name}")

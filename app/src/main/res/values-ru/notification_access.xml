@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="notification_access_title">Доступ к уведомлениям</string>
+    <string name="notification_access_explanation">Уведомление позволяет открыть клавиатуру и её настройки из шторки. Ввод работает и без этого разрешения. Разрешить уведомления можно в настройках Android.</string>
+    <string name="notification_blocked">Включено здесь, но заблокировано Android. Разрешите показ через «Доступ к уведомлениям» ниже. Ввод работает без изменений.</string>
+    <string name="notification_permission_allow">Разрешить уведомления</string>
+    <string name="notification_system_settings">Настройки Android</string>
+    <string name="notification_settings_unavailable">Откройте настройки этого приложения в Android и разрешите уведомления.</string>
+</resources>

@@ -87,11 +87,79 @@ guard дополнительно фиксирует вызов cleanup из `onD
 настройка включена. Повторная доставка одного и того же preference update не
 должна его скрывать. Проверить на API 24 и OnePlus 13 / Android 16.
 
-S2.08b остаётся открытым: manifest permission, явное действие в settings,
-grant/denial/dismissal, возврат из системных настроек и восстановление после
-recreation. Он должен учитывать различие target <33/≥33 по
-[официальному контракту Android](https://developer.android.com/develop/ui/views/notifications/notification-permission).
-Эта первая часть сама по себе не исправляет permission denial или SHOW без editor.
+S2.08a выполнен в PR #90. Эта первая часть сама по себе не исправляет permission
+denial или SHOW без editor.
+
+## S2.08b — optional notification permission
+
+Manifest объявляет `POST_NOTIFICATIONS` только ради опционального уведомления.
+`keyboard_notification` сохраняет прежние key, boolean type и default: это
+желание пользователя, а не копия Android permission. Отказ не сбрасывает его,
+не отключает IME и не меняет input preferences.
+
+- `NotificationAccess` проверяет runtime permission на API 33+, app-wide block
+  и importance существующего канала `PCKeyboard`. Пока нет разрешения, service
+  не создаёт канал и не регистрирует SHOW receiver; существующий notification
+  отменяется. Между проверкой и `notify` возможен revoke: узкий catch очищает
+  notification/receiver, не прерывая IME.
+- Включение checkbox — единственная автоматическая точка запроса. На устройстве
+  и target >=33 используется Activity Result permission contract; rationale
+  после предыдущего отказа — восстанавливаемый child DialogFragment. Grant,
+  denial и dismissal лишь обновляют отображение/notification state, не запускают
+  повторный запрос. На target <33 используется системная страница уведомлений:
+  приложение ещё не управляет временем OS dialog.
+- При блокировке checkbox остаётся включённым, summary прямо сообщает о запрете
+  Android. Дополнительная неперсистентная action «Доступ к уведомлениям» ведёт в
+  системные настройки, в том числе после permanent denial или block канала.
+  На API 24–25 открывается app details; при отсутствии notification settings
+  activity используется тот же fallback, затем понятное сообщение.
+- Возврат в settings (`onResume`) и permission callback обновляют summary и
+  отправляют package-scoped REFRESH_NOTIFICATION без extras. Уже существующий
+  private runtime receiver IME читает сохранённое желание, не доверяя данным
+  broadcast. Новых exported components и static service references нет.
+- IME перепроверяет доступ при начале input view. Ни этот путь, ни создание
+  service, ни простое открытие settings не вызывают permission launcher.
+
+Точечный `MissingPermission` suppression у `setNotification` сохранён: lint не
+прослеживает объединённую проверку helper. Проверки permission/app/channel,
+границы SDK и cleanup защищены source/mutation tests. Глобальных suppressions
+или новых baseline entries нет.
+
+### Проверки и границы
+
+`NotificationPermissionPolicyTest` — JVM matrix device/target API, permission,
+app-wide и channel block. Device tests на API 24/37 проверяют manifest и settings
+intent, synthetic runtime denial через ContextWrapper, реальный app-op deny →
+allow, отсутствие SHOW receiver при запрете, повторное enable после разрешения,
+blocked summary и сохранение checkbox при `Activity.recreate()`. Rationale и
+настоящий runtime permission dialog под target >=33 проверяются на target 33
+checkpoint отдельно: текущий APK всё ещё target 26.
+
+Instrumentation выполняется **только на disposable test installation**: fixture
+выдаёт POST_NOTIFICATIONS test target на API 33+ и временно меняет его app-op
+POST_NOTIFICATION. В finally app-op возвращается в allow, preference восстанавливается;
+сам runtime grant сохраняется до удаления тестового APK. Это не revoke/grant
+реального пользовательского приложения и не доказательство прохождения OS dialog.
+Полный InputConnection typing test при denial и SystemUI taps остаётся ручным.
+
+Перед target 33 checkpoint обязательно выполнить на API 33+ и OnePlus/Android 16:
+
+1. Чистая установка, настройка выключена: ввод работает, permission dialog не
+   появляется при старте IME или открытии settings.
+2. Включить уведомление → Allow: оно появляется, SHOW/settings работают.
+3. Deny или закрыть dialog: ввод продолжает работать; preference сохраняется,
+   виден blocked summary; возврат/recreation не повторяет prompt.
+4. Повторное включение после отказа: rationale, Cancel, rotation и Allow;
+   не более одного dialog, без автоматического retry.
+5. Permanent denial, app-wide block и отдельно block `PCKeyboard`: action
+   открывает системные настройки; после разрешения/возврата notification
+   восстанавливается. Если checkbox выключен, он не появляется.
+6. Снять разрешение, пока IME жив: следующая input session не падает и не
+   оставляет SHOW receiver. Проверить обычный ввод и terminal modifiers.
+
+Основание:
+[Android notification permission](https://developer.android.com/develop/ui/views/notifications/notification-permission),
+[runtime permission flow](https://developer.android.com/training/permissions/requesting).
 
 ## Источники
 

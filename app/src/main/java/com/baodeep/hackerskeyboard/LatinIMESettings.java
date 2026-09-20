@@ -20,19 +20,27 @@ package com.baodeep.hackerskeyboard;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.backup.BackupManager;
 import android.content.DialogInterface;
+import android.content.ActivityNotFoundException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Build;
 import android.text.AutoText;
 import android.text.InputType;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.CheckBoxPreference;
@@ -188,6 +196,11 @@ public class LatinIMESettings extends FragmentActivity
         private SharedPreferences mPreferences;
         private boolean mVoiceOn;
         private String mVoiceModeOff;
+        private CheckBoxPreference mNotificationPreference;
+        private Preference mNotificationAccess;
+        private final ActivityResultLauncher<String> mNotificationPermission =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                        granted -> refreshNotificationState());
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -213,6 +226,40 @@ public class LatinIMESettings extends FragmentActivity
                     });
 
             mPreferences = getPreferenceManager().getSharedPreferences();
+            mNotificationPreference = findPreference(LatinIME.PREF_KEYBOARD_NOTIFICATION);
+            // This is an action, not a new persisted preference or migration key.
+            mNotificationAccess = new Preference(requireContext());
+            mNotificationAccess.setPersistent(false);
+            mNotificationAccess.setTitle(R.string.notification_access_title);
+            mNotificationAccess.setSummary(R.string.notification_access_explanation);
+            mNotificationAccess.setOrder(mNotificationPreference.getOrder() + 1);
+            mNotificationAccess.setOnPreferenceClickListener(preference -> {
+                openNotificationSettings();
+                return true;
+            });
+            mNotificationPreference.getParent().addPreference(mNotificationAccess);
+            mNotificationPreference.setOnPreferenceChangeListener((preference, value) -> {
+                if (Boolean.TRUE.equals(value)) {
+                    switch (NotificationAccess.onEnable(requireContext())) {
+                        case REQUEST_PERMISSION:
+                            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                                if (getChildFragmentManager().findFragmentByTag("notification_rationale") == null) {
+                                    new NotificationRationaleFragment().show(
+                                            getChildFragmentManager(), "notification_rationale");
+                                }
+                            } else {
+                                requestNotificationPermission();
+                            }
+                            break;
+                        case OPEN_SETTINGS:
+                            openNotificationSettings();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return true; // Persist desired state even if Android denies permission.
+            });
             mVoiceModeOff = getString(R.string.voice_mode_off);
             mVoiceOn = !mPreferences.getString(VOICE_SETTINGS_KEY, mVoiceModeOff)
                     .equals(mVoiceModeOff);
@@ -259,6 +306,7 @@ public class LatinIMESettings extends FragmentActivity
 
             updateSummaries();
             updateVersionSummary();
+            refreshNotificationState();
         }
 
         @Override
@@ -275,6 +323,37 @@ public class LatinIMESettings extends FragmentActivity
                     .equals(mVoiceModeOff);
             updateVoiceModeSummary();
             updateSummaries();
+            if (LatinIME.PREF_KEYBOARD_NOTIFICATION.equals(key)) refreshNotificationState();
+        }
+
+        private void requestNotificationPermission() {
+            if (Build.VERSION.SDK_INT >= 33 && requireContext().getApplicationInfo().targetSdkVersion >= 33) {
+                mNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+
+        private void openNotificationSettings() {
+            try {
+                startActivity(NotificationAccess.settingsIntent(requireContext()));
+            } catch (ActivityNotFoundException unavailable) {
+                try {
+                    startActivity(NotificationAccess.appDetailsIntent(requireContext()));
+                } catch (ActivityNotFoundException noSettings) {
+                    Toast.makeText(requireContext(), R.string.notification_settings_unavailable,
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        private void refreshNotificationState() {
+            if (!isAdded() || mNotificationPreference == null) return;
+            boolean blocked = mPreferences.getBoolean(LatinIME.PREF_KEYBOARD_NOTIFICATION,
+                    getResources().getBoolean(R.bool.default_keyboard_notification))
+                    && !NotificationAccess.canPost(requireContext());
+            mNotificationPreference.setSummaryOn(blocked
+                    ? R.string.notification_blocked : R.string.summary_keyboard_notification_true);
+            mNotificationAccess.setVisible(blocked);
+            NotificationActions.refresh(requireContext());
         }
 
         private void updateSummaries() {
@@ -324,6 +403,21 @@ public class LatinIMESettings extends FragmentActivity
 
         private void disableVoiceMode() {
             mVoicePreference.setValue(mVoiceModeOff);
+        }
+    }
+
+    public static class NotificationRationaleFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.notification_access_title)
+                    .setMessage(R.string.notification_access_explanation)
+                    .setPositiveButton(R.string.notification_permission_allow, (dialog, which) ->
+                            ((MainPreferenceFragment) requireParentFragment()).requestNotificationPermission())
+                    .setNeutralButton(R.string.notification_system_settings, (dialog, which) ->
+                            ((MainPreferenceFragment) requireParentFragment()).openNotificationSettings())
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .create();
         }
     }
 }
