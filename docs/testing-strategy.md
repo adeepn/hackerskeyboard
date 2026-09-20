@@ -235,3 +235,10 @@ S2.05/S2.06 добавляет source/mutation guards и `NotificationActionsTes
 manifest Activity и игнорирование null/неизвестных actions. Они входят в
 существующие prek и API 24/API 37 CI jobs. Границы автоматизации и ручные случаи
 описаны в [notification-compatibility.md](notification-compatibility.md).
+
+S2.07 добавляет пять offline tests с visibility mutations и единый verifier для
+source manifest, собранных debug/release APK и release AAB. Device
+`PackageVisibilityTest` читает queries из установленного manifest на API 24/37.
+Он не доказывает discovery под фильтрацией, пока target остаётся 26; отдельный
+обязательный integration scenario для target >=30 и сторонних пакетов описан в
+[dictionary-visibility.md](dictionary-visibility.md).

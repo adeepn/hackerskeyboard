@@ -22,6 +22,8 @@
   `android:exported`, IME permission и автоматические regression checks.
 - [Notification compatibility](notification-compatibility.md) — immutable
   intents, прямое открытие настроек и private runtime receivers.
+- [Dictionary visibility](dictionary-visibility.md) — узкие package queries,
+  сохранение старых протоколов и проверки manifest в APK/AAB.
 - [Миграция на AndroidX](androidx-migration.md) — инвентаризация Support
   Library, границы S2.02/S2.03 и обязательные regression checks.
 - [Контракт хранения настроек](settings-contract.md) — зафиксированные keys,
