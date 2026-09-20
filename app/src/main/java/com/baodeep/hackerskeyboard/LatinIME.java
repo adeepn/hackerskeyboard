@@ -536,10 +536,14 @@ public class LatinIME extends InputMethodService implements
             // notificationId is a unique int for each notification that you must define
             notificationManager.notify(NOTIFICATION_ONGOING_ID, mBuilder.build());
 
-        } else if (mNotificationReceiver != null) {
+        } else if (!visible) {
+            // Repeated enable is a no-op. Always cancel on disable, including
+            // a stale notification left by an earlier IME process.
             mNotificationManager.cancel(NOTIFICATION_ONGOING_ID);
-            unregisterReceiver(mNotificationReceiver);
-            mNotificationReceiver = null;
+            if (mNotificationReceiver != null) {
+                unregisterReceiver(mNotificationReceiver);
+                mNotificationReceiver = null;
+            }
         }
     }
     
@@ -647,6 +651,7 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onDestroy() {
+        setNotification(false);
         if (mUserDictionary != null) {
             mUserDictionary.close();
         }
@@ -655,10 +660,6 @@ public class LatinIME extends InputMethodService implements
         //}
         unregisterReceiver(mReceiver);
         unregisterReceiver(mPluginManager);
-        if (mNotificationReceiver != null) {
-        	unregisterReceiver(mNotificationReceiver);
-            mNotificationReceiver = null;
-        }
         super.onDestroy();
     }
 

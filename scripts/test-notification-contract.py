@@ -28,6 +28,8 @@ class NotificationContractTest(unittest.TestCase):
             ("LatinIME.java", 'pFilter.addDataScheme("package");', ""),
             ("NotificationReceiver.java", "intent != null &&", ""),
             ("NotificationReceiver.java", "InputMethodManager.SHOW_FORCED", "0"),
+            ("LatinIME.java", "else if (!visible)", "else if (mNotificationReceiver != null)"),
+            ("LatinIME.java", "setNotification(false);", ""),
         )
         for name, before, after in mutations:
             with self.subTest(file=name, mutation=before):

@@ -41,6 +41,12 @@ def verify(sources):
             actions, "private SHOW receiver")
     require(r"NotificationActions.registerShowReceiver\(this, mNotificationReceiver\)",
             ime, "register private notification receiver")
+    require(r"else if \(!visible\)\s*\{\s*"
+            r"mNotificationManager.cancel\(NOTIFICATION_ONGOING_ID\);\s*"
+            r"if \(mNotificationReceiver != null\)", ime,
+            "idempotent disable and unconditional stale notification cancellation")
+    require(r"void onDestroy\(\)\s*\{\s*setNotification\(false\);", ime,
+            "cancel notification before IME teardown")
     for receiver_name, filter_name in (("mPluginManager", "pFilter"), ("mReceiver", "filter")):
         require(rf"ContextCompat.registerReceiver\(this, {receiver_name}, {filter_name},\s*"
                 r"ContextCompat.RECEIVER_NOT_EXPORTED\)", ime, f"system receiver {receiver_name}")
