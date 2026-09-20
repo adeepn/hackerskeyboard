@@ -128,7 +128,7 @@ Target SDK steps выполняются последовательно. Неза
 распараллеливать при непересекающихся файлах.
 
 20 сентября Play подтвердил blocker #81: target 26 не допускается, требуется
-36+. #85 завершена; приоритет — #87, затем notification permission и остальные
+36+. #85 и #87 завершены; приоритет — #89 (notification lifecycle/permission), затем остальные
 необходимые compatibility fixes, checkpoints S2.13–S2.18, проверка 16 KB, новый
 signed AAB с увеличенным versionCode и повторная Console validation. S2.22c
 не считается готовой доставкой до первого принятого выпуска.
