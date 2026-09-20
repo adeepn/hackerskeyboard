@@ -106,7 +106,7 @@ public class NotificationAccessTest {
                 assertNotNull(dialog);
                 assertEquals(1, fragment.getChildFragmentManager().getFragments().size());
                 assertTrue(dialog.requireDialog().isShowing());
-                dialog.dismissNow();
+                dialog.requireDialog().cancel();
             });
             assertTrue(prefs.getBoolean(key, false));
             assertEquals(0, unexpectedSettings.getHits());
