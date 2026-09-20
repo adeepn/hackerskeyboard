@@ -74,7 +74,10 @@ public class NotificationAccessTest {
                 new android.content.IntentFilter(NotificationAccess.settingsIntent(context).getAction()), null, true);
         try {
             activity[0] = (LatinIMESettings) instrumentation.startActivitySync(
-                    new Intent(context, LatinIMESettings.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    // Give the harness launch an action: IntentFilter matching
+                    // skips action comparison for null-action explicit intents.
+                    new Intent(context, LatinIMESettings.class).setAction(Intent.ACTION_MAIN)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             assertUi(instrumentation, activity[0], true);
             // Exercise our rationale restoration without faking the platform's
             // target>=33 prompt/rationale decision on this legacy-target APK.
