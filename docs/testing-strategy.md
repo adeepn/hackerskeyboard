@@ -242,3 +242,9 @@ source manifest, собранных debug/release APK и release AAB. Device
 Он не доказывает discovery под фильтрацией, пока target остаётся 26; отдельный
 обязательный integration scenario для target >=30 и сторонних пакетов описан в
 [dictionary-visibility.md](dictionary-visibility.md).
+
+S2.08a добавляет device regression test повторного enable/disable уведомления
+с настоящей регистрацией receiver. Это service-context harness, не полный IME
+lifecycle и не тест диалога разрешений. Source mutation guard защищает cleanup
+на `onDestroy`; границы и ручной сценарий описаны в
+[notification-compatibility.md](notification-compatibility.md).

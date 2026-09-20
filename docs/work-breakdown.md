@@ -95,9 +95,11 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   **готово, PR #86 смержен**: notification intents и runtime receiver export policy,
   immutable PendingIntent,
   прямое открытие settings, package-scoped private SHOW и системные listeners;
-- S2.07 ([#87](https://github.com/adeepn/hackerskeyboard/issues/87)) — узкие
+- S2.07 — выполнено в [PR #88](https://github.com/adeepn/hackerskeyboard/pull/88): узкие
   `<queries>` для обоих dictionary protocols, source/packaged manifest guards;
-- S2.08 — notification permission и notification UX;
+- S2.08 ([#89](https://github.com/adeepn/hackerskeyboard/issues/89)) — notification
+  permission и notification UX: S2.08a — идемпотентный lifecycle уведомления;
+  S2.08b — settings permission flow, guard при отказе и refresh после grant;
 - S2.09 — заменить legacy voice JAR;
 - S2.10 — PackageManager API compatibility;
 - S2.11 — vibration API compatibility;

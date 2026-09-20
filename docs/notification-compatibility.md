@@ -60,8 +60,38 @@ Device-тест settings проверяет маршрутизацию, не и�
 6. Отдельно зафиксировать SHOW без editor на OnePlus/Android 16: известное
    мигание клавиатуры остаётся отдельным compatibility investigation.
 
-Notification permission/denial UX относится к S2.08. Полные cross-UID attack
+Notification permission/denial UX относится к S2.08b. Полные cross-UID attack
 tests и package/ringer system-event tests этим шагом не реализованы.
+
+## S2.08a — lifecycle перед permission UX
+
+[#89](https://github.com/adeepn/hackerskeyboard/issues/89) разделён на два
+reviewable PR. В первой части повторный `setNotification(true)` больше не
+отменяет уведомление и не снимает SHOW receiver. `setNotification(false)`
+всегда отменяет notification ID, даже без живого receiver; unregister происходит
+только один раз. `onDestroy()` вызывает тот же cleanup до teardown IME.
+Channel ID, notification ID, intents, preference key/default и target 26
+сохраняются.
+
+`NotificationLifecycleTest` на main thread создаёт service с target context,
+но не запускает IME session. Он выполняет настоящий private notification path
+через reflection, проверяет enable → enable → disable → disable → enable и
+identity receiver. Это проверка регистрации/очистки, а не выдачи permission,
+отображения SystemUI или полного framework-driven `onDestroy`. Source/mutation
+guard дополнительно фиксирует вызов cleanup из `onDestroy` и ловит возврат
+ошибочной ветки. До исправления source guard красный по обеим новым проверкам.
+
+Ручной regression case: включить уведомление, переключиться на другую IME,
+дождаться уничтожения старого service; старого SHOW notification быть не должно.
+При возвращении к Hacker's Keyboard уведомление появляется снова, если
+настройка включена. Повторная доставка одного и того же preference update не
+должна его скрывать. Проверить на API 24 и OnePlus 13 / Android 16.
+
+S2.08b остаётся открытым: manifest permission, явное действие в settings,
+grant/denial/dismissal, возврат из системных настроек и восстановление после
+recreation. Он должен учитывать различие target <33/≥33 по
+[официальному контракту Android](https://developer.android.com/develop/ui/views/notifications/notification-permission).
+Эта первая часть сама по себе не исправляет permission denial или SHOW без editor.
 
 ## Источники
 
