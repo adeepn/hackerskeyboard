@@ -228,3 +228,10 @@ S2.22b добавляет manual gate `bundle-signing-tests` на JDK 21 (так
 недопустимые версии, tampering, unsigned entries и неправильный signer alias.
 Ни один тест не использует production secrets. Проверка Play acceptance и
 обновления с сохранением настроек остаётся отдельной задачей владельца в #81.
+
+S2.05/S2.06 добавляет source/mutation guards и `NotificationActionsTest`:
+настоящая доставка package-scoped SHOW через immutable PendingIntent с отказом
+на fill-in extras, прямой settings Activity entry point, проверка private
+manifest Activity и игнорирование null/неизвестных actions. Они входят в
+существующие prek и API 24/API 37 CI jobs. Границы автоматизации и ручные случаи
+описаны в [notification-compatibility.md](notification-compatibility.md).
