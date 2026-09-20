@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: Apache-2.0 -->
-<resources>
-    <string name="notification_access_title">Notification access</string>
-    <string name="notification_access_explanation">Notifications let you open the keyboard and its settings from the notification shade. Typing works without this permission. You can allow notifications in Android settings.</string>
-    <string name="notification_blocked">Enabled here, but blocked by Android. Use Notification access below to allow it. Typing is unaffected.</string>
-    <string name="notification_permission_allow">Allow notifications</string>
-    <string name="notification_system_settings">Android settings</string>
-    <string name="notification_settings_unavailable">Open this app in Android settings to allow notifications.</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- English fallback + Russian in this compatibility PR. Other translations
+         need language review; tracked with the localization lint debt in #38.
+         Suppress only these six keys, not the entire file or translation gate. -->
+    <string name="notification_access_title" tools:ignore="MissingTranslation">Notification access</string>
+    <string name="notification_access_explanation" tools:ignore="MissingTranslation">Notifications let you open the keyboard and its settings from the notification shade. Typing works without this permission. You can allow notifications in Android settings.</string>
+    <string name="notification_blocked" tools:ignore="MissingTranslation">Enabled here, but blocked by Android. Use Notification access below to allow it. Typing is unaffected.</string>
+    <string name="notification_permission_allow" tools:ignore="MissingTranslation">Allow notifications</string>
+    <string name="notification_system_settings" tools:ignore="MissingTranslation">Android settings</string>
+    <string name="notification_settings_unavailable" tools:ignore="MissingTranslation">Open this app in Android settings to allow notifications.</string>
 </resources>

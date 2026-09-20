@@ -76,6 +76,14 @@ public class NotificationAccessTest {
             activity[0] = (LatinIMESettings) instrumentation.startActivitySync(
                     new Intent(context, LatinIMESettings.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             assertUi(instrumentation, activity[0], true);
+            // Exercise our rationale restoration without faking the platform's
+            // target>=33 prompt/rationale decision on this legacy-target APK.
+            instrumentation.runOnMainSync(() -> {
+                LatinIMESettings.MainPreferenceFragment fragment = (LatinIMESettings.MainPreferenceFragment)
+                        activity[0].getSupportFragmentManager().findFragmentByTag(LatinIMESettings.FRAGMENT_TAG);
+                new LatinIMESettings.NotificationRationaleFragment().showNow(
+                        fragment.getChildFragmentManager(), "notification_rationale");
+            });
             Instrumentation.ActivityMonitor recreation = instrumentation.addMonitor(
                     LatinIMESettings.class.getName(), null, false);
             try {
@@ -86,6 +94,17 @@ public class NotificationAccessTest {
                 instrumentation.removeMonitor(recreation);
             }
             assertUi(instrumentation, activity[0], true);
+            instrumentation.runOnMainSync(() -> {
+                androidx.fragment.app.Fragment fragment = activity[0].getSupportFragmentManager()
+                        .findFragmentByTag(LatinIMESettings.FRAGMENT_TAG);
+                LatinIMESettings.NotificationRationaleFragment dialog =
+                        (LatinIMESettings.NotificationRationaleFragment) fragment.getChildFragmentManager()
+                                .findFragmentByTag("notification_rationale");
+                assertNotNull(dialog);
+                assertEquals(1, fragment.getChildFragmentManager().getFragments().size());
+                assertTrue(dialog.requireDialog().isShowing());
+                dialog.dismissNow();
+            });
             assertTrue(prefs.getBoolean(key, false));
             assertEquals(0, unexpectedSettings.getHits());
 

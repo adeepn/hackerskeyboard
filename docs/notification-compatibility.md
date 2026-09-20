@@ -125,15 +125,22 @@ Manifest объявляет `POST_NOTIFICATIONS` только ради опци�
 границы SDK и cleanup защищены source/mutation tests. Глобальных suppressions
 или новых baseline entries нет.
 
+Новые шесть UI strings имеют English fallback и русский перевод. Для остальных
+локалей нужен language review: каждый из этих шести keys временно имеет только
+`tools:ignore="MissingTranslation"`, долг записан в #38. Gate для остальных
+строк остаётся включённым; ресурсы не помечены `translatable=false`.
+
 ### Проверки и границы
 
 `NotificationPermissionPolicyTest` — JVM matrix device/target API, permission,
 app-wide и channel block. Device tests на API 24/37 проверяют manifest и settings
 intent, synthetic runtime denial через ContextWrapper, реальный app-op deny →
 allow, отсутствие SHOW receiver при запрете, повторное enable после разрешения,
-blocked summary и сохранение checkbox при `Activity.recreate()`. Rationale и
-настоящий runtime permission dialog под target >=33 проверяются на target 33
-checkpoint отдельно: текущий APK всё ещё target 26.
+blocked summary и сохранение checkbox при `Activity.recreate()`, восстановление
+одного rationale DialogFragment и доставку REFRESH, игнорирующую extras.
+Rationale показывается тестом напрямую: настоящий OS runtime permission dialog
+и выбор ветки rationale под target >=33 проверяются на target 33 checkpoint
+отдельно, текущий APK всё ещё target 26.
 
 Instrumentation выполняется **только на disposable test installation**: fixture
 выдаёт POST_NOTIFICATIONS test target на API 33+ и временно меняет его app-op

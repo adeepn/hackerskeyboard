@@ -8,7 +8,13 @@ import static org.junit.Assert.assertSame;
 
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.SystemClock;
 
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -108,5 +114,59 @@ public class NotificationLifecycleTest {
                 throw new AssertionError(exception);
             }
         });
+    }
+
+    @Test
+    public void privateRefreshUsesPersistedChoiceNotBroadcastExtras() throws Exception {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context context = instrumentation.getTargetContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String key = LatinIME.PREF_KEYBOARD_NOTIFICATION;
+        boolean existed = prefs.contains(key);
+        boolean previous = prefs.getBoolean(key, false);
+        Field systemReceiver = LatinIME.class.getDeclaredField("mReceiver");
+        systemReceiver.setAccessible(true);
+        Field showReceiver = LatinIME.class.getDeclaredField("mNotificationReceiver");
+        showReceiver.setAccessible(true);
+        Method setNotification = LatinIME.class.getDeclaredMethod("setNotification", boolean.class);
+        setNotification.setAccessible(true);
+        TestIme[] ime = new TestIme[1];
+        instrumentation.runOnMainSync(() -> ime[0] = new TestIme(context));
+        BroadcastReceiver refreshReceiver = (BroadcastReceiver) systemReceiver.get(ime[0]);
+        ContextCompat.registerReceiver(context, refreshReceiver,
+                new IntentFilter(NotificationActions.ACTION_REFRESH), ContextCompat.RECEIVER_NOT_EXPORTED);
+        try {
+            prefs.edit().putBoolean(key, true).commit();
+            context.sendBroadcast(NotificationActions.refreshIntent(context).putExtra(key, false));
+            awaitReceiver(instrumentation, showReceiver, ime[0], true);
+            prefs.edit().putBoolean(key, false).commit();
+            context.sendBroadcast(NotificationActions.refreshIntent(context).putExtra(key, true));
+            awaitReceiver(instrumentation, showReceiver, ime[0], false);
+        } finally {
+            context.unregisterReceiver(refreshReceiver);
+            invokeAndCheck(instrumentation, setNotification, showReceiver, ime[0], false, false);
+            SharedPreferences.Editor editor = prefs.edit();
+            if (existed) editor.putBoolean(key, previous);
+            else editor.remove(key);
+            editor.commit();
+        }
+    }
+
+    private static void awaitReceiver(Instrumentation instrumentation, Field receiver,
+            TestIme ime, boolean registered) {
+        boolean[] found = new boolean[1];
+        long deadline = SystemClock.uptimeMillis() + 5000;
+        do {
+            instrumentation.runOnMainSync(() -> {
+                try {
+                    found[0] = (receiver.get(ime) != null) == registered;
+                } catch (ReflectiveOperationException exception) {
+                    throw new AssertionError(exception);
+                }
+            });
+            if (found[0]) return;
+            SystemClock.sleep(50);
+        } while (SystemClock.uptimeMillis() < deadline);
+        throw new AssertionError("REFRESH did not apply persisted notification state");
     }
 }
