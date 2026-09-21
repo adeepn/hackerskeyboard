@@ -34,6 +34,8 @@
   изоляция ключа, ручной workflow и проверка готового APK.
 - [Доставка через Google Play](google-play-delivery.md) — приоритетный путь
   AAB → Internal testing → автоматические обновления после зелёного CI.
+- [Target 36 bootstrap](target-36-bootstrap.md) — прямое повышение API для Play,
+  16 KB gates и минимальные runtime fixes перед Internal testing.
 - [Настройка окружения](developer-setup.md) — JDK 21, `JAVA_HOME` и локальные
   проверки.
 - [Исследование форков](fork-research.md) — сравнение трёх форков и перечень

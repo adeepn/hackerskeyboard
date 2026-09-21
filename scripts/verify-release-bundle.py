@@ -18,6 +18,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 from verify_package_visibility import verify_queries
+from verify_native_alignment import verify_archive as verify_native_alignment
 
 ROOT = Path(__file__).resolve().parents[1]
 # Official google/bundletool release asset and GitHub asset digest, 2026-09-14.
@@ -125,6 +126,7 @@ def main() -> None:
     parser.add_argument("--bundletool", type=Path, help="Use an already downloaded, checksum-verified JAR")
     args = parser.parse_args()
     verify_archive(args.bundle)
+    verify_native_alignment(args.bundle)
     tool = get_bundletool(args.bundletool)
     java_home = os.environ.get("JAVA_HOME")
     java = str(Path(java_home) / "bin" / "java") if java_home else "java"

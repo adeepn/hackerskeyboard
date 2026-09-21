@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId 'com.baodeep.hackerskeyboard'
         minSdk 24
-        targetSdk 26
+        targetSdk 36
         versionCode providers.gradleProperty('appVersionCode').get().toInteger()
         versionName providers.gradleProperty('appVersionName').get()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -38,6 +38,14 @@ android {
     testOptions {
         managedDevices {
             localDevices {
+                pixel2Api36_16k {
+                    device = "Pixel 2"
+                    sdkVersion = 36
+                    systemImageSource = "google"
+                    require64Bit = true
+                    testedAbi = "x86_64"
+                    pageAlignment = com.android.build.api.dsl.ManagedVirtualDevice.PageAlignment.FORCE_16KB_PAGES
+                }
                 pixel2Api37 {
                     device = "Pixel 2"
                     sdkVersion = 37
