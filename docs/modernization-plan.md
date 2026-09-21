@@ -99,8 +99,10 @@ issues. Каждый нижележащий шаг является отдель
 10. Обновить vibration, locale/resources и PackageManager overloads.
 11. Удалить или заменить `AsyncTask` там, где lifecycle/cancellation уже создают
     ошибки; полная декомпозиция остаётся этапом 4.
-12. Поднимать target последовательно через поведенческие границы
-    28 → 31 → 33 → 34 → 35 → 36 → 37, фиксируя результаты тестов.
+12. По решению владельца от 21 сентября 2026 поднять target напрямую
+    26 → 36 для Play Internal testing. Границы 28/31/33/34/35 сохраняются как
+    checklist рисков, но не требуют отдельных релизов. Исправлять конкретные
+    блокеры; оставшаяся модернизация и target 37 выполняются после bootstrap.
 13. Проверить edge-to-edge/window insets, popup placement, candidates view,
     extract/fullscreen mode, portrait/landscape и multi-window.
 14. Собрать Android App Bundle и выполнить Play pre-launch проверки.

@@ -29,6 +29,7 @@ public class PrefScreenFeedback extends FragmentActivity {
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        ActivityInsets.apply(this);
         if (icicle == null) {
             getSupportFragmentManager()
                     .beginTransaction()

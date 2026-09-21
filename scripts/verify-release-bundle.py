@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -18,6 +19,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 from verify_package_visibility import verify_queries
+from verify_native_alignment import verify_archive as verify_native_alignment
 
 ROOT = Path(__file__).resolve().parents[1]
 # Official google/bundletool release asset and GitHub asset digest, 2026-09-14.
@@ -119,17 +121,28 @@ def verify_archive(path: Path) -> None:
                     raise ValueError(f"Invalid native ELF entry: {name}")
 
 
+def verify_page_alignment(config: str) -> None:
+    alignment = json.loads(config).get("optimizations", {}).get(
+        "uncompressNativeLibraries", {}).get("alignment")
+    if alignment != "PAGE_ALIGNMENT_16K":
+        raise ValueError("AAB must request 16 KB ZIP alignment for generated APKs")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("bundle", type=Path)
     parser.add_argument("--bundletool", type=Path, help="Use an already downloaded, checksum-verified JAR")
     args = parser.parse_args()
     verify_archive(args.bundle)
+    verify_native_alignment(args.bundle)
     tool = get_bundletool(args.bundletool)
     java_home = os.environ.get("JAVA_HOME")
     java = str(Path(java_home) / "bin" / "java") if java_home else "java"
     command = [java, "-jar", str(tool)]
     subprocess.run(command + ["validate", f"--bundle={args.bundle}"], check=True)
+    config = subprocess.run(command + ["dump", "config", f"--bundle={args.bundle}"],
+                            check=True, capture_output=True, text=True).stdout
+    verify_page_alignment(config)
     manifest = subprocess.run(
         command + ["dump", "manifest", f"--bundle={args.bundle}", "--module=base"],
         check=True, capture_output=True, text=True,
