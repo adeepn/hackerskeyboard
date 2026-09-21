@@ -92,7 +92,7 @@ public class LatinIME extends InputMethodService implements
         LatinKeyboardBaseView.OnKeyboardActionListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "PCKeyboardIME";
-    private static final String NOTIFICATION_CHANNEL_ID = "PCKeyboard";
+    private static final String NOTIFICATION_CHANNEL_ID = NotificationAccess.CHANNEL_ID;
     private static final int NOTIFICATION_ONGOING_ID = 1001;
     static Map<Integer, String> ESC_SEQUENCES;
     static Map<Integer, Integer> CTRL_SEQUENCES;
@@ -437,6 +437,7 @@ public class LatinIME extends InputMethodService implements
         // register to receive ringer mode changes for silent mode
         IntentFilter filter = new IntentFilter(
                 AudioManager.RINGER_MODE_CHANGED_ACTION);
+        filter.addAction(NotificationActions.ACTION_REFRESH);
         ContextCompat.registerReceiver(this, mReceiver, filter,
                 ContextCompat.RECEIVER_NOT_EXPORTED);
         prefs.registerOnSharedPreferenceChangeListener(this);
@@ -482,9 +483,11 @@ public class LatinIME extends InputMethodService implements
         }
     }
 
-    // S2.08 adds notification permission UX before the targetSdk 33 checkpoint.
+    // NotificationAccess checks permission, app and channel settings; lint does
+    // not follow that helper. Also handle revocation between the check and post.
     @SuppressLint("MissingPermission")
     private void setNotification(boolean visible) {
+        visible = visible && NotificationAccess.canPost(this);
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
 
@@ -534,7 +537,11 @@ public class LatinIME extends InputMethodService implements
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
             // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(NOTIFICATION_ONGOING_ID, mBuilder.build());
+            try {
+                notificationManager.notify(NOTIFICATION_ONGOING_ID, mBuilder.build());
+            } catch (SecurityException permissionRevoked) {
+                setNotification(false);
+            }
 
         } else if (!visible) {
             // Repeated enable is a no-op. Always cancel on disable, including
@@ -763,6 +770,7 @@ public class LatinIME extends InputMethodService implements
     
     @Override
     public void onStartInputView(EditorInfo attribute, boolean restarting) {
+        setNotification(mKeyboardNotification);
         sKeyboardSettings.editorPackageName = attribute.packageName;
         sKeyboardSettings.editorFieldName = attribute.fieldName;
         sKeyboardSettings.editorFieldId = attribute.fieldId;
@@ -3227,7 +3235,15 @@ public class LatinIME extends InputMethodService implements
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateRingerMode();
+            if (intent == null) return;
+            if (NotificationActions.ACTION_REFRESH.equals(intent.getAction())) {
+                mKeyboardNotification = PreferenceManager.getDefaultSharedPreferences(LatinIME.this)
+                        .getBoolean(PREF_KEYBOARD_NOTIFICATION,
+                                getResources().getBoolean(R.bool.default_keyboard_notification));
+                setNotification(mKeyboardNotification);
+            } else if (AudioManager.RINGER_MODE_CHANGED_ACTION.equals(intent.getAction())) {
+                updateRingerMode();
+            }
         }
     };
 

@@ -30,6 +30,12 @@ class NotificationContractTest(unittest.TestCase):
             ("NotificationReceiver.java", "InputMethodManager.SHOW_FORCED", "0"),
             ("LatinIME.java", "else if (!visible)", "else if (mNotificationReceiver != null)"),
             ("LatinIME.java", "setNotification(false);", ""),
+            ("AndroidManifest.xml", "android.permission.POST_NOTIFICATIONS", "android.permission.INTERNET"),
+            ("LatinIME.java", "visible = visible && NotificationAccess.canPost(this);", ""),
+            ("NotificationActions.java", "new Intent(ACTION_REFRESH).setPackage(context.getPackageName())", "new Intent(ACTION_REFRESH)"),
+            ("NotificationAccess.java", "areNotificationsEnabled()", "unconditionallyAllow()"),
+            ("NotificationAccess.java", "channel.getImportance() != NotificationManager.IMPORTANCE_NONE", "true"),
+            ("LatinIMESettings.java", "targetSdkVersion >= 33", "targetSdkVersion >= 26"),
         )
         for name, before, after in mutations:
             with self.subTest(file=name, mutation=before):

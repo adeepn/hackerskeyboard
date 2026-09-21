@@ -248,3 +248,10 @@ S2.08a добавляет device regression test повторного enable/dis
 lifecycle и не тест диалога разрешений. Source mutation guard защищает cleanup
 на `onDestroy`; границы и ручной сценарий описаны в
 [notification-compatibility.md](notification-compatibility.md).
+
+S2.08b добавляет JVM notification policy matrix, device app-op denial/recovery,
+settings blocked state/recreation и scoped refresh. Runtime permission выдаётся
+fixture только disposable test APK; реальный target >=33 OS-dialog flow и ввод
+при denial требуют отдельного checkpoint. Команды: `prek run --all-files`,
+`prek run --all-files --hook-stage manual android-unit` и существующие device
+gates. Подробные ограничения и manual cases — в notification compatibility.
