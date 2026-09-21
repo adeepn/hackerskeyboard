@@ -15,6 +15,7 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.InputType;
 import android.view.View;
+import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -76,12 +77,16 @@ public class Target36CompatibilityTest {
         String ownId = context.getPackageName() + "/.LatinIME";
         String oldId = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.DEFAULT_INPUT_METHOD);
+        String oldHardwareSetting = Settings.Secure.getString(context.getContentResolver(),
+                "show_ime_with_hard_keyboard");
         InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         boolean wasEnabled = manager.getEnabledInputMethodList().stream()
                 .anyMatch(method -> ownId.equals(method.getId()));
         Main main = null;
         LatinIMESettings settings = null;
         try {
+            // Emulators report an attached QWERTY keyboard; request the soft keyboard too.
+            shell(instrumentation, "settings put secure show_ime_with_hard_keyboard 1");
             shell(instrumentation, "ime enable " + ownId);
             shell(instrumentation, "ime set " + ownId);
             main = (Main) instrumentation.startActivitySync(new Intent(context, Main.class)
@@ -93,6 +98,24 @@ public class Target36CompatibilityTest {
                 editor.requestFocus();
                 manager.showSoftInput(editor, InputMethodManager.SHOW_IMPLICIT);
             });
+            int[] position = new int[2];
+            instrumentation.runOnMainSync(() -> {
+                editor.getLocationOnScreen(position);
+                position[0] += editor.getWidth() / 2;
+                position[1] += editor.getHeight() / 2;
+            });
+            long tapTime = SystemClock.uptimeMillis();
+            MotionEvent down = MotionEvent.obtain(tapTime, tapTime, MotionEvent.ACTION_DOWN,
+                    position[0], position[1], 0);
+            MotionEvent up = MotionEvent.obtain(tapTime, tapTime + 50, MotionEvent.ACTION_UP,
+                    position[0], position[1], 0);
+            try {
+                instrumentation.sendPointerSync(down);
+                instrumentation.sendPointerSync(up);
+            } finally {
+                down.recycle();
+                up.recycle();
+            }
             LatinIME[] active = new LatinIME[1];
             long deadline = SystemClock.uptimeMillis() + 15000;
             while (active[0] == null && SystemClock.uptimeMillis() < deadline) {
@@ -135,7 +158,14 @@ public class Target36CompatibilityTest {
                     shell(instrumentation, "ime set " + oldId);
                 }
             } finally {
-                if (!wasEnabled) shell(instrumentation, "ime disable " + ownId);
+                try {
+                    if (!wasEnabled) shell(instrumentation, "ime disable " + ownId);
+                } finally {
+                    shell(instrumentation, oldHardwareSetting == null
+                            ? "settings delete secure show_ime_with_hard_keyboard"
+                            : "settings put secure show_ime_with_hard_keyboard "
+                                    + ("1".equals(oldHardwareSetting) ? "1" : "0"));
+                }
             }
         }
     }

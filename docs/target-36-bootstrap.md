@@ -29,6 +29,8 @@
   PT_LOAD alignment >=16 KB, согласованность offset/address, bounds и ZIP
   alignment несжатых библиотек в APK. AAB ZIP layout сам по себе не является
   APK layout; в AAB проверяются ELF. Обе 64-bit ABI обязательны.
+  Дополнительно `bundletool dump config` должен подтвердить
+  `PAGE_ALIGNMENT_16K` для APK, которые Play создаст из bundle.
 - `BinaryDictionarySmokeTest` проверяет настоящий `targetSdk 36`; в managed
   device jobs сверяет `Os.sysconf(_SC_PAGESIZE)` с ожидаемым значением перед JNI
   lookup. API 36 использует FORCE_16KB_PAGES, API 37 — 4 KB, API 24 сохраняется.
@@ -52,6 +54,11 @@ scripts/run-api24-connected-tests.sh
 
 Результаты конкретных прогонов фиксируются в PR. Не подменять проверку 16 KB
 тем фактом, что современный NDK использован или APK собрался.
+
+Lint: убран устаревший baseline finding `ExpiredTargetSdkVersion` для target 26.
+У строки target 36 стоит точечный `OldTargetApi` suppression: AGP рекомендует
+уже 37, но согласованный bootstrap намеренно использует 36. Остальные lint
+категории остаются включёнными, новых findings в baseline не добавляется.
 
 ## Что остаётся до/после загрузки
 

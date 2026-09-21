@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -120,6 +121,13 @@ def verify_archive(path: Path) -> None:
                     raise ValueError(f"Invalid native ELF entry: {name}")
 
 
+def verify_page_alignment(config: str) -> None:
+    alignment = json.loads(config).get("optimizations", {}).get(
+        "uncompressNativeLibraries", {}).get("alignment")
+    if alignment != "PAGE_ALIGNMENT_16K":
+        raise ValueError("AAB must request 16 KB ZIP alignment for generated APKs")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("bundle", type=Path)
@@ -132,6 +140,9 @@ def main() -> None:
     java = str(Path(java_home) / "bin" / "java") if java_home else "java"
     command = [java, "-jar", str(tool)]
     subprocess.run(command + ["validate", f"--bundle={args.bundle}"], check=True)
+    config = subprocess.run(command + ["dump", "config", f"--bundle={args.bundle}"],
+                            check=True, capture_output=True, text=True).stdout
+    verify_page_alignment(config)
     manifest = subprocess.run(
         command + ["dump", "manifest", f"--bundle={args.bundle}", "--module=base"],
         check=True, capture_output=True, text=True,

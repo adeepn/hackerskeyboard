@@ -9,6 +9,8 @@ android {
     defaultConfig {
         applicationId 'com.baodeep.hackerskeyboard'
         minSdk 24
+        // Reviewed Play bootstrap (#95); target 37 remains a separate compatibility step.
+        //noinspection OldTargetApi
         targetSdk 36
         versionCode providers.gradleProperty('appVersionCode').get().toInteger()
         versionName providers.gradleProperty('appVersionName').get()

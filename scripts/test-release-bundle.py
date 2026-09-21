@@ -4,6 +4,7 @@
 """Offline regression tests for release bundle validation failures."""
 
 import importlib.util
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -38,6 +39,14 @@ class ReleaseBundleTest(unittest.TestCase):
     def test_valid_manifest_and_implicit_false(self):
         MODULE.verify_manifest(self.manifest, self.expected)
         MODULE.verify_manifest(self.manifest.replace(' android:debuggable="false"', ""), self.expected)
+
+    def test_bundle_must_request_16kb_alignment_for_generated_apks(self):
+        config = {"optimizations": {"uncompressNativeLibraries": {"alignment": "PAGE_ALIGNMENT_16K"}}}
+        MODULE.verify_page_alignment(json.dumps(config))
+        config["optimizations"]["uncompressNativeLibraries"]["alignment"] = "PAGE_ALIGNMENT_4K"
+        for invalid in (config, {}):
+            with self.assertRaises(ValueError):
+                MODULE.verify_page_alignment(json.dumps(invalid))
 
     def test_wrong_identity_versions_sdks_and_debuggable_rejected(self):
         mutations = (
