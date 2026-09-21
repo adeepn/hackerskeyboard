@@ -99,9 +99,12 @@ Epic: **Stage 2: AndroidX и targetSdk 37**.
   `<queries>` для обоих dictionary protocols, source/packaged manifest guards;
 - S2.08 ([#89](https://github.com/adeepn/hackerskeyboard/issues/89)) — notification
   permission и notification UX: S2.08a выполнен в PR #90;
-  S2.08b — settings permission flow, guard при отказе и refresh после grant.
+  S2.08b выполнен в PR #91 — settings permission flow, guard при отказе и refresh после grant.
   OS-dialog acceptance под target >=33 остаётся gate соответствующего checkpoint;
-- S2.09 — заменить legacy voice JAR;
+- S2.09 ([#93](https://github.com/adeepn/hackerskeyboard/issues/93)) — заменить
+  legacy voice JAR: S2.09a — provider-neutral enabled voice-IME и public switch
+  с тестами; S2.09b — session-safe recognizer Activity bridge, доступность mic
+  и удаление JAR. Контракт/границы: [voice-input.md](voice-input.md);
 - S2.10 — PackageManager API compatibility;
 - S2.11 — vibration API compatibility;
 - S2.12 — locale/resources migration;

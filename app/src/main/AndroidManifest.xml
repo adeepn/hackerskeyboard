@@ -9,6 +9,10 @@
         <intent>
             <action android:name="com.menny.android.anysoftkeyboard.DICTIONARY" />
         </intent>
+        <!-- Provider-neutral voice IME discovery/switching, not arbitrary apps. -->
+        <intent>
+            <action android:name="android.view.InputMethod" />
+        </intent>
     </queries>
 
     <uses-permission android:name="android.permission.VIBRATE"/>

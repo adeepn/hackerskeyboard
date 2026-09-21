@@ -24,6 +24,8 @@
   intents, прямое открытие настроек и private runtime receivers.
 - [Dictionary visibility](dictionary-visibility.md) — узкие package queries,
   сохранение старых протоколов и проверки manifest в APK/AAB.
+- [Голосовой ввод](voice-input.md) — provider-neutral voice-IME и поэтапная
+  замена legacy JAR без потери запасного recognizer route.
 - [Миграция на AndroidX](androidx-migration.md) — инвентаризация Support
   Library, границы S2.02/S2.03 и обязательные regression checks.
 - [Контракт хранения настроек](settings-contract.md) — зафиксированные keys,

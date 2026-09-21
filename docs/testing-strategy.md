@@ -255,3 +255,8 @@ fixture только disposable test APK; реальный target >=33 OS-dialog
 при denial требуют отдельного checkpoint. Команды: `prek run --all-files`,
 `prek run --all-files --hook-stage manual android-unit` и существующие device
 gates. Подробные ограничения и manual cases — в notification compatibility.
+
+S2.09a добавляет пять device tests voice-IME selection/dispatch с настоящими
+Android metadata и fake system-service boundary, а также mutation test нового
+узкого query. Они не записывают звук и не доказывают реальное переключение IME;
+provider acceptance и условия удаления JAR описаны в [voice-input.md](voice-input.md).

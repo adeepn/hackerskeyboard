@@ -30,6 +30,7 @@ class ReleaseBundleTest(unittest.TestCase):
         <queries>
             <intent><action android:name="org.pocketworkstation.DICT"/></intent>
             <intent><action android:name="com.menny.android.anysoftkeyboard.DICTIONARY"/></intent>
+            <intent><action android:name="android.view.InputMethod"/></intent>
         </queries>
         <application android:debuggable="false"/>
     </manifest>'''
@@ -52,7 +53,7 @@ class ReleaseBundleTest(unittest.TestCase):
                 MODULE.verify_manifest(self.manifest.replace(original, replacement), self.expected)
 
     def test_wrong_dictionary_visibility_rejected(self):
-        with self.assertRaisesRegex(ValueError, "Dictionary queries"):
+        with self.assertRaisesRegex(ValueError, "Queries must match"):
             MODULE.verify_manifest(self.manifest.replace("org.pocketworkstation.DICT", "wrong.DICT"), self.expected)
         broad_permission = '<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>'
         with self.assertRaisesRegex(ValueError, "QUERY_ALL_PACKAGES"):

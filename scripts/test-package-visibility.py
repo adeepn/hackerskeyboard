@@ -26,6 +26,19 @@ class PackageVisibilityTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "queries"):
             verify_queries(manifest)
 
+    def test_voice_ime_query_is_required_but_recognizer_query_is_not_yet_approved(self):
+        manifest = self.manifest()
+        queries = manifest.find("queries")
+        voice = next(intent for intent in queries
+                     if intent[0].get(ANDROID + "name") == "android.view.InputMethod")
+        queries.remove(voice)
+        with self.assertRaises(ValueError):
+            verify_queries(manifest)
+        voice[0].set(ANDROID + "name", "android.speech.action.RECOGNIZE_SPEECH")
+        queries.append(voice)
+        with self.assertRaises(ValueError):
+            verify_queries(manifest)
+
     def test_missing_renamed_or_duplicate_action_rejected(self):
         for change in ("missing", "renamed", "duplicate"):
             with self.subTest(change=change):

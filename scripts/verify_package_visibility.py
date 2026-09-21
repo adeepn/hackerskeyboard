@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Check the reviewed dictionary visibility policy in source or decoded manifests."""
+"""Check reviewed dictionary and voice-IME visibility in source or decoded manifests."""
 
 from pathlib import Path
 import sys
@@ -11,6 +11,7 @@ DICTIONARY_ACTIONS = {
     "org.pocketworkstation.DICT",
     "com.menny.android.anysoftkeyboard.DICTIONARY",
 }
+ALLOWED_ACTIONS = DICTIONARY_ACTIONS | {"android.view.InputMethod"}
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -35,8 +36,8 @@ def verify_queries(manifest: ET.Element) -> None:
         if set(action.attrib) != {ANDROID + "name"} or list(action):
             raise ValueError("Unexpected dictionary action attributes/content")
         actions.append(action.get(ANDROID + "name"))
-    if len(actions) != len(DICTIONARY_ACTIONS) or set(actions) != DICTIONARY_ACTIONS:
-        raise ValueError("Dictionary queries must match exactly the HK and ASK protocols")
+    if len(actions) != len(ALLOWED_ACTIONS) or set(actions) != ALLOWED_ACTIONS:
+        raise ValueError("Queries must match exactly HK, ASK and the voice-IME contract")
 
 
 def main() -> None:
@@ -47,7 +48,7 @@ def main() -> None:
     else:
         raise ValueError("Usage: verify_package_visibility.py [--stdin]")
     verify_queries(manifest)
-    print("Verified narrow HK/ASK dictionary queries; no broad package visibility")
+    print("Verified narrow HK/ASK and voice-IME queries; no broad package visibility")
 
 
 if __name__ == "__main__":
