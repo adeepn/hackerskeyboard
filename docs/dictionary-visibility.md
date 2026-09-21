@@ -10,7 +10,8 @@
 | Hacker's Keyboard | `queryIntentActivities` | `org.pocketworkstation.DICT` |
 | AnySoftKeyboard | `queryBroadcastReceivers` с metadata | `com.menny.android.anysoftkeyboard.DICTIONARY` |
 
-Manifest содержит ровно эти две action-only `<queries><intent>`. Не добавляются
+S2.07 добавил эти две action-only `<queries><intent>`. S2.09a добавляет третий
+query `android.view.InputMethod` для [voice-IME](voice-input.md). Не добавляются
 `QUERY_ALL_PACKAGES`, общий MAIN/LAUNCHER query, список известных package names
 или provider grants. Категория DEFAULT тоже не нужна: она сузила бы поиск
 относительно существующих action-only запросов. При добавлении новых queries
@@ -20,7 +21,7 @@ Manifest содержит ровно эти две action-only `<queries><intent
 и JNI остаются без изменений. Старый action `org.pocketworkstation.DICT` не
 переименовывается в `com.baodeep.*`: он является внешним API. Воспроизводимые
 first-party dictionary packs остаются в #27, кнопка поиска издателя — в #69.
-Voice queries будут рассмотрены вместе с заменой legacy voice JAR в S2.09.
+Recognizer Activity query будет рассмотрен отдельно в S2.09b.
 
 ## Автоматические проверки
 

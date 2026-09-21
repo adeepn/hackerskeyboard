@@ -290,6 +290,7 @@ public class LatinIME extends InputMethodService implements
     private NotificationReceiver mNotificationReceiver;
 
     private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
+    private VoiceImeSwitcher mVoiceImeSwitcher;
 
     public abstract static class WordAlternatives {
         protected CharSequence mChosenWord;
@@ -406,6 +407,7 @@ public class LatinIME extends InputMethodService implements
         sKeyboardSettings.initPrefs(prefs, res);
 
         mVoiceRecognitionTrigger = new VoiceRecognitionTrigger(this);
+        mVoiceImeSwitcher = new VoiceImeSwitcher(this);
         
         updateKeyboardOptions();
 
@@ -921,6 +923,18 @@ public class LatinIME extends InputMethodService implements
         // If we just entered a text field, maybe it has some old text that
         // requires correction
         checkReCorrectionOnStart();
+    }
+
+    private void startVoiceInput() {
+        VoiceImeSwitcher.Result voiceResult = mVoiceImeSwitcher.start();
+        if (voiceResult == VoiceImeSwitcher.Result.UNAVAILABLE) {
+            // Temporary legacy fallback; replaced separately in S2.09b.
+            if (mVoiceRecognitionTrigger.isInstalled()) {
+                mVoiceRecognitionTrigger.startVoiceRecognition();
+            }
+        } else if (voiceResult == VoiceImeSwitcher.Result.FAILED) {
+            Toast.makeText(this, R.string.voice_input_unavailable, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean shouldShowVoiceButton(EditorInfo attribute) {
@@ -2018,10 +2032,7 @@ public class LatinIME extends InputMethodService implements
             toggleLanguage(false, false);
             break;
         case LatinKeyboardView.KEYCODE_VOICE:
-            if (mVoiceRecognitionTrigger.isInstalled()) {
-                mVoiceRecognitionTrigger.startVoiceRecognition();
-            }
-            //startListening(false /* was a button press, was not a swipe */);
+            startVoiceInput();
             break;
         case 9 /* Tab */:
             if (processMultiKey(primaryCode)) {

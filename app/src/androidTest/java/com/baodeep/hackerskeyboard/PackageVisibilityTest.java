@@ -43,9 +43,10 @@ public class PackageVisibilityTest {
                 }
             }
         }
-        assertEquals(2, actions.size());
+        assertEquals(3, actions.size());
         assertEquals(new HashSet<>(Arrays.asList(PluginManager.HK_INTENT_DICT,
-                "com.menny.android.anysoftkeyboard.DICTIONARY")), new HashSet<>(actions));
+                "com.menny.android.anysoftkeyboard.DICTIONARY", "android.view.InputMethod")),
+                new HashSet<>(actions));
         PackageInfo info = context.getPackageManager().getPackageInfo(
                 context.getPackageName(), PackageManager.GET_PERMISSIONS);
         if (info.requestedPermissions != null) {

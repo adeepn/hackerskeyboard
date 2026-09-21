@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- English fallback until the translation backlog (#38) covers this new message. -->
+    <string name="voice_input_unavailable" tools:ignore="MissingTranslation">Voice input is unavailable. Check your enabled keyboards in system settings.</string>
+</resources>
