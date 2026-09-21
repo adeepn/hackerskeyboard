@@ -132,15 +132,10 @@ public class Target36CompatibilityTest {
                 if (active[0] == null) SystemClock.sleep(100);
             }
             assertNotNull("IME must start a real editor session", active[0]);
-            instrumentation.runOnMainSync(() -> {
-                active[0].onKey('a', new int[] {'a'}, 0, 0);
-                active[0].onKey('b', new int[] {'b'}, 0, 0);
-                active[0].onKey(Keyboard.KEYCODE_DELETE, null, 0, 0);
-                active[0].onKey('c', new int[] {'c'}, 0, 0);
-                active[0].getCurrentInputConnection().finishComposingText();
-            });
-            instrumentation.waitForIdleSync();
-            instrumentation.runOnMainSync(() -> assertEquals("ac", editor.getText().toString()));
+            dispatchAndAwait(instrumentation, active[0], editor, 'a', "a");
+            dispatchAndAwait(instrumentation, active[0], editor, 'b', "ab");
+            dispatchAndAwait(instrumentation, active[0], editor, Keyboard.KEYCODE_DELETE, "a");
+            dispatchAndAwait(instrumentation, active[0], editor, 'c', "ac");
             instrumentation.runOnMainSync(() -> active[0].onKey(
                     LatinKeyboardView.KEYCODE_OPTIONS, null, 0, 0));
             settings = ApplicationSmokeTest.waitForResumedActivity(
@@ -168,6 +163,22 @@ public class Target36CompatibilityTest {
                 }
             }
         }
+    }
+
+    private static void dispatchAndAwait(Instrumentation instrumentation, LatinIME ime,
+            EditText editor, int key, String expected) {
+        instrumentation.runOnMainSync(() -> ime.onKey(key, new int[] {key}, 0, 0));
+        // InputConnection delivery and editor selection updates cross asynchronous boundaries.
+        // Let each key reach the real editor before sending the next, as separate user events do.
+        String[] actual = new String[1];
+        long deadline = SystemClock.uptimeMillis() + 5000;
+        do {
+            instrumentation.waitForIdleSync();
+            instrumentation.runOnMainSync(() -> actual[0] = editor.getText().toString());
+            if (expected.equals(actual[0])) return;
+            SystemClock.sleep(50);
+        } while (SystemClock.uptimeMillis() < deadline);
+        assertEquals(expected, actual[0]);
     }
 
     private static void shell(Instrumentation instrumentation, String command) throws Exception {
