@@ -13,7 +13,7 @@ from pathlib import Path
 
 EXPECTED_DEPENDENCIES = {
     "implementation": {
-        "androidx.core:core:1.19.0",
+        "androidx.core:core:1.19.1",
         "androidx.preference:preference:1.2.1",
     },
     "androidTestImplementation": {
@@ -452,7 +452,7 @@ def main() -> int:
         return 1
 
     print(
-        "AndroidX migration verified: Core 1.19.0; Preference 1.2.1; "
+        "AndroidX migration verified: Core 1.19.1; Preference 1.2.1; "
         "Test runner 1.7.0; "
         f"JUnit extension 1.3.0; Jetifier disabled; {jar_count} JAR checked"
     )

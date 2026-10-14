@@ -96,10 +96,11 @@ instrumentation configurations. В итоговом graph не должно ос
 
 ### Выбранные версии S2.02
 
-По официальным AndroidX release notes на 13 августа 2026 года выбраны стабильные
-версии:
+Исходные версии S2.02 выбраны по AndroidX release notes на 13 августа 2026.
+14 октября Core обновлён до 1.19.1 по прямому поручению владельца; актуальные
+координаты:
 
-- `androidx.core:core:1.19.0`;
+- `androidx.core:core:1.19.1` (patch update после PR #96);
 - `androidx.test:runner:1.7.0`;
 - `androidx.test.ext:junit:1.3.0`.
 

@@ -5,7 +5,7 @@
 | Компонент | Версия | Состояние |
 | --- | --- | --- |
 | JDK | 21 | зафиксирован в `.java-version` |
-| Gradle | 9.7.1 | зафиксирован wrapper и SHA-256 |
+| Gradle | 9.8.1 | зафиксирован wrapper и SHA-256 |
 | Android Gradle Plugin | 9.3.1 | зафиксирован в `gradle.properties` |
 | Android NDK | 29.0.14206865 (r29) | зафиксирован в `gradle.properties` |
 | CMake | 3.22.1 | зафиксирован в `gradle.properties` |
@@ -14,9 +14,10 @@
 
 AGP 9.3.1 требует Gradle 9.5.0 или новее, минимум JDK 17 и поддерживает API 37.
 Проект фиксирует
-[Gradle 9.7.1](https://docs.gradle.org/9.7.1/release-notes.html), выпущенный
-19 августа 2026 года. Обновление с 9.6.1 выполняется в PR #52 вместе с JUnit
-4.13.2; checksums wrapper JAR и дистрибутива сверены с официальными.
+[Gradle 9.8.1](https://docs.gradle.org/9.8.1/release-notes.html) вместе с
+AndroidX Core 1.19.1 для устранения новых version lint findings после PR #96.
+Полный wrapper сгенерирован из официального дистрибутива; provenance, checksums
+и решение о release-age buffer записаны в [gradle-wrapper.md](gradle-wrapper.md).
 JVM tests теперь явно запускаются через одинаковый manual prek gate локально
 и в Android build CI: `prek run --all-files --hook-stage manual android-unit`.
 Нужны проектный JDK и Android SDK. Проект фиксирует JDK 21
