@@ -39,8 +39,9 @@ GitHub Actions дополнительно проверяет wrapper JAR чер�
 `gradle/actions/wrapper-validation` и выполняет bootstrap на JDK 21.
 
 Wrapper, AGP и `compileSdk` обновляются как единая совместимая матрица:
-Gradle 9.8.1, AGP 9.3.1 и API 37. Откат только одного элемента этой матрицы
-запрещён: он снова сделает AndroidX Core 1.19.1 неразрешимой зависимостью.
+Gradle 9.8.1, AGP 9.3.1 и API 37. AGP 9.3.1 допускает Gradle 9.5.0 или новее,
+поэтому откат Gradle до 9.7.1 сам по себе не делает Core 1.19.1 неразрешимым.
+Он возвращает version lint finding, который блокирует текущие release gates.
 
 ## Обновление после target 36 bootstrap
 
