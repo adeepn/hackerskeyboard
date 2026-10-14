@@ -31,4 +31,5 @@ for apk in "$@"; do
   done
 
   echo "Verified native ABIs in ${apk}"
+  python3 "$(dirname "$0")/verify_native_alignment.py" "${apk}"
 done

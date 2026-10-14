@@ -63,6 +63,12 @@ Epic: **Stage 1: восстановить современную воспрои�
 
 Epic: **Stage 2: AndroidX и targetSdk 37**.
 
+Приоритет от 21 сентября 2026: [#95](https://github.com/adeepn/hackerskeyboard/issues/95)
+поднимает target сразу до 36 для Internal testing; S2.13–S2.18 больше не являются
+шестью последовательными релизами. Их поведенческие проверки сохраняются;
+полная S2.09b/S2.10–S2.12 не блокирует bootstrap без конкретного runtime дефекта.
+См. [target-36-bootstrap.md](target-36-bootstrap.md).
+
 - S2.01 ([#48](https://github.com/adeepn/hackerskeyboard/issues/48)) —
   инвентаризация Support Library и AndroidX migration plan;
 - S2.02 ([#50](https://github.com/adeepn/hackerskeyboard/issues/50)) —

@@ -37,6 +37,11 @@ for apk in "$@"; do
 
   actual_application_id="$(apkanalyzer manifest application-id "${apk}")"
   actual_application_id="${actual_application_id//$'\r'/}"
+  actual_target_sdk="$(apkanalyzer manifest target-sdk "${apk}")"
+  if [[ "${actual_target_sdk//$'\r'/}" != "36" ]]; then
+    echo "APK must target API 36 for the Play bootstrap: ${apk}" >&2
+    exit 1
+  fi
   if [[ "${actual_application_id}" != "${expected_application_id}" ]]; then
     echo "Unexpected application ID in ${apk}: ${actual_application_id}" >&2
     exit 1

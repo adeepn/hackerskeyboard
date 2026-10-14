@@ -260,3 +260,8 @@ S2.09a добавляет пять device tests voice-IME selection/dispatch с 
 Android metadata и fake system-service boundary, а также mutation test нового
 узкого query. Они не записывают звук и не доказывают реальное переключение IME;
 provider acceptance и условия удаления JAR описаны в [voice-input.md](voice-input.md).
+
+Target 36 bootstrap (#95) расширяет CI API 36/16 KB image с проверкой фактической
+page size и JNI lookup. Добавлены повторные Activity insets и real IME-session
+smoke, плюс offline ELF/ZIP tests и проверки native alignment APK/AAB.
+Команды и незакрытые manual acceptance cases: [target-36-bootstrap.md](target-36-bootstrap.md).

@@ -41,6 +41,7 @@ public class Main extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        ActivityInsets.apply(this);
         String html = getString(R.string.main_body);
         html += "<p><i>Version: " + getString(R.string.auto_version) + "</i></p>";
         Spanned content = Html.fromHtml(html);
@@ -97,4 +98,3 @@ public class Main extends Activity {
         });
     }    
 }
-

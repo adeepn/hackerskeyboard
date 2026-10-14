@@ -25,7 +25,7 @@ EXPECTED_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
 EXPECTED_SDK_LEVELS = {
     "compileSdk": "37",
     "minSdk": "24",
-    "targetSdk": "26",
+    "targetSdk": "36",
 }
 FORBIDDEN_TOKENS = (
     "android.preference.",

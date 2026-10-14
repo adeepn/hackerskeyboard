@@ -21,6 +21,7 @@ hooks = [
 [[repos]]
 repo = "local"
 hooks = [
+  { id = "native-alignment-tests", name = "16 KB native alignment verifier tests", entry = "python3 scripts/test-native-alignment.py", language = "system", pass_filenames = false, always_run = true },
   { id = "application-identity", name = "Application identity", entry = "python3 scripts/verify-application-identity.py", language = "system", pass_filenames = false, always_run = true },
   { id = "androidx-migration", name = "AndroidX migration", entry = "python3 scripts/verify-androidx-migration.py", language = "system", pass_filenames = false, always_run = true },
   { id = "manifest-component-tests", name = "Manifest component tests", entry = "python3 scripts/test-manifest-components.py", language = "system", pass_filenames = false, always_run = true },

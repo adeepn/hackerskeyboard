@@ -1,7 +1,7 @@
 # Голосовой ввод: S2.09
 
 Tracking: [#93](https://github.com/adeepn/hackerskeyboard/issues/93).
-`targetSdk` остаётся 26. Миграция разделена на два reviewable PR, поскольку
+S2.09a был принят при `targetSdk 26`. Миграция разделена на два reviewable PR, поскольку
 старый JAR содержит два разных пути, а не только запуск speech Activity.
 
 ## Исследование старого контракта
@@ -96,7 +96,9 @@ voice-IME, объявляющая enabled `voice` subtype; несколько п
 5. Удалить JAR/build reference после замены обоих путей; зафиксировать license
    inventory и проверить APK/AAB без `com.google.android.voiceime`.
 
-До завершения S2.09b голосовой ввод не объявляется готовым к повышению target.
+По решению владельца от 21 сентября 2026 полная S2.09b не блокирует target 36
+и Internal testing (#95). При этом фактические voice runtime ошибки требуют
+исправления; сама смена target не считается проверкой голосового ввода.
 
 Официальные API:
 [enabled IME/subtypes](https://developer.android.com/reference/android/view/inputmethod/InputMethodManager),

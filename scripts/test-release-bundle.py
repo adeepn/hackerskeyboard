@@ -4,6 +4,7 @@
 """Offline regression tests for release bundle validation failures."""
 
 import importlib.util
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -21,12 +22,12 @@ SPEC.loader.exec_module(MODULE)
 class ReleaseBundleTest(unittest.TestCase):
     expected = {
         "package": "com.baodeep.hackerskeyboard", "versionCode": "2000004",
-        "versionName": "2.0.0-alpha04", "minSdk": "24", "targetSdk": "26",
+        "versionName": "2.0.0-alpha04", "minSdk": "24", "targetSdk": "36",
     }
     manifest = '''<manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.baodeep.hackerskeyboard" android:versionCode="2000004"
         android:versionName="2.0.0-alpha04">
-        <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="26"/>
+        <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="36"/>
         <queries>
             <intent><action android:name="org.pocketworkstation.DICT"/></intent>
             <intent><action android:name="com.menny.android.anysoftkeyboard.DICTIONARY"/></intent>
@@ -39,12 +40,20 @@ class ReleaseBundleTest(unittest.TestCase):
         MODULE.verify_manifest(self.manifest, self.expected)
         MODULE.verify_manifest(self.manifest.replace(' android:debuggable="false"', ""), self.expected)
 
+    def test_bundle_must_request_16kb_alignment_for_generated_apks(self):
+        config = {"optimizations": {"uncompressNativeLibraries": {"alignment": "PAGE_ALIGNMENT_16K"}}}
+        MODULE.verify_page_alignment(json.dumps(config))
+        config["optimizations"]["uncompressNativeLibraries"]["alignment"] = "PAGE_ALIGNMENT_4K"
+        for invalid in (config, {}):
+            with self.assertRaises(ValueError):
+                MODULE.verify_page_alignment(json.dumps(invalid))
+
     def test_wrong_identity_versions_sdks_and_debuggable_rejected(self):
         mutations = (
             ("com.baodeep.hackerskeyboard", "example.wrong"),
             ("2000004", "2000003"), ("alpha04", "alpha03"),
             ('minSdkVersion="24"', 'minSdkVersion="25"'),
-            ('targetSdkVersion="26"', 'targetSdkVersion="37"'),
+            ('targetSdkVersion="36"', 'targetSdkVersion="26"'),
             ('debuggable="false"', 'debuggable="true"'),
             ('<application android:debuggable="false"/>', ""),
         )

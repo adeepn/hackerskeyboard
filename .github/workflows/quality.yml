@@ -187,8 +187,12 @@ jobs:
       matrix:
         include:
           - api: 24
+          - api: 36
+            task: pixel2Api36_16kDebugAndroidTest
+            page-size: 16384
           - api: 37
             task: pixel2Api37DebugAndroidTest
+            page-size: 4096
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -219,13 +223,14 @@ jobs:
         if: matrix.api == 24
         run: scripts/run-api24-connected-tests.sh
 
-      - name: Run application and JNI smoke tests on API 37
-        if: matrix.api == 37
+      - name: Run application and JNI smoke tests on API ${{ matrix.api }}
+        if: matrix.api != 24
         run: >-
           ./gradlew :app:${{ matrix.task }}
           --no-daemon
           --stacktrace
           -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+          -Pandroid.testInstrumentationRunnerArguments.expectedPageSize=${{ matrix.page-size }}
 
       - name: Upload instrumentation results
         if: always()

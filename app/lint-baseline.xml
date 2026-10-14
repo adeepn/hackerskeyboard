@@ -3017,17 +3017,6 @@
     </issue>
 
     <issue
-        id="ExpiredTargetSdkVersion"
-        message="Google Play requires that apps target API level 33 or higher."
-        errorLine1="        targetSdk 26"
-        errorLine2="        ~~~~~~~~~~~~">
-        <location
-            file="build.gradle"
-            line="12"
-            column="9"/>
-    </issue>
-
-    <issue
         id="Recycle"
         message="This `TypedArray` should be recycled after use with `#recycle()`"
         errorLine1="        TypedArray a = context.obtainStyledAttributes("
