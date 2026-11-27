@@ -5,7 +5,7 @@
 | Компонент | Версия | Состояние |
 | --- | --- | --- |
 | JDK | 21 | зафиксирован в `.java-version` |
-| Gradle | 9.8.2 | зафиксирован wrapper и SHA-256 |
+| Gradle | 9.9.2 | зафиксирован wrapper и SHA-256 |
 | Android Gradle Plugin | 9.3.1 | зафиксирован в `gradle.properties` |
 | Android NDK | 29.0.14206865 (r29) | зафиксирован в `gradle.properties` |
 | CMake | 3.22.1 | зафиксирован в `gradle.properties` |
@@ -14,7 +14,7 @@
 
 AGP 9.3.1 требует Gradle 9.5.0 или новее, минимум JDK 17 и поддерживает API 37.
 Проект фиксирует
-[Gradle 9.8.2](https://docs.gradle.org/9.8.2/release-notes.html). AndroidX Core
+[Gradle 9.9.2](https://docs.gradle.org/9.9.2/release-notes.html). AndroidX Core
 1.19.1 сохраняется после устранения новых version lint findings после PR #96.
 Полный wrapper сгенерирован из официального дистрибутива; provenance, checksums
 и решение о release-age buffer записаны в [gradle-wrapper.md](gradle-wrapper.md).
