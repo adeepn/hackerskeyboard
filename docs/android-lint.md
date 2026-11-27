@@ -6,6 +6,7 @@
 `app/build.gradle` включены `abortOnError` и `warningsAsErrors`, поэтому любая
 новая lint-проблема останавливает проверку. Текущий исторический долг перечислен
 точечно в `app/lint-baseline.xml`; глобальных suppressions категорий нет.
+Единственное исключение вне baseline описано ниже.
 
 Локальный запуск через общий runner проекта:
 
@@ -28,6 +29,36 @@ JDK 21 закреплён не ради обхода проверки: `Bidirect
 AGP 9.3.1 вызывает `java.util.List.removeLast()`. На JDK 17 анализ падал внутри
 lint до формирования отчёта. Детектор `BidiSpoofing` остаётся включённым, а
 локальная и CI-среда используют одинаковый JDK 21 LTS.
+
+## Возраст релизов и wrapper freshness
+
+[DECISION] `lint.xml` исключает только `AndroidGradlePluginVersion` для
+`gradle/wrapper/gradle-wrapper.properties`. Это подсказка о более новом Gradle,
+которая меняется в день публикации релиза и конфликтует с семидневным буфером
+supply chain. Наличие нового релиза не означает несовместимость закреплённой
+матрицы. Автоматическое требование немедленно обновиться не является gate.
+
+Совместимые обновления закреплённых версий проходят отдельные reviewed
+Dependabot PR. В `.github/dependabot.yml` оба ecosystem (`gradle` и
+`github-actions`) имеют `cooldown.default-days: 7`, без исключений и сокращённых
+SemVer-интервалов. Weekly schedule может увеличить фактическое ожидание.
+Проверка возраста при ручном обновлении остаётся обязанностью автора PR.
+Security alerts рассматриваются отдельно; сокращение буфера допускается вручную
+только для именованного CVE по правилам владельца, с причиной в commit.
+Настройка cooldown не заменяет security review и проверку совместимости матрицы.
+
+`warningsAsErrors`, `abortOnError` и baseline сохранены. Исключение не меняет
+severity issue в других файлах, включая AGP в build scripts, и не отключает
+проверки корректности, безопасности или совместимости. Guard
+`scripts/test-dependency-update-policy.py` проверяет точную область исключения
+и оба cooldown; mutation cases отклоняют wildcard/category/global suppression,
+удаление cooldown и обходы для patch/exclude. Он запускается общим `prek` в CI
+и локально.
+
+Синтаксис и область действия: [Android lint configuration](https://developer.android.com/studio/write/lint#config)
+и [lint.xml reference](https://googlesamples.github.io/android-custom-lint-rules/usage/lintxml.md.html).
+Поддержка `default-days` для обоих ecosystem:
+[Dependabot cooldown](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#cooldown).
 
 ## Что исправлено до baseline
 
