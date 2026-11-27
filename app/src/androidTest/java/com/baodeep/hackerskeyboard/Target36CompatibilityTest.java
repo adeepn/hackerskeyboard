@@ -132,6 +132,7 @@ public class Target36CompatibilityTest {
                 if (active[0] == null) SystemClock.sleep(100);
             }
             assertNotNull("IME must start a real editor session", active[0]);
+            assertKeyboardNavigationInsets(instrumentation, active[0]);
             dispatchAndAwait(instrumentation, active[0], editor, 'a', "a");
             dispatchAndAwait(instrumentation, active[0], editor, 'b', "ab");
             dispatchAndAwait(instrumentation, active[0], editor, Keyboard.KEYCODE_DELETE, "a");
@@ -163,6 +164,45 @@ public class Target36CompatibilityTest {
                 }
             }
         }
+    }
+
+    private static void assertKeyboardNavigationInsets(Instrumentation instrumentation, LatinIME ime) {
+        if (Build.VERSION.SDK_INT < 35) return;
+        instrumentation.runOnMainSync(() -> {
+            LatinKeyboardView keyboard = ime.mKeyboardSwitcher.getInputView();
+            WindowInsetsCompat original = ViewCompat.getRootWindowInsets(keyboard);
+            assertNotNull("Visible keyboard must have window insets", original);
+            int left = keyboard.getPaddingLeft();
+            int top = keyboard.getPaddingTop();
+            int right = keyboard.getPaddingRight();
+            try {
+                for (int bottom : new int[] {23, 23, 0, 37}) {
+                    WindowInsetsCompat bars = new WindowInsetsCompat.Builder()
+                            .setInsets(WindowInsetsCompat.Type.navigationBars(),
+                                    Insets.of(0, 0, 0, bottom))
+                            // Editor IME insets must never be added back to the keyboard itself.
+                            .setInsets(WindowInsetsCompat.Type.ime(), Insets.of(0, 0, 0, 700))
+                            .setInsets(WindowInsetsCompat.Type.statusBars(), Insets.of(0, 19, 0, 0))
+                            .build();
+                    ViewCompat.dispatchApplyWindowInsets(keyboard, bars);
+                    assertEquals("Reserve the navigation bar below the keys", bottom,
+                            keyboard.getPaddingBottom());
+                    assertEquals(left, keyboard.getPaddingLeft());
+                    assertEquals(top, keyboard.getPaddingTop());
+                    assertEquals(right, keyboard.getPaddingRight());
+                    keyboard.measure(View.MeasureSpec.makeMeasureSpec(keyboard.getWidth(),
+                                    View.MeasureSpec.EXACTLY),
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                    assertEquals("Insets must not shrink the keyboard rows",
+                            keyboard.getKeyboard().getHeight() + top + bottom,
+                            keyboard.getMeasuredHeight());
+                }
+            } finally {
+                ViewCompat.dispatchApplyWindowInsets(keyboard, original);
+                keyboard.requestLayout();
+            }
+        });
+        instrumentation.waitForIdleSync();
     }
 
     private static void dispatchAndAwait(Instrumentation instrumentation, LatinIME ime,
