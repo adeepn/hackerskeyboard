@@ -89,3 +89,15 @@ made available to Gradle and ordinary PR workflows.
   provide no migration patch;
 - API 24 and API 37 instrumentation tests provide the installation, component
   and JNI baseline that the renamed package must preserve.
+
+## Display name
+
+Owner decision of 27 November 2026: the user-visible application and IME name is
+**Hacker's keyboard: Rebirth**. Application/IME labels, settings titles and setup
+instructions use this name in the default and Russian resources; other locales
+inherit the default label. This replaces the earlier display label "Hacker's
+Keyboard v2" without changing the permanent application ID, namespace, signing
+certificate, preference keys or dictionary discovery protocols. The resource
+identifier `english_ime_settings` also remains unchanged because it is a
+preference-screen key in the persisted settings contract. Historical migration
+references and existing attribution/modification notices are retained.

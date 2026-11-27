@@ -57,7 +57,7 @@ import java.util.Set;
 public class ApplicationSmokeTest {
     private static final String EXPECTED_APPLICATION_ID =
             "com.baodeep.hackerskeyboard";
-    private static final String EXPECTED_DISPLAY_NAME = "Hacker's Keyboard v2";
+    private static final String EXPECTED_DISPLAY_NAME = "Hacker's keyboard: Rebirth";
     private static final String DEFAULT_SHARED_PREFERENCES =
             EXPECTED_APPLICATION_ID + "_preferences";
 
