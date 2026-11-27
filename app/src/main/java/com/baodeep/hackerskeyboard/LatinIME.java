@@ -3525,12 +3525,11 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     protected void dump(FileDescriptor fd, PrintWriter fout, String[] args) {
-        super.dump(fd, fout, args);
+        // InputMethodService.dump includes editor/extracted text; never delegate.
 
         final Printer p = new PrintWriterPrinter(fout);
         p.println("LatinIME state :");
-        p.println("  Keyboard mode = " + mKeyboardSwitcher.getKeyboardMode());
-        p.println("  mComposing=" + mComposing.toString());
+        p.println("  Keyboard mode = " + (mKeyboardSwitcher == null ? -1 : mKeyboardSwitcher.getKeyboardMode()));
         p.println("  mPredictionOnForMode=" + mPredictionOnForMode);
         p.println("  mCorrectionMode=" + mCorrectionMode);
         p.println("  mPredicting=" + mPredicting);
