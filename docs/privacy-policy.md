@@ -1,10 +1,12 @@
-# Hacker's keyboard: Rebirth — privacy policy draft
+# Hacker's keyboard: Rebirth — privacy policy
 
-Publication status: prepared 27 November 2026 for owner review. This tracked draft
-has not replaced the live policy at https://baodeep.com/hkkpolicy. Set the effective
-date when the reviewed text is published. The application package is
-`com.baodeep.hackerskeyboard`; the Google Play developer named in the existing
-policy is `adeepv`. Privacy contact: **priv@baodeep.com**.
+Publication status: published 27 November 2026 at https://baodeep.com/hkkpolicy.
+The HTTPS response and owning local HTML source were verified byte-for-byte
+(SHA-256 `b29a77eaa2ac876dfb6eaaff9b064e9b39db4f5b5f5ba98f0a2e4744fcc2cc99`).
+This policy covers already distributed releases and the upcoming privacy changes;
+it does not claim the branch's diagnostic or editor-privacy fixes are shipped.
+Application package: `com.baodeep.hackerskeyboard`. Google Play developer: `adeepv`.
+Privacy contact: **priv@baodeep.com**.
 
 ## Typing and suggestions
 

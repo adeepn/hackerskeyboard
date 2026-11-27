@@ -12,11 +12,12 @@ WebView, preference keys or network permission. An unavailable browser produces 
 localized message containing the URL. Default and Russian labels are provided;
 other locales use the default resource.
 
-The [policy draft](privacy-policy.md) describes verified storage and external
+The [policy text](privacy-policy.md) describes verified storage and external
 boundaries without promising universal device-only storage or backup exclusion.
-It is prepared text, not evidence that the website has changed. Audit evidence is recorded with the privacy change. The published policy's
-absolute device-only/no-other-recipient claims require replacement through the
-website's owning process.
+It was published at https://baodeep.com/hkkpolicy on 27 November 2026 and verified
+against the owning HTML source. Publication does not mean this branch's app code
+has shipped: the wording also covers installed releases and scopes voice behavior
+by release.
 
 [GOTCHA] Current distributed releases must not be assumed to have this branch's
 hardening. The privacyfix work targets content-free service diagnostics, password
@@ -47,8 +48,8 @@ issues or model prompts. Use sanitized technical reproductions with synthetic te
   rerun settings/application identity guards, resource builds, lint and full prek.
 - [DEFER] Backup/restore and OEM device-transfer testing remains required before
   stronger learned-dictionary exclusion or deletion guarantees can be made.
-- Confirm final policy text matches the shipped artifact and publish through the
-  website owner; verify the live policy separately. Reconcile Play Data Safety
+- Confirm the published policy still matches the final shipped artifact.
+  Reconcile Play Data Safety
   against all distributed tracks and platform/SDK boundaries before submission.
 
 No website publication, Console configuration or release is performed by adding

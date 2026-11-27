@@ -52,8 +52,8 @@
 
 - [Privacy behavior](privacy.md) — ограничения диагностики, обучения и внешних
   сервисов, Android vitals и release acceptance.
-- [Privacy policy draft](privacy-policy.md) — подготовленный текст политики,
-  отделённый от фактической публикации сайта.
+- [Privacy policy](privacy-policy.md) — опубликованный текст политики и
+  границы проверки приложения.
 
 ## Целевое состояние v2
 
