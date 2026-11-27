@@ -641,6 +641,7 @@ public class KeyboardSwitcher implements
             mInputView.setExtensionLayoutResId(THEMES[newLayout]);
             mInputView.setOnKeyboardActionListener(mInputMethodService);
             mInputView.setPadding(0, 0, 0, 0);
+            ImeNavigationInsets.apply(mInputView);
             mLayoutId = newLayout;
         }
         mInputMethodService.mHandler.post(new Runnable() {
