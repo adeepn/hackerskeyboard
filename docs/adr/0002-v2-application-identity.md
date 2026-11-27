@@ -93,7 +93,7 @@ made available to Gradle and ordinary PR workflows.
 ## Display name
 
 Owner decision of 27 November 2026: the user-visible application and IME name is
-**Hacker's Keyboard Rebirth**. Application/IME labels, settings titles and setup
+**Hacker's keyboard: Rebirth**. Application/IME labels, settings titles and setup
 instructions use this name in the default and Russian resources; other locales
 inherit the default label. This replaces the earlier display label "Hacker's
 Keyboard v2" without changing the permanent application ID, namespace, signing
