@@ -70,3 +70,12 @@ PR #101 обновляет дистрибутив до Gradle 9.8.2. Релиз 
 [Compatibility matrix](https://docs.gradle.org/9.9.2/userguide/compatibility.html)
 включает проектные JDK 21 и AGP 9.3.1. Wrapper JAR/scripts сохраняют provenance
 9.8.1; остальные версии toolchain не меняются.
+
+## Политика новых релизов
+
+[DECISION] Wrapper freshness следует reviewed Dependabot PR после семидневного
+`cooldown`, а не изменяемой в день релиза подсказке lint. Точная область
+исключения и неизменённые compatibility/security gates описаны в
+[Android lint](android-lint.md#возраст-релизов-и-wrapper-freshness).
+Исторические обновления выше описывают причины на тот момент; появление нового
+релиза больше не требует немедленного изменения закреплённого Gradle.

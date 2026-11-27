@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<lint>
+    <!-- Wrapper freshness follows reviewed Dependabot updates after a seven-day cooldown.
+         Compatibility and security checks remain enabled; see docs/android-lint.md. -->
+    <issue id="AndroidGradlePluginVersion">
+        <ignore path="gradle/wrapper/gradle-wrapper.properties" />
+    </issue>
+</lint>
