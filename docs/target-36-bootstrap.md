@@ -117,3 +117,7 @@ is evidence of a similar overlap and a candidate `fitsSystemWindows` workaround.
 No upstream patch was imported. The explicit bottom-only handler avoids adding
 status-bar padding or changing the window's side-fitting policy. Platform
 reference: [Android 16 InputMethodService](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android16-release/core/java/android/inputmethodservice/InputMethodService.java).
+
+The next signed candidate is alpha06 / `2000006`, so it can update the installed
+alpha05 without reusing a versionCode. Signing still occurs only after an
+approved merge to v2 and green CI.
