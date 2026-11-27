@@ -6,11 +6,12 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertNull;
 
 import android.view.inputmethod.InputMethodInfo;
+import android.view.inputmethod.EditorInfo;
+import android.text.InputType;
 import android.view.inputmethod.InputMethodSubtype;
 import android.app.Instrumentation;
 import android.content.Context;
 
-import com.google.android.voiceime.VoiceRecognitionTrigger;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -135,61 +136,101 @@ public class VoiceImeSwitcherTest {
     }
 
     private static final class TestIme extends LatinIME {
+        final EditorInfo editor = new EditorInfo();
+        @Override public EditorInfo getCurrentInputEditorInfo() { return editor; }
+        void startEditor(int type, int options) {
+            editor.inputType = type;
+            editor.imeOptions = options;
+            onStartInput(editor, false);
+        }
         TestIme(Context context) {
             attachBaseContext(context);
         }
     }
 
-    private static final class LegacyTrigger extends VoiceRecognitionTrigger {
-        int starts;
-        boolean installed = true;
-
-        LegacyTrigger(TestIme ime) {
-            super(ime);
-        }
-
-        @Override
-        public boolean isInstalled() {
-            return installed;
-        }
-
-        @Override
-        public void startVoiceRecognition() {
-            starts++;
-        }
-    }
-
     @Test
-    public void latinImeFallsBackOnlyWhenNoEnabledVoiceSubtypeExists() throws Exception {
+    public void unavailableVoiceImeHasNoLegacyRecognizerFallback() throws Exception {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         Field switcherField = LatinIME.class.getDeclaredField("mVoiceImeSwitcher");
         switcherField.setAccessible(true);
-        Field legacyField = LatinIME.class.getDeclaredField("mVoiceRecognitionTrigger");
-        legacyField.setAccessible(true);
         Method start = LatinIME.class.getDeclaredMethod("startVoiceInput");
         start.setAccessible(true);
         instrumentation.runOnMainSync(() -> {
             TestIme ime = new TestIme(instrumentation.getTargetContext());
             FakeBackend backend = new FakeBackend();
-            LegacyTrigger legacy = new LegacyTrigger(ime);
             try {
+                ime.startEditor(InputType.TYPE_CLASS_TEXT, 0);
                 switcherField.set(ime, new VoiceImeSwitcher(backend, OWN_PACKAGE));
-                legacyField.set(ime, legacy);
                 start.invoke(ime);
-                assertEquals(1, legacy.starts);
-                legacy.installed = false;
-                start.invoke(ime);
-                assertEquals(1, legacy.starts);
-                legacy.installed = true;
-                backend.add("example.offline", subtype("voice"));
-                start.invoke(ime);
-                assertEquals(1, legacy.starts);
-                backend.failure = new SecurityException("Test provider loss");
-                start.invoke(ime);
-                assertEquals(1, legacy.starts);
+                assertNull(backend.selectedId);
+                for (Field field : LatinIME.class.getDeclaredFields()) {
+                    org.junit.Assert.assertFalse(field.getType().getName()
+                            .startsWith("com.google.android.voiceime."));
+                }
+                try {
+                    Class.forName("com.google.android.voiceime.VoiceRecognitionTrigger");
+                    org.junit.Assert.fail("Legacy deferred recognizer must not be packaged");
+                } catch (ClassNotFoundException expected) {
+                    // No trigger can schedule a cross-editor deferred result.
+                }
             } catch (ReflectiveOperationException exception) {
                 throw new AssertionError(exception);
             }
         });
     }
+
+    @Test
+    public void sensitiveSessionsBlockDirectVoiceDispatchAndOrdinarySessionRestoresIt()
+            throws Exception {
+        Field switcherField = LatinIME.class.getDeclaredField("mVoiceImeSwitcher");
+        switcherField.setAccessible(true);
+        Method start = LatinIME.class.getDeclaredMethod("startVoiceInput");
+        start.setAccessible(true);
+        Method show = LatinIME.class.getDeclaredMethod("shouldShowVoiceButton", EditorInfo.class);
+        show.setAccessible(true);
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        instrumentation.runOnMainSync(() -> {
+            TestIme ime = new TestIme(instrumentation.getTargetContext());
+            FakeBackend backend = new FakeBackend();
+            backend.add("example.offline", subtype("voice"));
+            try {
+                switcherField.set(ime, new VoiceImeSwitcher(backend, OWN_PACKAGE));
+                start.invoke(ime); // No editor session must fail closed.
+                assertNull(backend.selectedId);
+                for (int type : new int[] {
+                        InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD,
+                        InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
+                        InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD,
+                        InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD}) {
+                    ime.startEditor(type, 0);
+                    assertEquals(false, show.invoke(ime, ime.editor));
+                    start.invoke(ime);
+                    assertNull(backend.selectedId);
+                }
+                ime.startEditor(InputType.TYPE_CLASS_TEXT,
+                        EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING);
+                assertEquals(false, show.invoke(ime, ime.editor));
+                start.invoke(ime);
+                assertNull(backend.selectedId);
+                ime.startEditor(InputType.TYPE_CLASS_TEXT, 0);
+                assertEquals(true, show.invoke(ime, ime.editor));
+                start.invoke(ime);
+                assertEquals(backend.methods.get(0).getId(), backend.selectedId);
+                Field keyboard = LatinIME.class.getDeclaredField("mKeyboardSwitcher");
+                keyboard.setAccessible(true);
+                java.lang.reflect.Constructor<KeyboardSwitcher> keyboardConstructor =
+                        KeyboardSwitcher.class.getDeclaredConstructor();
+                keyboardConstructor.setAccessible(true);
+                keyboard.set(ime, keyboardConstructor.newInstance());
+                ime.onFinishInput();
+                backend.selectedId = null;
+                assertEquals(false, show.invoke(ime, ime.editor));
+                start.invoke(ime);
+                assertNull(backend.selectedId);
+            } catch (ReflectiveOperationException exception) {
+                throw new AssertionError(exception);
+            }
+        });
+    }
+
 }

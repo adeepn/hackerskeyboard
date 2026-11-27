@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="privacy_no_browser">Браузер недоступен. Откройте https://baodeep.com/hkkpolicy на другом устройстве.</string>
+</resources>

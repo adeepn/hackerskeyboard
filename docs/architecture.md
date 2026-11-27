@@ -8,7 +8,8 @@
 - 1 999 строк C++/JNI;
 - 519 Android resources;
 - один Android application module;
-- старый закрытый JAR голосового ввода `app/libs/voiceimeutils.jar`.
+- исторически — закрытый JAR голосового ввода `app/libs/voiceimeutils.jar`
+  (удалён 27 ноября 2026; текущий route — `VoiceImeSwitcher`, см. `voice-input.md`).
 
 Код происходит от AOSP LatinIME эпохи Android 2.3. Последние существенные
 изменения основной ветки относятся к 2019–2020 годам.
@@ -56,8 +57,8 @@ JDK 26. В S2.02 проектный JDK поднят до 21 вместе с AGP
    UI — на новых window/insets правилах.
 6. `android.preference`, `AsyncTask`, старые locale/resource и vibration API
    требуют замены либо совместимого адаптера.
-7. `voiceimeutils.jar` 2011 года не должен оставаться непрозрачной долгосрочной
-   зависимостью.
+7. Исторический `voiceimeutils.jar` 2011 года удалён при privacy hardening;
+   session-safe recognizer route остаётся отдельной задачей S2.09b.
 8. Глобальное изменение `Resources.Configuration.locale` создаёт риск утечки
    locale state между раскладками и поломки popup resources.
 

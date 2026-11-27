@@ -50,6 +50,11 @@
   каждого этапа.
 - `adr/` — будущие Architecture Decision Records для необратимых решений.
 
+- [Privacy behavior](privacy.md) — ограничения диагностики, обучения и внешних
+  сервисов, Android vitals и release acceptance.
+- [Privacy policy](privacy-policy.md) — опубликованный текст политики и
+  границы проверки приложения.
+
 ## Целевое состояние v2
 
 - воспроизводимая сборка на JDK 21 с Gradle wrapper;

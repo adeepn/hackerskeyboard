@@ -88,6 +88,12 @@ public class Main extends Activity {
                 }
             }
         });
+        final Button privacy = (Button) findViewById(R.id.main_privacy_policy);
+        privacy.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openPrivacyPolicy(Main.this);
+            }
+        });
         // PluginManager.getPluginDictionaries(getApplicationContext()); // why?
 
         final Button setup5 = (Button) findViewById(R.id.main_setup_btn_settings);
@@ -96,5 +102,14 @@ public class Main extends Activity {
                 startActivityForResult(new Intent(that, LatinIMESettings.class), 0);
             }
         });
-    }    
+    }
+
+    void openPrivacyPolicy(Context browserContext) {
+        try {
+            browserContext.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://baodeep.com/hkkpolicy")));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.privacy_no_browser, Toast.LENGTH_LONG).show();
+        }
+    }
 }

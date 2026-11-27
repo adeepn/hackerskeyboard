@@ -19,7 +19,6 @@ package com.baodeep.hackerskeyboard;
 
 import com.baodeep.hackerskeyboard.LatinIMEUtil.RingCharBuffer;
 
-import com.google.android.voiceime.VoiceRecognitionTrigger;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -182,6 +181,8 @@ public class LatinIME extends InputMethodService implements
     private int mCommittedLength;
     private boolean mPredicting;
     private boolean mEnableVoiceButton;
+    private boolean mEditorAllowsLearning;
+    private boolean mEditorAllowsVoice;
     private CharSequence mBestWord;
     private boolean mPredictionOnForMode;
     private boolean mPredictionOnPref;    
@@ -289,7 +290,6 @@ public class LatinIME extends InputMethodService implements
     private PluginManager mPluginManager;
     private NotificationReceiver mNotificationReceiver;
 
-    private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
     private VoiceImeSwitcher mVoiceImeSwitcher;
 
     public abstract static class WordAlternatives {
@@ -406,7 +406,6 @@ public class LatinIME extends InputMethodService implements
         mVolDownAction = prefs.getString(PREF_VOL_DOWN, res.getString(R.string.default_vol_down));
         sKeyboardSettings.initPrefs(prefs, res);
 
-        mVoiceRecognitionTrigger = new VoiceRecognitionTrigger(this);
         mVoiceImeSwitcher = new VoiceImeSwitcher(this);
         
         updateKeyboardOptions();
@@ -771,6 +770,23 @@ public class LatinIME extends InputMethodService implements
     }
     
     @Override
+    public void onStartInput(EditorInfo attribute, boolean restarting) {
+        // Establish policy even when no keyboard view is created (hardware input).
+        mEditorAllowsLearning = attribute != null && EditorPrivacyPolicy.allowsLearning(
+                attribute.inputType, attribute.imeOptions);
+        mEditorAllowsVoice = attribute != null && EditorPrivacyPolicy.allowsVoice(
+                attribute.inputType, attribute.imeOptions);
+        mPasswordText = attribute != null && EditorPrivacyPolicy.isPassword(attribute.inputType);
+        mPredictionOnForMode = false;
+        mCompletions = null;
+        mCompletionOn = false;
+        mHandler.removeMessages(MSG_UPDATE_SUGGESTIONS);
+        mHandler.removeMessages(MSG_UPDATE_OLD_SUGGESTIONS);
+        resetPrediction();
+        super.onStartInput(attribute, restarting);
+    }
+
+    @Override
     public void onStartInputView(EditorInfo attribute, boolean restarting) {
         setNotification(mKeyboardNotification);
         sKeyboardSettings.editorPackageName = attribute.packageName;
@@ -798,23 +814,12 @@ public class LatinIME extends InputMethodService implements
         // Most such things we decide below in the switch statement, but we need to know
         // now whether this is a password text field, because we need to know now (before
         // the switch statement) whether we want to enable the voice button.
-        mPasswordText = false;
+        mPasswordText = EditorPrivacyPolicy.isPassword(attribute.inputType);
         int variation = attribute.inputType & EditorInfo.TYPE_MASK_VARIATION;
-        if (variation == EditorInfo.TYPE_TEXT_VARIATION_PASSWORD
-                || variation == EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                || variation == 0xe0 /* EditorInfo.TYPE_TEXT_VARIATION_WEB_PASSWORD */
-        ) {
-            if ((attribute.inputType & EditorInfo.TYPE_MASK_CLASS) == EditorInfo.TYPE_CLASS_TEXT) {
-                mPasswordText = true;
-            }
-        }
 
         mEnableVoiceButton = shouldShowVoiceButton(attribute);
         final boolean enableVoiceButton = mEnableVoiceButton && mEnableVoice;
 
-        if (mVoiceRecognitionTrigger != null) {
-            mVoiceRecognitionTrigger.onStartInputView();
-        }
         
         mInputTypeNoAutoCorrect = false;
         mPredictionOnForMode = false;
@@ -926,20 +931,18 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void startVoiceInput() {
+        if (!mEditorAllowsVoice || !shouldShowVoiceButton(getCurrentInputEditorInfo())) {
+            return;
+        }
         VoiceImeSwitcher.Result voiceResult = mVoiceImeSwitcher.start();
-        if (voiceResult == VoiceImeSwitcher.Result.UNAVAILABLE) {
-            // Temporary legacy fallback; replaced separately in S2.09b.
-            if (mVoiceRecognitionTrigger.isInstalled()) {
-                mVoiceRecognitionTrigger.startVoiceRecognition();
-            }
-        } else if (voiceResult == VoiceImeSwitcher.Result.FAILED) {
+        if (voiceResult != VoiceImeSwitcher.Result.REQUESTED) {
             Toast.makeText(this, R.string.voice_input_unavailable, Toast.LENGTH_SHORT).show();
         }
     }
 
     private boolean shouldShowVoiceButton(EditorInfo attribute) {
-        // TODO Auto-generated method stub
-        return true;
+        return mEditorAllowsVoice && attribute != null
+                && EditorPrivacyPolicy.allowsVoice(attribute.inputType, attribute.imeOptions);
     }
 
     private void checkReCorrectionOnStart() {
@@ -972,6 +975,12 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     public void onFinishInput() {
+        mEditorAllowsLearning = false;
+        mEditorAllowsVoice = false;
+        mEnableVoiceButton = false;
+        mHandler.removeMessages(MSG_UPDATE_SUGGESTIONS);
+        mHandler.removeMessages(MSG_UPDATE_OLD_SUGGESTIONS);
+        resetPrediction();
         super.onFinishInput();
 
         onAutoCompletionStateChanged(false);
@@ -1463,6 +1472,7 @@ public class LatinIME extends InputMethodService implements
     }
 
     public boolean addWordToDictionary(String word) {
+        if (!mEditorAllowsLearning) return false;
         mUserDictionary.addWord(word, 128);
         // Suggestion strip should be updated after the operation of adding word
         // to the
@@ -2828,7 +2838,7 @@ public class LatinIME extends InputMethodService implements
      */
     private void checkAddToDictionary(CharSequence suggestion,
             int frequencyDelta, boolean addToBigramDictionary) {
-        if (suggestion == null || suggestion.length() < 1)
+        if (!mEditorAllowsLearning || suggestion == null || suggestion.length() < 1)
             return;
         // Only auto-add to dictionary if auto-correct is ON. Otherwise we'll be
         // adding words in situations where the user or application really
@@ -3353,6 +3363,7 @@ public class LatinIME extends InputMethodService implements
     }
     
     /* package */void promoteToUserDictionary(String word, int frequency) {
+        if (!mEditorAllowsLearning) return;
         if (mUserDictionary.isValidWord(word))
             return;
         mUserDictionary.addWord(word, frequency);
@@ -3525,12 +3536,11 @@ public class LatinIME extends InputMethodService implements
 
     @Override
     protected void dump(FileDescriptor fd, PrintWriter fout, String[] args) {
-        super.dump(fd, fout, args);
+        // InputMethodService.dump includes editor/extracted text; never delegate.
 
         final Printer p = new PrintWriterPrinter(fout);
         p.println("LatinIME state :");
-        p.println("  Keyboard mode = " + mKeyboardSwitcher.getKeyboardMode());
-        p.println("  mComposing=" + mComposing.toString());
+        p.println("  Keyboard mode = " + (mKeyboardSwitcher == null ? -1 : mKeyboardSwitcher.getKeyboardMode()));
         p.println("  mPredictionOnForMode=" + mPredictionOnForMode);
         p.println("  mCorrectionMode=" + mCorrectionMode);
         p.println("  mPredicting=" + mPredicting);

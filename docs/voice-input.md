@@ -15,11 +15,13 @@ S2.09a был принят при `targetSdk 26`. Миграция раздел�
 - `IntentApiTrigger` проверяет `RECOGNIZE_SPEECH`, запускает service/activity
   bridge и откладывает результат до следующего `onStartInputView`. Привязка
   результата к исходной editor session требует отдельной проверки/замены.
-- `LatinIME.shouldShowVoiceButton()` пока всегда возвращает `true`.
+- На момент исследования `LatinIME.shouldShowVoiceButton()` всегда возвращал `true`.
 
 Это характеристика бинарника, не импорт исходников и не подтверждение его
 лицензионного происхождения. S1.22 licensing inventory остаётся актуальным;
-новый адаптер написан независимо по публичным Android API. JAR не изменяется.
+новый адаптер написан независимо по публичным Android API. Исторический JAR
+удалён при privacy hardening 27 ноября 2026; его происхождение не объявляется
+подтверждённым задним числом.
 
 Upstream проверен 21 сентября 2026:
 
@@ -49,11 +51,21 @@ subtypes, включая implicit defaults. Выбирает первый `voice
 скрытно. English fallback и русский перевод сообщения добавлены отдельно;
 остальные локали отслеживаются в #38, suppression только у нового ключа.
 
-Только отсутствие подходящего subtype (`UNAVAILABLE`) передаёт управление
-старому JAR. Это **временный legacy fallback**, который может также выбрать
-Google IME по своей старой политике. Настройки `voice_mode`, размещение mic,
-сохранение текста и lifecycle старого recognizer bridge пока не меняются.
-Скрытие mic при отсутствии обоих маршрутов откладывается до S2.09b.
+С 27 ноября 2026 по явному решению владельца legacy fallback отключён на всех
+версиях Android, его JAR и Gradle dependency удалены. Bytecode подтвердил, что
+`IntentApiTrigger` откладывал commit через собственный Handler, затем запрашивал
+**текущее** InputConnection; API отмены/привязки к исходной сессии отсутствует.
+Не было регистрации `ServiceHelper` в manifest и подтверждения рабочего fallback.
+Отсутствие включённого voice subtype (`UNAVAILABLE`) теперь показывает существующее
+локализованное сообщение, как и ошибка переключения (`FAILED`). Это сознательное
+изменение поведения: recognizer Activity больше не является запасным маршрутом.
+Установленная включённая voice-IME с enabled `voice` subtype остаётся доступна.
+
+Пароли (text/visible/web/numeric) и `IME_FLAG_NO_PERSONALIZED_LEARNING` запрещают
+mic UI и прямой dispatch. Политика устанавливается в `onStartInput`, до создания
+view, и отзывается в `onFinishInput`. Нет deferred result из удалённого bridge,
+который мог бы попасть в новый редактор. `voice_mode` и размещение mic сохранены;
+обычный редактор восстанавливает доступ к установленной voice-IME.
 
 Manifest добавляет только `android.view.InputMethod` query, необходимый для
 доступности IME при переключении под современной package visibility policy.
@@ -67,8 +79,10 @@ Manifest добавляет только `android.view.InputMethod` query, не�
 - `VoiceImeSwitcherTest`: Android metadata + fake system-service boundary;
   non-Google provider, keyboard-only/empty/own package, exact subtype,
   исчезновение провайдера, порядок, отказ/ошибка. Отдельный тест вызывает
-  реальный dispatch helper `LatinIME` с fake backend и spy legacy trigger:
-  fallback только при UNAVAILABLE, не после REQUESTED/FAILED.
+  реальный dispatch helper `LatinIME` с fake backend: sensitive/no-session/finished
+  sessions блокируются, ordinary session вызывает установленную voice-IME,
+  UNAVAILABLE не запускает fallback. Class-loading test подтверждает отсутствие
+  legacy trigger в test target.
 - API 24/37 CI запускает эти тесты вместе с существующими device tests.
   Они **не переключают реальную системную IME** и не записывают звук.
 - Общий visibility gate проверяет три точных query в source, APK и AAB;
@@ -84,7 +98,7 @@ voice-IME, объявляющая enabled `voice` subtype; несколько п
 по одному названию subtype. Под target >=30 повторить с внешней fixture IME
 из UID клавиатуры, включая отрицательный контроль без query.
 
-## S2.09b: следующий PR и условия удаления JAR
+## S2.09b: будущий recognizer route
 
 1. Заменить intent bridge приватным Activity/result flow на публичном
    `RecognizerIntent`; добавить ровно его query и reviewed component contract.
@@ -93,8 +107,9 @@ voice-IME, объявляющая enabled `voice` subtype; несколько п
 3. Тестировать cancel, пустой/невалидный/поздний result, удаление провайдера,
    recreation, возврат в редактор, отсутствие сервиса и обычный ввод.
 4. Обновлять доступность mic без перезаписи пользовательского `voice_mode`.
-5. Удалить JAR/build reference после замены обоих путей; зафиксировать license
-   inventory и проверить APK/AAB без `com.google.android.voiceime`.
+5. Не возвращать удалённый legacy JAR. Новый route требует отдельного review
+   privacy/lifecycle и provenance; отсутствие старого JAR не подтверждает
+   завершение общего licensing inventory.
 
 По решению владельца от 21 сентября 2026 полная S2.09b не блокирует target 36
 и Internal testing (#95). При этом фактические voice runtime ошибки требуют
@@ -104,3 +119,7 @@ voice-IME, объявляющая enabled `voice` subtype; несколько п
 [enabled IME/subtypes](https://developer.android.com/reference/android/view/inputmethod/InputMethodManager),
 [switchInputMethod](https://developer.android.com/reference/android/inputmethodservice/InputMethodService),
 [subtype mode](https://developer.android.com/reference/android/view/inputmethod/InputMethodSubtype).
+
+Удалённый исторический artifact: `voiceimeutils.jar`, SHA-256
+`dc8de4ded83fbf9c11fc55a6b9b5fcf271ce72982330f00945a735741823194c`, сохранён в истории до privacy hardening. Это
+идентификация прежнего бинарника, не подтверждение его внешнего происхождения.
