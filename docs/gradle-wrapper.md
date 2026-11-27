@@ -1,6 +1,6 @@
 # Gradle wrapper
 
-Репозиторий использует Gradle wrapper 9.8.1 как воспроизводимую точку входа в
+Репозиторий использует Gradle 9.8.2 через wrapper как воспроизводимую точку входа в
 сборку вместе с Android Gradle Plugin 9.3.1 и Android API 37.
 
 ## Состав
@@ -10,10 +10,10 @@
 - `gradle/wrapper/gradle-wrapper.properties` — URL и SHA-256 дистрибутива.
 
 Используется компактный официальный дистрибутив
-`https://services.gradle.org/distributions/gradle-9.8.1-bin.zip` с SHA-256:
+`https://services.gradle.org/distributions/gradle-9.8.2-bin.zip` с SHA-256:
 
 ```text
-dce76f55f8e251a3a1f130eb120f30b3d271de2b76c9b0729d316b5a1b6dc01f
+21bd5da2de49b642904077f38c0efdc7778e92b3ed0889392dca61b97e389607
 ```
 
 Wrapper JAR соответствует официальному Gradle 9.8.1. Его SHA-256:
@@ -39,7 +39,7 @@ GitHub Actions дополнительно проверяет wrapper JAR чер�
 `gradle/actions/wrapper-validation` и выполняет bootstrap на JDK 21.
 
 Wrapper, AGP и `compileSdk` обновляются как единая совместимая матрица:
-Gradle 9.8.1, AGP 9.3.1 и API 37. AGP 9.3.1 допускает Gradle 9.5.0 или новее,
+Gradle 9.8.2, AGP 9.3.1 и API 37. AGP 9.3.1 допускает Gradle 9.5.0 или новее,
 поэтому откат Gradle до 9.7.1 сам по себе не делает Core 1.19.1 неразрешимым.
 Он возвращает version lint finding, который блокирует текущие release gates.
 
@@ -54,3 +54,9 @@ GitHub release Gradle опубликован 7 октября в 21:46 UTC: по
 [Release notes](https://docs.gradle.org/9.8.1/release-notes.html) перечисляют
 GHSA-mvvg-497x-hmj8, GHSA-xwqc-3h47-hg64 и GHSA-j5m7-59rp-24f5.
 Lint severity, baseline, AGP, JDK, SDK и версия alpha05 не изменяются.
+
+## Patch update 9.8.2
+
+PR #101 обновляет дистрибутив до Gradle 9.8.2. Релиз опубликован 19 октября
+2026 года; семидневный буфер истёк. Wrapper JAR и launcher scripts сохраняют
+происхождение от 9.8.1, описанное выше. AGP, JDK, SDK и AndroidX не меняются.
