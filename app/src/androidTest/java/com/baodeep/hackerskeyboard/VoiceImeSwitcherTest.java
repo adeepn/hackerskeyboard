@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodSubtype;
 import android.app.Instrumentation;
 import android.content.Context;
 
-import com.google.android.voiceime.VoiceRecognitionTrigger;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -149,59 +148,37 @@ public class VoiceImeSwitcherTest {
         }
     }
 
-    private static final class LegacyTrigger extends VoiceRecognitionTrigger {
-        int starts;
-        boolean installed = true;
-
-        LegacyTrigger(TestIme ime) {
-            super(ime);
-        }
-
-        @Override
-        public boolean isInstalled() {
-            return installed;
-        }
-
-        @Override
-        public void startVoiceRecognition() {
-            starts++;
-        }
-    }
-
     @Test
-    public void latinImeFallsBackOnlyWhenNoEnabledVoiceSubtypeExists() throws Exception {
+    public void unavailableVoiceImeHasNoLegacyRecognizerFallback() throws Exception {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         Field switcherField = LatinIME.class.getDeclaredField("mVoiceImeSwitcher");
         switcherField.setAccessible(true);
-        Field legacyField = LatinIME.class.getDeclaredField("mVoiceRecognitionTrigger");
-        legacyField.setAccessible(true);
         Method start = LatinIME.class.getDeclaredMethod("startVoiceInput");
         start.setAccessible(true);
         instrumentation.runOnMainSync(() -> {
             TestIme ime = new TestIme(instrumentation.getTargetContext());
             FakeBackend backend = new FakeBackend();
-            LegacyTrigger legacy = new LegacyTrigger(ime);
             try {
                 ime.startEditor(InputType.TYPE_CLASS_TEXT, 0);
                 switcherField.set(ime, new VoiceImeSwitcher(backend, OWN_PACKAGE));
-                legacyField.set(ime, legacy);
                 start.invoke(ime);
-                assertEquals(1, legacy.starts);
-                legacy.installed = false;
-                start.invoke(ime);
-                assertEquals(1, legacy.starts);
-                legacy.installed = true;
-                backend.add("example.offline", subtype("voice"));
-                start.invoke(ime);
-                assertEquals(1, legacy.starts);
-                backend.failure = new SecurityException("Test provider loss");
-                start.invoke(ime);
-                assertEquals(1, legacy.starts);
+                assertNull(backend.selectedId);
+                for (Field field : LatinIME.class.getDeclaredFields()) {
+                    org.junit.Assert.assertFalse(field.getType().getName()
+                            .startsWith("com.google.android.voiceime."));
+                }
+                try {
+                    Class.forName("com.google.android.voiceime.VoiceRecognitionTrigger");
+                    org.junit.Assert.fail("Legacy deferred recognizer must not be packaged");
+                } catch (ClassNotFoundException expected) {
+                    // No trigger can schedule a cross-editor deferred result.
+                }
             } catch (ReflectiveOperationException exception) {
                 throw new AssertionError(exception);
             }
         });
     }
+
     @Test
     public void sensitiveSessionsBlockDirectVoiceDispatchAndOrdinarySessionRestoresIt()
             throws Exception {

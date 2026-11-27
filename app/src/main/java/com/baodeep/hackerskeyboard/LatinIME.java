@@ -19,7 +19,6 @@ package com.baodeep.hackerskeyboard;
 
 import com.baodeep.hackerskeyboard.LatinIMEUtil.RingCharBuffer;
 
-import com.google.android.voiceime.VoiceRecognitionTrigger;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -291,7 +290,6 @@ public class LatinIME extends InputMethodService implements
     private PluginManager mPluginManager;
     private NotificationReceiver mNotificationReceiver;
 
-    private VoiceRecognitionTrigger mVoiceRecognitionTrigger;
     private VoiceImeSwitcher mVoiceImeSwitcher;
 
     public abstract static class WordAlternatives {
@@ -408,7 +406,6 @@ public class LatinIME extends InputMethodService implements
         mVolDownAction = prefs.getString(PREF_VOL_DOWN, res.getString(R.string.default_vol_down));
         sKeyboardSettings.initPrefs(prefs, res);
 
-        mVoiceRecognitionTrigger = new VoiceRecognitionTrigger(this);
         mVoiceImeSwitcher = new VoiceImeSwitcher(this);
         
         updateKeyboardOptions();
@@ -823,9 +820,6 @@ public class LatinIME extends InputMethodService implements
         mEnableVoiceButton = shouldShowVoiceButton(attribute);
         final boolean enableVoiceButton = mEnableVoiceButton && mEnableVoice;
 
-        if (mEditorAllowsVoice && mVoiceRecognitionTrigger != null) {
-            mVoiceRecognitionTrigger.onStartInputView();
-        }
         
         mInputTypeNoAutoCorrect = false;
         mPredictionOnForMode = false;
@@ -941,12 +935,7 @@ public class LatinIME extends InputMethodService implements
             return;
         }
         VoiceImeSwitcher.Result voiceResult = mVoiceImeSwitcher.start();
-        if (voiceResult == VoiceImeSwitcher.Result.UNAVAILABLE) {
-            // Temporary legacy fallback; replaced separately in S2.09b.
-            if (mVoiceRecognitionTrigger.isInstalled()) {
-                mVoiceRecognitionTrigger.startVoiceRecognition();
-            }
-        } else if (voiceResult == VoiceImeSwitcher.Result.FAILED) {
+        if (voiceResult != VoiceImeSwitcher.Result.REQUESTED) {
             Toast.makeText(this, R.string.voice_input_unavailable, Toast.LENGTH_SHORT).show();
         }
     }
