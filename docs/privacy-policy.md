@@ -35,12 +35,11 @@ backup service or have access to your backup through this app.
 
 ## External voice input and links
 
-If you choose voice input, the keyboard switches to a separate enabled voice
-input method. That app handles speech under its own policy and may use network
-services. The keyboard does not request microphone permission or record audio
-itself, and does not receive that voice input method's recognition result.
-Some earlier releases included a recognizer-based fallback that could return
-recognized text through the keyboard; that fallback is no longer included.
+If you choose voice input, a separate installed speech app or voice input method
+handles speech under its own policy and may use network services. The keyboard
+does not request microphone permission or record audio itself. Depending on the
+installed release and voice route, recognized text may be returned through the
+keyboard or entered by the selected voice input method into the receiving app.
 
 If you open this page from a link in the app, the link launches an external
 browser only when you select it. Your browser then makes an HTTPS request to
