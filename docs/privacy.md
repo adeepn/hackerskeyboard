@@ -54,3 +54,14 @@ issues or model prompts. Use sanitized technical reproductions with synthetic te
 No website publication, Console configuration or release is performed by adding
 this document. Test command results belong in the PR and durable verification
 artifacts; this checklist alone is not a passing result.
+
+## Legacy recognizer decision
+
+[DECISION] The owner approved disabling the bundled legacy recognizer fallback
+on all Android versions. Its JAR exposes no cancellation API and its deferred
+result handler reads the current editor connection; new-session guards cannot
+safely bind an already scheduled callback. The JAR, dependency and production
+callbacks are removed. Enabled voice IME switching remains. Without an enabled
+voice IME, the existing unavailable message is shown. A recognizer-based fallback
+requires a separate session-safe implementation in #93; no speech engine or
+network service is added here.

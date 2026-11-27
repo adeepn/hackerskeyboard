@@ -39,3 +39,10 @@ including editor transitions and actual write/dispatch boundaries. Resource
 compilation, settings/identity guards, lint and API24/36-16KB/37 smoke remain
 mandatory. Owner approval is required for merge; website changes are prepared
 against the owning source and publication status must be explicit.
+
+## Accepted voice tradeoff
+
+[DECISION] After reviewing the missing cancellation API, the owner explicitly
+approved removal of the legacy JAR fallback on all Android versions. Preserve
+voice-IME switching and report unavailable when no provider exists. A replacement
+recognizer bridge is deferred to #93 and must bind/cancel results by session.

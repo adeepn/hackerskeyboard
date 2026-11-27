@@ -35,13 +35,19 @@ backup service or have access to your backup through this app.
 
 ## External voice input and links
 
-If you choose voice input, a separate installed speech app or input method handles
-speech under its own policy and may use network services. The keyboard does not
-request microphone permission or record audio itself. Depending on the voice
-route, recognized text is returned through the keyboard or entered by the selected
-input method into the receiving app. Opening this privacy policy launches an
-external browser only when you select the link; the browser and website handle
-that request under their own practices.
+If you choose voice input, the keyboard switches to a separate enabled voice
+input method. That app handles speech under its own policy and may use network
+services. The keyboard does not request microphone permission or record audio
+itself, and does not receive that voice input method's recognition result.
+Some earlier releases included a recognizer-based fallback that could return
+recognized text through the keyboard; that fallback is no longer included.
+
+If you open this page from a link in the app, the link launches an external
+browser only when you select it. Your browser then makes an HTTPS request to
+baodeep.com; the web server necessarily receives connection metadata such as the
+IP address. The keyboard does not attach typed text, dictionaries or editor
+information to that request. The browser may provide additional request metadata
+under its own settings and practices.
 
 ## Advertising and diagnostics
 
