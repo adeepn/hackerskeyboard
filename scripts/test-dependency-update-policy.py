@@ -4,11 +4,35 @@
 """Keep the release-age exception bounded; exercise unsafe policy mutations."""
 
 from pathlib import Path
-import re
 import unittest
 import xml.etree.ElementTree as ET
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
+
+
+class PolicyLoader(yaml.SafeLoader):
+    """Reject duplicate keys, aliases and merges instead of guessing precedence."""
+
+    def compose_node(self, parent, index):
+        if self.check_event(yaml.AliasEvent):
+            raise yaml.YAMLError("Aliases are unsupported in dependency policy")
+        return super().compose_node(parent, index)
+
+    def construct_mapping(self, node, deep=False):
+        seen = set()
+        for key_node, _ in node.value:
+            if key_node.tag == "tag:yaml.org,2002:merge":
+                raise yaml.YAMLError("Merge keys are unsupported in dependency policy")
+            key = self.construct_object(key_node, deep=deep)
+            try:
+                if key in seen:
+                    raise yaml.YAMLError(f"Duplicate mapping key: {key!r}")
+                seen.add(key)
+            except TypeError as error:
+                raise yaml.YAMLError("Mapping keys must be hashable scalars") from error
+        return super().construct_mapping(node, deep=deep)
 
 
 def verify(lint_xml: str, dependabot: str) -> None:
@@ -23,33 +47,28 @@ def verify(lint_xml: str, dependabot: str) -> None:
     } or len(issue[0]):
         raise AssertionError("The exception must match only the wrapper properties file")
 
-    # Deliberately accept only the repository's simple, two-space YAML layout.
-    # Fail closed on overrides, anchors, aliases, or flow mappings in cooldown.
-    blocks = re.split(r"^  - package-ecosystem: ", dependabot, flags=re.MULTILINE)[1:]
-    ecosystems = set()
-    for block in blocks:
-        ecosystem = block.splitlines()[0]
-        ecosystems.add(ecosystem)
-        # YAML blank lines and comments do not terminate a mapping. Inspect
-        # every indented child until the next sibling instead of matching a
-        # consecutive run of six-space lines.
-        lines = [line for line in block.splitlines()
-                 if line.strip() and not line.lstrip().startswith("#")]
-        cooldown = []
-        for index, line in enumerate(lines):
-            if line.lstrip().startswith("cooldown:"):
-                if line != "    cooldown:":
-                    raise AssertionError("Unsupported cooldown mapping syntax")
-                children = []
-                for child in lines[index + 1:]:
-                    indentation = len(child) - len(child.lstrip(" "))
-                    if indentation <= 4:
-                        break
-                    children.append(child)
-                cooldown.append(children)
-        if cooldown != [["      default-days: 7"]]:
-            raise AssertionError(f"{ecosystem}: require seven days without cooldown overrides")
-    if ecosystems != {"gradle", "github-actions"} or len(blocks) != 2:
+    try:
+        config = yaml.load(dependabot, Loader=PolicyLoader)
+    except yaml.YAMLError as error:
+        raise AssertionError(f"Invalid or ambiguous Dependabot YAML: {error}") from error
+    if not isinstance(config, dict) or type(config.get("version")) is not int or config["version"] != 2:
+        raise AssertionError("Dependabot must use configuration version 2")
+    updates = config.get("updates")
+    if not isinstance(updates, list) or len(updates) != 2:
+        raise AssertionError("Require exactly the two supported update entries")
+    ecosystems = []
+    for update in updates:
+        if not isinstance(update, dict):
+            raise AssertionError("Every update entry must be a mapping")
+        ecosystem = update.get("package-ecosystem")
+        if ecosystem not in ("gradle", "github-actions"):
+            raise AssertionError("Unsupported dependency ecosystem")
+        ecosystems.append(ecosystem)
+        cooldown = update.get("cooldown")
+        if (not isinstance(cooldown, dict) or set(cooldown) != {"default-days"}
+                or type(cooldown["default-days"]) is not int or cooldown["default-days"] != 7):
+            raise AssertionError(f"{ecosystem}: require integer seven days without overrides")
+    if set(ecosystems) != {"gradle", "github-actions"}:
         raise AssertionError("Both dependency ecosystems must have the release-age policy")
 
 
@@ -68,6 +87,57 @@ class PolicyTests(unittest.TestCase):
             '    cooldown:\n\n    # Release-age policy\n      default-days: 7\n\n',
         )
         verify(self.lint, formatted)
+
+    def test_accept_semantically_equivalent_yaml(self):
+        for updates in [
+            '  - directory: /\n    cooldown: {default-days: 7}\n    package-ecosystem: gradle\n'
+            '  - directory: /\n    package-ecosystem: github-actions\n    cooldown: {default-days: 7}\n',
+            '  - {directory: /, package-ecosystem: gradle, cooldown: {default-days: 7}}\n'
+            '  - {cooldown: {default-days: 7}, package-ecosystem: github-actions, directory: /}\n',
+        ]:
+            with self.subTest(updates=updates):
+                verify(self.lint, 'version: 2\nupdates:\n' + updates)
+
+    def test_reject_every_additional_update_entry(self):
+        for entry in [
+            '  - directory: /\n    package-ecosystem: gradle\n',
+            '  - {directory: /, package-ecosystem: gradle, cooldown: {default-days: 0}}\n',
+            '  - {package-ecosystem: npm, cooldown: {default-days: 7}}\n',
+        ]:
+            with self.subTest(entry=entry), self.assertRaises(AssertionError):
+                verify(self.lint, self.dependabot + '\n' + entry)
+
+    def test_reject_invalid_reordered_and_flow_entries(self):
+        for ecosystem in ['gradle', 'github-actions']:
+            other = 'github-actions' if ecosystem == 'gradle' else 'gradle'
+            for entry in [
+                f'  - directory: /\n    package-ecosystem: {ecosystem}\n',
+                f'  - {{directory: /, package-ecosystem: {ecosystem}, cooldown: {{default-days: 0}}}}\n',
+            ]:
+                config = ('version: 2\nupdates:\n' + entry +
+                          f'  - {{package-ecosystem: {other}, cooldown: {{default-days: 7}}}}\n')
+                with self.subTest(entry=entry), self.assertRaises(AssertionError):
+                    verify(self.lint, config)
+
+    def test_reject_duplicate_keys_aliases_and_merges(self):
+        for config in [
+            self.dependabot + '\nupdates: []\n',
+            self.dependabot.replace('default-days: 7', 'default-days: 0\n      default-days: 7', 1),
+            self.dependabot.replace('    directory: /', '    directory: /\n    package-ecosystem: gradle', 1),
+            self.dependabot.replace('version: 2', 'version: &version 2\nunused: *version'),
+            self.dependabot.replace('    cooldown:', '    <<: {cooldown: {default-days: 0}}\n    cooldown:', 1),
+        ]:
+            with self.subTest(config=config), self.assertRaises(AssertionError):
+                verify(self.lint, config)
+
+    def test_reject_noninteger_release_age_and_invalid_shapes(self):
+        for age in ['"7"', '7.0', 'true', 'null']:
+            with self.subTest(age=age), self.assertRaises(AssertionError):
+                verify(self.lint, self.dependabot.replace('default-days: 7', f'default-days: {age}'))
+        for config in ['[]', 'version: 2\nupdates: {}', 'version: 2\nupdates: [7, 8]',
+                       self.dependabot.replace('package-ecosystem: github-actions', 'package-ecosystem: gradle')]:
+            with self.subTest(config=config), self.assertRaises(AssertionError):
+                verify(self.lint, config)
 
     def test_reject_widened_lint_exception(self):
         for old, new in [

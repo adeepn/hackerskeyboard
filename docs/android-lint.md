@@ -55,6 +55,19 @@ severity issue в других файлах, включая AGP в build scripts
 удаление cooldown и обходы для patch/exclude. Он запускается общим `prek` в CI
 и локально.
 
+Guard разбирает весь YAML через `PyYAML==6.0.3`, закреплённый в
+`additional_dependencies` Python hook в `prek.toml`. `prek` создаёт отдельную
+среду; установленный в системе PyYAML не требуется. Проверяются все update
+entries независимо от порядка ключей и block/flow записи. Duplicate mapping
+keys, YAML aliases и merge keys отклоняются, чтобы избежать неоднозначности.
+
+Источник зависимости: [PyYAML 6.0.3 на PyPI](https://pypi.org/project/PyYAML/6.0.3/),
+релиз 25 сентября 2025 года; при добавлении 27 ноября 2026 семидневный буфер
+истёк. Пакет используется только локальной/CI проверкой и не входит в APK.
+Синтаксис hook: [prek Python support](https://prek.j178.dev/reference/language-support/#python)
+и [additional_dependencies](https://prek.j178.dev/reference/configuration/#additional_dependencies).
+Точный bootstrap и запуск проверки: `prek run dependency-update-policy --all-files`.
+
 Синтаксис и область действия: [Android lint configuration](https://developer.android.com/studio/write/lint#config)
 и [lint.xml reference](https://googlesamples.github.io/android-custom-lint-rules/usage/lintxml.md.html).
 Поддержка `default-days` для обоих ecosystem:
