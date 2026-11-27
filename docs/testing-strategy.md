@@ -265,3 +265,9 @@ Target 36 bootstrap (#95) расширяет CI API 36/16 KB image с прове
 page size и JNI lookup. Добавлены повторные Activity insets и real IME-session
 smoke, плюс offline ELF/ZIP tests и проверки native alignment APK/AAB.
 Команды и незакрытые manual acceptance cases: [target-36-bootstrap.md](target-36-bootstrap.md).
+
+The navigation-overlap regression in PR #102 extends the real target-36 IME
+session smoke with live key bounds and bottom navigation inset handling. It
+checks repeated, changed and removed insets without shrinking key rows or
+applying the editor IME/status-bar inset. Owner-device landscape, gesture
+navigation and popup checks remain manual; see target-36-bootstrap.md.

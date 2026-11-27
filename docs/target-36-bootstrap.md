@@ -88,3 +88,32 @@ Upstream [#958](https://github.com/klausw/hackerskeyboard/issues/958) — eviden
 [Play target API](https://developer.android.com/google/play/requirements/target-sdk),
 [Android 16 target behavior](https://developer.android.com/about/versions/16/behavior-changes-16),
 [16 KB support](https://developer.android.com/guide/practices/page-sizes).
+
+## Three-button navigation regression after alpha05
+
+Owner acceptance on 27 November 2026 confirmed an alpha03 → alpha05 update on
+OnePlus CPH2653 / Android 16, then found system navigation buttons overlaying the
+last key row. The visible navigation bar occupied y=3014..3168 on a 1440x3168
+display. Activity-only insets did not cover this IME surface.
+
+The input-view creation path now reserves the bottom `navigationBars` inset on
+API 35+, including theme/view recreation. Padding uses the original value on
+every dispatch and clears when the inset disappears. It does not apply editor
+IME or status-bar insets; the platform IME window already fits its other sides.
+Key row heights, popup input views, preferences and API 24 behavior are unchanged.
+This is separate from the old blank band above the keyboard (#47).
+
+`Target36CompatibilityTest` checks live key bounds against the navigation bar,
+then repeated/zero/changed synthetic insets, exclusion of status/editor IME
+insets and preservation of measured key-row height. The initial test-only commit
+failed on API 36/37 with expected bottom 23, actual 0; run
+[45984550494](https://github.com/adeepn/hackerskeyboard/actions/runs/45984550494).
+OnePlus after-validation, landscape, gesture navigation, themes and popup
+acceptance remain required before claiming the regression fixed on the owner
+phone. Do not publish the browser screenshot used for local diagnosis.
+
+Upstream [PR #978 comment](https://github.com/klausw/hackerskeyboard/pull/978#issuecomment-3770320452)
+is evidence of a similar overlap and a candidate `fitsSystemWindows` workaround.
+No upstream patch was imported. The explicit bottom-only handler avoids adding
+status-bar padding or changing the window's side-fitting policy. Platform
+reference: [Android 16 InputMethodService](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android16-release/core/java/android/inputmethodservice/InputMethodService.java).

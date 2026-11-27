@@ -172,6 +172,16 @@ public class Target36CompatibilityTest {
             LatinKeyboardView keyboard = ime.mKeyboardSwitcher.getInputView();
             WindowInsetsCompat original = ViewCompat.getRootWindowInsets(keyboard);
             assertNotNull("Visible keyboard must have window insets", original);
+            int navigationBottom = original.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            View decor = ime.getWindow().getWindow().getDecorView();
+            int[] keyboardPosition = new int[2];
+            int[] decorPosition = new int[2];
+            keyboard.getLocationOnScreen(keyboardPosition);
+            decor.getLocationOnScreen(decorPosition);
+            int keyBottom = keyboardPosition[1] + keyboard.getPaddingTop()
+                    + keyboard.getKeyboard().getHeight();
+            assertTrue("Key rows must end above the actual navigation bar",
+                    keyBottom <= decorPosition[1] + decor.getHeight() - navigationBottom);
             int left = keyboard.getPaddingLeft();
             int top = keyboard.getPaddingTop();
             int right = keyboard.getPaddingRight();
